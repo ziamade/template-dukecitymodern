@@ -75,7 +75,8 @@ module.exports = function (eleventyConfig) {
     // ═════════════════════════════════════════════════════════════════════════
 
     eleventyConfig.addPassthroughCopy("./src/assets"); // Static assets
-    eleventyConfig.addPassthroughCopy("./src/admin"); // CMS admin files
+    eleventyConfig.addPassthroughCopy("./src/admin"); // Agency CMS admin
+    eleventyConfig.addPassthroughCopy("./src/client-admin"); // Client CMS admin (content only)
     eleventyConfig.addPassthroughCopy("./src/_redirects"); // Redirect rules
 
     // ═════════════════════════════════════════════════════════════════════════
