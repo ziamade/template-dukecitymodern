@@ -112,6 +112,28 @@ content:
         type: string
         description: "Hours shown for weekend/Sunday. Example: Sunday: Closed"
 
+  # ── Brand Colors ───────────────────────────────────────────────────────────
+  - name: brand
+    label: Brand Colors
+    type: file
+    path: src/_data/brand.json
+    format: json
+    fields:
+      - { name: primary, label: Primary Color, type: string, description: "Main CTA color — buttons, links, active states. Hex value e.g. #ec5b13" }
+      - { name: primaryLight, label: Primary Light, type: string, description: "Hover state for primary. e.g. #f47a3e" }
+      - { name: secondary, label: Secondary Color, type: string, description: "Secondary accent — icons, nav button. e.g. #7a8d81" }
+      - { name: secondaryLight, label: Secondary Light, type: string, description: "Hover state for secondary. e.g. #95a89d" }
+      - { name: accent, label: Accent Color, type: string, description: "Subtle highlights and labels. e.g. #d9b382" }
+      - { name: headerColor, label: Heading Color, type: string, description: "Color for all headings. e.g. #221610" }
+      - { name: bodyTextColor, label: Body Text Color, type: string, description: "Main body text. e.g. #3a3a3a" }
+      - { name: bodyTextColorWhite, label: Light Text Color, type: string, description: "Text on dark backgrounds. e.g. #f8f6f6" }
+      - { name: offWhite, label: Off White Background, type: string, description: "Light section backgrounds. e.g. #f8f6f6" }
+      - { name: cream, label: Cream Background, type: string, description: "Warm neutral backgrounds. e.g. #f0eae0" }
+      - { name: dark, label: Dark Background, type: string, description: "Dark sections and dark mode bg. e.g. #221610" }
+      - { name: medium, label: Dark Surface, type: string, description: "Dark mode card surfaces. e.g. #2c1a10" }
+      - { name: accentDark, label: Dark Accent Surface, type: string, description: "Dark mode accent cards. e.g. #3a2a1e" }
+      - { name: silver, label: Muted / Silver, type: string, description: "Muted text and dividers. e.g. #a89f95" }
+
   # ── Hero ───────────────────────────────────────────────────────────────────
   - name: hero
     label: Hero Section

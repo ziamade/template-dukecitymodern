@@ -37,6 +37,28 @@
         <link rel="stylesheet" href="/assets/css/root.css">
         <script defer src="/assets/js/nav.js"></script>
 
+        <!-- Brand color overrides from brand.json -->
+        <style>
+            :root {
+                --primary: {{ brand.primary }};
+                --primaryLight: {{ brand.primaryLight }};
+                --secondary: {{ brand.secondary }};
+                --secondaryLight: {{ brand.secondaryLight }};
+                --accent: {{ brand.accent }};
+                --headerColor: {{ brand.headerColor }};
+                --bodyTextColor: {{ brand.bodyTextColor }};
+                --bodyTextColorWhite: {{ brand.bodyTextColorWhite }};
+                --off-white: {{ brand.offWhite }};
+                --cream: {{ brand.cream }};
+                --dark: {{ brand.dark }};
+                --midnight: {{ brand.dark }};
+                --medium: {{ brand.medium }};
+                --deep-brown: {{ brand.medium }};
+                --accent-dark: {{ brand.accentDark }};
+                --silver: {{ brand.silver }};
+            }
+        </style>
+
         {% block head %}{% endblock %}
 
         <title>{{ title }}</title>

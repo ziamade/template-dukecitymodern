@@ -1,0 +1,16 @@
+{
+  "primary": "#ec5b13",
+  "primaryLight": "#f47a3e",
+  "secondary": "#7a8d81",
+  "secondaryLight": "#95a89d",
+  "accent": "#d9b382",
+  "headerColor": "#221610",
+  "bodyTextColor": "#3a3a3a",
+  "bodyTextColorWhite": "#f8f6f6",
+  "offWhite": "#f8f6f6",
+  "cream": "#f0eae0",
+  "dark": "#221610",
+  "medium": "#2c1a10",
+  "accentDark": "#3a2a1e",
+  "silver": "#a89f95"
+}

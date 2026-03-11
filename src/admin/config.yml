@@ -128,6 +128,26 @@ collections:
                 - { label: "Weekday Hours", name: "hoursWeekdays", widget: "string" }
                 - { label: "Weekend Hours", name: "hoursWeekend", widget: "string" }
 
+          # ── Brand Colors ──────────────────────────────────────────────────
+          - name: "brand"
+            label: "Brand Colors"
+            file: "src/_data/brand.json"
+            fields:
+                - { label: "Primary Color", name: "primary", widget: "color", hint: "Main CTA color — buttons, links, active states." }
+                - { label: "Primary Light", name: "primaryLight", widget: "color", hint: "Hover state for primary color." }
+                - { label: "Secondary Color", name: "secondary", widget: "color", hint: "Secondary accent — icons, nav button." }
+                - { label: "Secondary Light", name: "secondaryLight", widget: "color", hint: "Hover state for secondary color." }
+                - { label: "Accent Color", name: "accent", widget: "color", hint: "Subtle highlights and labels." }
+                - { label: "Heading Color", name: "headerColor", widget: "color", hint: "Color for headings." }
+                - { label: "Body Text Color", name: "bodyTextColor", widget: "color", hint: "Main body text color." }
+                - { label: "Light Text Color", name: "bodyTextColorWhite", widget: "color", hint: "Text on dark backgrounds." }
+                - { label: "Off White Background", name: "offWhite", widget: "color", hint: "Light section backgrounds." }
+                - { label: "Cream Background", name: "cream", widget: "color", hint: "Warm neutral section backgrounds." }
+                - { label: "Dark Background", name: "dark", widget: "color", hint: "Dark mode / dark section background." }
+                - { label: "Dark Surface", name: "medium", widget: "color", hint: "Dark mode surface color." }
+                - { label: "Dark Accent Surface", name: "accentDark", widget: "color", hint: "Dark mode card/accent background." }
+                - { label: "Muted / Silver", name: "silver", widget: "color", hint: "Muted text and dividers." }
+
           # ── Hero ───────────────────────────────────────────────────────────
           - name: "hero"
             label: "Hero Section"

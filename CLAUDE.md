@@ -67,6 +67,15 @@ All CMS-editable data lives in `src/_data/`. Update the JSON, and the site rebui
 { "hoursWeekdays": "Mon–Fri: 9–5", "hoursWeekend": "Sat–Sun: Closed" }
 ```
 
+### brand.json
+```json
+{ "primary": "#ec5b13", "primaryLight": "#f47a3e", "secondary": "#7a8d81", "secondaryLight": "#95a89d",
+  "accent": "#d9b382", "headerColor": "#221610", "bodyTextColor": "#3a3a3a", "bodyTextColorWhite": "#f8f6f6",
+  "offWhite": "#f8f6f6", "cream": "#f0eae0", "dark": "#221610", "medium": "#2c1a10",
+  "accentDark": "#3a2a1e", "silver": "#a89f95" }
+```
+Injected as inline CSS variables in `base.html` — overrides `root.less` defaults. No recompile needed.
+
 ### hero.json
 ```json
 { "heroImage": "/assets/images/...", "heroTagline": "string", "heroSubtitle": "string" }
