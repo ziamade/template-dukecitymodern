@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "text": "Outstanding service from start to finish. They were professional, on time, and the results exceeded our expectations. Highly recommend to anyone in the area!",
+      "author": "Maria G.",
+      "initials": "MG",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "#"
+    },
+    {
+      "text": "We have used this company for years and they never disappoint. Fair pricing, excellent workmanship, and genuinely friendly people. A true local gem.",
+      "author": "James R.",
+      "initials": "JR",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "#"
+    },
+    {
+      "text": "Found them through a neighbor's recommendation and so glad I did. They treated our home like their own and the quality speaks for itself.",
+      "author": "Sarah K.",
+      "initials": "SK",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "#"
+    }
+  ]
+}

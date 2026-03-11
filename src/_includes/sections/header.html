@@ -1,0 +1,42 @@
+<!-- ============================================ -->
+<!--                 Navigation                   -->
+<!-- ============================================ -->
+
+<header id="cs-navigation">
+    <div class="cs-container">
+        <!-- Logo -->
+        <a href="/" class="cs-logo" aria-label="{{ client.name }} Home">
+            <span class="cs-logo-name">{{ client.name }}</span>
+        </a>
+
+        <!-- Nav -->
+        <nav class="cs-nav" aria-label="main navigation">
+            <button class="cs-toggle" id="cs-toggle" aria-expanded="false" aria-controls="cs-ul-wrapper" aria-label="mobile menu toggle" aria-haspopup="menu">
+                <span class="cs-box" aria-hidden="true">
+                    <span class="cs-line cs-line1" aria-hidden="true"></span>
+                    <span class="cs-line cs-line2" aria-hidden="true"></span>
+                    <span class="cs-line cs-line3" aria-hidden="true"></span>
+                </span>
+            </button>
+            <div class="cs-ul-wrapper" id="cs-ul-wrapper">
+                <ul id="cs-expanded" class="cs-ul">
+                    <li class="cs-li">
+                        <a href="#services" class="cs-li-link">Services</a>
+                    </li>
+                    <li class="cs-li">
+                        <a href="#testimonials" class="cs-li-link">Reviews</a>
+                    </li>
+                    <li class="cs-li">
+                        <a href="#why-choose" class="cs-li-link">About</a>
+                    </li>
+                    <li class="cs-li">
+                        <a href="#quote-form" class="cs-li-link">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Single CTA — the only action in the header -->
+        <a href="#quote-form" class="cs-button-solid cs-nav-button">Get Quote</a>
+    </div>
+</header>

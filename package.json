@@ -1,0 +1,41 @@
+{
+	"name": "duke-city-modern-template",
+	"version": "1.0.0",
+	"description": "High Desert Modern — 11ty template for local business websites. Duke City Digital.",
+	"main": "index.js",
+	"scripts": {
+		"watch:cms": "npx decap-server",
+		"watch:eleventy": "cross-env ELEVENTY_ENV=DEV eleventy --serve",
+		"build:eleventy": "cross-env ELEVENTY_ENV=PROD eleventy",
+		"start": "run-p watch:*",
+		"build": "run-s build:*",
+		"preview": "cross-env ELEVENTY_ENV=PROD eleventy --serve"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/chilefixdigital/template-dukecitymodern.git"
+	},
+	"keywords": ["11ty", "eleventy", "template", "local-business", "southwest-modern"],
+	"author": "Duke City Digital",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/chilefixdigital/template-dukecitymodern/issues"
+	},
+	"homepage": "https://github.com/chilefixdigital/template-dukecitymodern#readme",
+	"dependencies": {
+		"@11ty/eleventy": "^3.1.2",
+		"@codestitchofficial/eleventy-plugin-minify": "^1.1.3",
+		"@codestitchofficial/eleventy-plugin-sharp-images": "^2.2.0",
+		"@quasibit/eleventy-plugin-sitemap": "^2.2.0",
+		"autoprefixer": "^10.4.27",
+		"codestitch-sharp-image-automation": "^0.4.0",
+		"cross-env": "^10.1.0",
+		"cssnano": "^7.1.2",
+		"esbuild": "^0.27.3",
+		"glob": "^11.1.0",
+		"less": "^4.5.1",
+		"netlify-plugin-cache": "^1.0.3",
+		"npm-run-all2": "^5.0.2",
+		"postcss": "^8.5.6"
+	}
+}

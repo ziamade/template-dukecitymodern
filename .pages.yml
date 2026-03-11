@@ -1,0 +1,205 @@
+media:
+  - name: images
+    label: Images
+    input: src/assets/images
+    output: /assets/images
+    extensions: [jpg, jpeg, png, gif, webp, svg]
+  - name: service-images
+    label: Service Images
+    input: src/assets/images/services
+    output: /assets/images/services
+    extensions: [jpg, jpeg, png, gif, webp, svg]
+  - name: videos
+    label: Videos
+    input: src/assets/videos
+    output: /assets/videos
+    extensions: [mp4, webm]
+
+settings:
+  content:
+    merge: true
+
+content:
+  # ── Alert Banner ───────────────────────────────────────────────────────────
+  - name: alert
+    label: Alert Banner
+    type: file
+    path: src/_data/alert.json
+    format: json
+    fields:
+      - name: enabled
+        label: Enable Banner
+        type: boolean
+        default: false
+      - name: text
+        label: Message
+        type: string
+        required: false
+        description: "The message shown in the banner across the top of the site."
+      - name: startDate
+        label: Start Date
+        type: date
+        required: false
+        description: "Leave blank to show immediately when enabled."
+      - name: endDate
+        label: End Date
+        type: date
+        required: false
+        description: "Leave blank to show indefinitely."
+
+  # ── Contact Info ───────────────────────────────────────────────────────────
+  - name: contact
+    label: Contact Info
+    type: file
+    path: src/_data/contact.json
+    format: json
+    fields:
+      - name: email
+        label: Email Address
+        type: string
+        description: "Business email shown in the footer and contact section. Example: info@yourbusiness.com"
+      - name: phoneForTel
+        label: Phone Number
+        type: string
+        description: "Used for click-to-call links and automatically formatted as (555) 555-5555. Digits and dashes only. Example: 209-954-9896"
+
+  # ── Location & Maps ────────────────────────────────────────────────────────
+  - name: location
+    label: Location & Maps
+    type: file
+    path: src/_data/location.json
+    format: json
+    fields:
+      - name: address
+        label: Street Address
+        type: string
+        description: "Street address shown in the footer and contact section. Example: 8829 Davis Road STE 3"
+      - name: city
+        label: City
+        type: string
+        description: "City name used in the address display and throughout the site. Example: Stockton"
+      - name: state
+        label: State
+        type: string
+        description: "Two-letter state abbreviation. Example: CA"
+      - name: zip
+        label: ZIP Code
+        type: string
+        description: "5-digit ZIP code. Example: 95209"
+      - name: country
+        label: Country Code
+        type: string
+        default: "US"
+        description: "Two-letter country code for structured data (schema.org). Example: US"
+      - name: mapLink
+        label: Google Maps Link
+        type: string
+        description: "Full Google Maps URL. Go to maps.google.com, search your address, click Share, then Copy link."
+
+  # ── Business Hours ─────────────────────────────────────────────────────────
+  - name: hours
+    label: Business Hours
+    type: file
+    path: src/_data/hours.json
+    format: json
+    fields:
+      - name: hoursWeekdays
+        label: Weekday Hours
+        type: string
+        description: "Hours shown for your weekday schedule. Example: Mon-Sat: 9:00 AM - 6:00 PM"
+      - name: hoursWeekend
+        label: Weekend Hours
+        type: string
+        description: "Hours shown for weekend/Sunday. Example: Sunday: Closed"
+
+  # ── Hero ───────────────────────────────────────────────────────────────────
+  - name: hero
+    label: Hero Section
+    type: file
+    path: src/_data/hero.json
+    format: json
+    fields:
+      - name: heroImage
+        label: Hero Image
+        type: image
+        description: "Main hero image displayed on the homepage."
+      - name: heroTagline
+        label: Tagline
+        type: string
+        description: "Short tagline displayed above the main heading."
+      - name: heroSubtitle
+        label: Subtitle
+        type: string
+        description: "Descriptive text below the main heading."
+
+  # ── Testimonials ──────────────────────────────────────────────────────────
+  - name: testimonials
+    label: Customer Reviews
+    type: file
+    path: src/_data/testimonials.json
+    format: json
+    fields:
+      - name: items
+        label: Reviews
+        type: list
+        fields:
+          - { name: text, label: Review Text, type: text }
+          - { name: author, label: Author Name, type: string }
+          - { name: initials, label: Initials, type: string, description: "Two letters shown in avatar circle" }
+          - { name: role, label: Role, type: string, default: "Verified Customer" }
+          - { name: rating, label: Rating, type: number, default: 5 }
+          - { name: source, label: Source, type: string, default: "Google" }
+          - { name: url, label: Review URL, type: string, required: false }
+
+  # ── Trust Bar ─────────────────────────────────────────────────────────────
+  - name: trustbar
+    label: Trust Bar Stats
+    type: file
+    path: src/_data/trustbar.json
+    format: json
+    fields:
+      - name: items
+        label: Stats
+        type: list
+        fields:
+          - { name: number, label: "Number/Value", type: string }
+          - { name: label, label: Label, type: string }
+
+  # ── Services ───────────────────────────────────────────────────────────────
+  - name: services
+    label: "Services (max 6)"
+    type: collection
+    path: src/content/services
+    extension: md
+    format: yaml-frontmatter
+    filename: "{order}-{fields.title | slugify}"
+    media:
+      input: src/assets/images/services
+      output: /assets/images/services
+    view:
+      primary: title
+      fields: [title, order]
+      sort: [order]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: beforeImage
+        label: Before Image
+        type: image
+      - name: afterImage
+        label: After Image (optional)
+        type: image
+        required: false
+        description: "If provided, the card will show this image on hover."
+      - name: order
+        label: Display Order
+        type: number
+        default: 1
+        description: "Lower numbers appear first (1 = first card). Maximum 6 services total."
