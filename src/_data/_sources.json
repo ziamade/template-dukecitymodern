@@ -12,7 +12,7 @@
     "source": "https://duransstation.com"
   },
   "client.socials.facebook": {
-    "value": "https://www.facebook.com/groups/albuquerquefoodies/posts/1564826538042099/",
+    "value": "https://www.facebook.com/p/Durans-Station-100063573939940/",
     "source": "serper"
   },
   "client.socials.instagram": {
@@ -68,15 +68,15 @@
     "source": "google-places"
   },
   "hero.heroImage": {
-    "value": "/api/place-photo?ref=ATCDNfVhi_O5JYk-ue2fNFU-6tocNaCzYsX5XPgUhr4cwOykiTJe5j0-gbOdKDWrcrjOIbLb0gklKXjbjdILwhAR3W428Iy7-zJTS_2cpezOJZNTiVWB-athjPgTFtgsn1mdJFTaYwcF6nMfeu5zCiP6P3UYojhtSstYRT8Zd2TPVPuTMDIvXQZLNYTpWiPu8x_f5C6BC1NdObjb-fid3mR3RWOewrZfrOW1BzQED9UNyUuqks1J9kGXwKwk696hcRvlR2InScnXhgsPGU6yC8SK5AJtZCVumMEpQPTKe-_UFqlLf_oq9Gvu-OXcwYeOjsCjFMVbO1oaboou3cTFPY7xBUiDg5rnRRATgKLEqpYSZx0PFwluj2NWxvz7vDAyO1zpQpHeVBjctFBltsUI5WT1_fDXwsKg_lhNu_saZfIhu177jg",
+    "value": "/api/place-photo?ref=ATCDNfV-cUjM7Xc0NnegGpGxykpMb0eyO1F4LYwanZT2AvyDEKnwb64n9hbrOwOB9zO66UPXuuUneQk-whl9ij59Oq6mdQ6Q3LVgaA4nTu5SegEkUerEWvkJL-7L_e9RaenFp6PTFQiFwekw8e3CTJxwazql-ixkwgdLMwaexeJmc21cDpXAY02ycprVBI3RChELoFA4xcvGlv2MZCvz4tBl11MmE1ThJSOqgzzUw7Gm6rktTxr6oI8hWwsyZnfUsDlap5pL7iIQI8dxwBUI46JYHk6ZE6aGIv86mP5cCAnsLilk2mpja_ARIANlykAu9oVl8pu66Pd3tfH74nwK5XPYtYmQvzChqiDNkdVZAK4lW9Y8JLfhq-PWnKUJNDGoFTqzjQrhebm9Ho_YD42fW8wcToX_hsfLhp1duB-Ve7Em4M_XDg",
     "source": "google-places"
   },
   "hero.heroTagline": {
-    "value": "Authentic New Mexican Flavors in Albuquerque",
+    "value": "Authentic New Mexican Flavors, Family-Owned Tradition",
     "source": "copy_agent"
   },
   "hero.heroSubtitle": {
-    "value": "Step into a vibrant culinary journey, where generations of recipes meet the freshest local produce, creating an unforgettable taste of New Mexico.",
+    "value": "Step into Duran's Station and taste the warmth of generations, where every dish tells a story of New Mexican heritage and hospitality.",
     "source": "qa_fix"
   },
   "alert.text": {
@@ -88,7 +88,7 @@
     "source": "default"
   },
   "_aboutBody": {
-    "value": "Duran's Station has been a beloved fixture in the Albuquerque community, serving up the authentic tastes of New Mexico. We pride ourselves on creating a welcoming atmosphere where friends and family can gather to enjoy classic dishes and make lasting memories.",
-    "source": "copy_agent"
+    "value": "Since opening our doors in 1964, Duran's Station has been a cornerstone of the Albuquerque community, founded by the Duran family with a passion for authentic New Mexican cuisine. What started as a small, beloved local eatery has grown into a cherished tradition, known for our homemade red and green chile and a welcoming atmosphere that makes every guest feel like family. We're proud to continue our legacy, serving up time-honored recipes passed down through generations.",
+    "source": "qa_fix"
   }
 }

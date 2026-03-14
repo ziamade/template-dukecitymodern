@@ -1,6 +1,6 @@
 ---
 title: "Family-Friendly Dining"
-description: "Gather your loved ones for a memorable meal in our lively, welcoming atmosphere. We offer a diverse menu with options for every palate, ensuring a delightful experience for all ages, from our kid-approved favorites to our authentic New Mexican specialties."
+description: "Bring the whole family to enjoy a casual and comfortable dining experience, complete with a dedicated kids' menu and dishes everyone, from toddlers to grandparents, will love."
 beforeImage: "/assets/images/service-1.jpg"
 order: 1
 ---
