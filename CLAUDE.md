@@ -19,7 +19,7 @@ This is a reusable 11ty website template by **Duke City Digital** for local busi
 | JavaScript | esbuild (bundling + minification) |
 | CMS | Decap CMS (admin/config.yml) + Pages CMS (.pages.yml) |
 | Images | Sharp plugin (`{% getUrl %}` shortcode) |
-| Hosting | Netlify (netlify.toml) |
+| Hosting | Cloudflare Pages (GitHub Actions + Wrangler) |
 
 ### Directory Structure
 
@@ -149,6 +149,25 @@ Warm, direct, community-rooted. Avoid corporate jargon. Write for neighbors, not
 | `npm start` | Dev server + CMS proxy |
 | `npm run build` | Production build |
 | `npm run preview` | Preview production build locally |
+
+## Deployment (Cloudflare Pages)
+
+Sites deploy via GitHub Actions using `cloudflare/wrangler-action@v3` (direct upload, no CF Git integration).
+
+| Workflow | Trigger | Target |
+|----------|---------|--------|
+| `deploy-preview.yml` | Auto on push to `main` | Preview (`preview.<slug>.pages.dev`) |
+| `deploy-production.yml` | Manual (`workflow_dispatch`) | Production (`<slug>.pages.dev`) |
+
+**Secrets** (org-level on `chilefix`, inherited by all repos):
+- `CLOUDFLARE_API_TOKEN` — scoped to `Cloudflare Pages:Edit` only
+- `CLOUDFLARE_ACCOUNT_ID`
+
+**If switching to custom subdomains** (e.g., `client.chilefixdigital.com`):
+1. Add the custom domain in CF Pages dashboard or via `wrangler pages project ...`
+2. Update `client.domain` in `src/_data/client.js` to the new URL (affects sitemap, canonical tags)
+3. Set up DNS CNAME: `client.chilefixdigital.com` → `<slug>.pages.dev`
+4. No workflow changes needed, only the domain and DNS config
 
 ## Coding Conventions
 
