@@ -132,6 +132,24 @@ module.exports = function (eleventyConfig) {
         return isNaN(y) ? 0 : new Date().getFullYear() - y;
     });
 
+    /*
+     * String Contains Filter (case-insensitive)
+     * Returns true if str contains substr
+     * Usage: {% if client.industry | contains("restaurant") %}
+     */
+    eleventyConfig.addFilter("contains", (str, substr) =>
+        (str || '').toLowerCase().includes((substr || '').toLowerCase())
+    );
+
+    /*
+     * String Split Filter
+     * Splits a string by separator into an array
+     * Usage: {% for line in hours | split(" | ") %}
+     */
+    eleventyConfig.addFilter("split", (str, separator) =>
+        (str || '').split(separator || ',')
+    );
+
     // ═════════════════════════════════════════════════════════════════════════
     // SHORTCODES
     // Generate dynamic content with JavaScript
