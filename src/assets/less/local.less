@@ -496,7 +496,9 @@
             cursor: pointer;
             text-decoration: none;
             color: inherit;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .testimonial-card:hover {
@@ -518,6 +520,10 @@
             color: #333;
             margin-bottom: 2rem;
             font-style: italic;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
         }
 
         .testimonial-author {
@@ -526,6 +532,7 @@
             justify-content: space-between;
             padding-top: 1.5rem;
             border-top: 2px solid #f0f0f0;
+            margin-top: auto;
         }
 
         .author-info {

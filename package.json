@@ -21,7 +21,11 @@
 	"bugs": {
 		"url": "https://github.com/chilefix/template-dukecitymodern/issues"
 	},
-	"homepage": "https://github.com/chilefix/template-dukecitymodern#readme",
+	"homepage": "https://github.com/chilefixdigital/template-dukecitymodern#readme",
+	"devDependencies": {
+		"@playwright/test": "^1.49.0",
+		"serve": "^14.2.4"
+	},
 	"dependencies": {
 		"@11ty/eleventy": "^3.1.2",
 		"@codestitchofficial/eleventy-plugin-minify": "^1.1.3",
