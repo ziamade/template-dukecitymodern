@@ -101,6 +101,7 @@ tags: "sitemap"
         </div>
         <div class="services-grid">
             {% for service in collections.service | sort(false, false, 'data.order') %}
+            {% set afterUrl = "" %}
             {% set beforeUrl %}{% getUrl service.data.beforeImage %}{% endset %}
             {% if service.data.afterImage %}
                 {% set afterUrl %}{% getUrl service.data.afterImage %}{% endset %}
