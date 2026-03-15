@@ -181,18 +181,21 @@ tags: "sitemap"
     <!-- ============================================ -->
     <!--               Why Choose Us                  -->
     <!-- ============================================ -->
+    {% set yearsInBusiness = client.foundingYear | yearsAgo %}
     <section class="why-choose" id="why-choose">
         <div class="why-content">
             <div class="why-text">
                 <h2>Why Choose <span class="cs-logo-name">{{ client.name }}</span>?</h2>
                 <ul class="features-list">
+                    {% if yearsInBusiness >= 5 %}
                     <li class="feature-item">
                         <div class="feature-icon">&#10003;</div>
                         <div class="feature-content">
-                            <h4><span id="years-experience">5</span> Years of Excellence</h4>
+                            <h4>{{ yearsInBusiness }} Years of Excellence</h4>
                             <p>Since {{ client.foundingYear }}, we've been {{ location.city }}'s trusted local experts, delivering quality service and exceptional results.</p>
                         </div>
                     </li>
+                    {% endif %}
                     <li class="feature-item">
                         <div class="feature-icon">&#10003;</div>
                         <div class="feature-content">
@@ -217,10 +220,12 @@ tags: "sitemap"
                 </ul>
             </div>
             <div class="stats-grid">
+                {% if yearsInBusiness >= 5 %}
                 <div class="stat-box">
-                    <div class="stat-number" id="years-in-business">5</div>
+                    <div class="stat-number">{{ yearsInBusiness }}</div>
                     <div class="stat-label">Years Local</div>
                 </div>
+                {% endif %}
                 <div class="stat-box">
                     <div class="stat-number">4.9&#9733;</div>
                     <div class="stat-label">Rating</div>

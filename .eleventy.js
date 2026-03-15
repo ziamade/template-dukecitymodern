@@ -115,6 +115,16 @@ module.exports = function (eleventyConfig) {
         return phone;
     });
 
+    /*
+     * Years Ago Filter
+     * Computes how many years ago a given year was. Returns 0 for invalid/missing input.
+     * Usage: {{ client.foundingYear | yearsAgo }}
+     */
+    eleventyConfig.addFilter("yearsAgo", (year) => {
+        const y = parseInt(year, 10);
+        return isNaN(y) ? 0 : new Date().getFullYear() - y;
+    });
+
     // ═════════════════════════════════════════════════════════════════════════
     // SHORTCODES
     // Generate dynamic content with JavaScript
