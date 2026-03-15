@@ -1,0 +1,31 @@
+<!-- ============================================ -->
+<!--                Full Menu                     -->
+<!-- ============================================ -->
+<section class="menu-section" id="menu">
+    <div class="section-header">
+        <div class="section-label">What We Serve</div>
+        <h2 class="section-title">Our Menu</h2>
+    </div>
+    <div class="menu-categories">
+        {% for category in menu.categories %}
+        <div class="menu-category">
+            <h3 class="menu-category-name">{{ category.name }}</h3>
+            <div class="menu-items">
+                {% for item in category.items %}
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <span class="menu-item-name">{{ item.name }}</span>
+                        {% if item.description %}
+                        <span class="menu-item-desc">{{ item.description }}</span>
+                        {% endif %}
+                    </div>
+                    {% if item.price %}
+                    <span class="menu-item-price">{{ item.price }}</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>

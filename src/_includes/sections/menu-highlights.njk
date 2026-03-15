@@ -1,0 +1,27 @@
+<!-- ============================================ -->
+<!--             Signature Dishes                 -->
+<!-- ============================================ -->
+<section class="menu-highlights" id="services">
+    <div class="section-header">
+        <div class="section-label">Our Kitchen</div>
+        <h2 class="section-title">Signature Dishes</h2>
+    </div>
+    <div class="highlights-grid">
+        {% for service in collections.service | sort(false, false, 'data.order') %}
+        {% if loop.index <= 3 %}
+        <div class="highlight-card">
+            {% if service.data.beforeImage and (service.data.beforeImage | isRemoteUrl) %}
+                {% set imgUrl = service.data.beforeImage %}
+            {% else %}
+                {% set imgUrl %}{% getUrl service.data.beforeImage %}{% endset %}
+            {% endif %}
+            <img src="{{ imgUrl | safe }}" alt="{{ service.data.title }}" class="highlight-image" loading="lazy">
+            <div class="highlight-content">
+                <h3>{{ service.data.title }}</h3>
+                <p>{{ service.data.description }}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</section>
