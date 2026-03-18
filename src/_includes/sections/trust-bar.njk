@@ -1,0 +1,16 @@
+<!-- ============================================ -->
+<!--                 Trust Bar                    -->
+<!-- ============================================ -->
+<section class="trust-bar" aria-label="Business credentials">
+    <div class="trust-bar-inner">
+        {% for item in trustbar.items %}
+        <div class="trust-bar-item">
+            <span class="trust-bar-number">{{ item.number }}</span>
+            <span class="trust-bar-label">{{ item.label }}</span>
+        </div>
+        {% if not loop.last %}
+        <div class="trust-bar-divider" aria-hidden="true"></div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</section>

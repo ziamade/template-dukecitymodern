@@ -1,0 +1,26 @@
+<!-- ============================================ -->
+<!--                  About Us                     -->
+<!-- ============================================ -->
+{% if about and about.text %}
+{% set yearsInBusiness = client.foundingYear | yearsAgo %}
+<section class="about-section" id="about">
+    <div class="about-content">
+        <div class="about-text">
+            <h2>About <span class="cs-logo-name">{{ client.name }}</span></h2>
+            <p>{{ about.text | safe }}</p>
+        </div>
+        <div class="about-stats">
+            {% if yearsInBusiness >= 5 %}
+            <div class="stat-box">
+                <div class="stat-number" id="years-in-business">{{ yearsInBusiness }}</div>
+                <div class="stat-label">Years Local</div>
+            </div>
+            {% endif %}
+            <div class="stat-box">
+                <div class="stat-number">Local</div>
+                <div class="stat-label">Owned &amp; Operated</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

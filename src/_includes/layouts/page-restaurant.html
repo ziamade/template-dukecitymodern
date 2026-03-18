@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/css/critical.css"/>
+    {% if client.isProduction %}
+        <link rel="preload" href="/assets/css/local.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/assets/css/local.css"></noscript>
+    {% else %}
+        <link rel="stylesheet" href="/assets/css/local.css"/>
+    {% endif %}
+    <script defer src="/assets/js/script.js"></script>
+{% endblock %}
+
+{% block header %}{% include "sections/header-restaurant.html" %}{% endblock %}
+
+{% block body %}
+    {% set heroCta = { text: "View Our Menu", href: "#menu" } %}
+    {% include "sections/hero.njk" %}
+
+    {% include "sections/trust-bar.njk" %}
+
+    {% set sectionLabel = "Our Kitchen" %}
+    {% set sectionTitle = "What We Serve" %}
+    {% include "sections/service-cards.njk" %}
+
+    {% if menu and menu.categories %}
+    {% include "sections/menu-full.njk" %}
+    {% endif %}
+
+    {% include "sections/testimonials.njk" %}
+
+    {% include "sections/about.njk" %}
+
+    {% include "sections/order-cta.njk" %}
+{% endblock %}

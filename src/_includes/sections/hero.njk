@@ -1,0 +1,20 @@
+<!-- ============================================ -->
+<!--                    Hero                      -->
+<!-- ============================================ -->
+<section class="hero"{% if client.foundingYear %} data-founding="{{ client.foundingYear }}"{% endif %}>
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-h1">{{ hero.heroTagline }}</h1>
+            <p class="hero-subtitle">{{ hero.heroSubtitle }}</p>
+            <div class="hero-cta">
+                <a href="{{ heroCta.href }}" class="btn-primary">{{ heroCta.text }}</a>
+                <a href="{{ location.mapLink }}" target="_blank" rel="noopener" class="location-link">
+                    &#128205; Serving {{ location.city }}, {{ location.state }} &amp; surrounding areas
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{{ hero.heroImage }}" alt="{{ client.name }}" loading="eager" width="800" height="600"{% if hero.fallbackImage %} data-fallback="{{ hero.fallbackImage }}" onerror="this.onerror=null;this.src=this.dataset.fallback;"{% endif %}>
+        </div>
+    </div>
+</section>
