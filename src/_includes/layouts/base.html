@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="/assets/css/hero.css">
   <link rel="stylesheet" href="/assets/css/faq.css">
   <link rel="stylesheet" href="/assets/css/reviews.css">
+  <link rel="stylesheet" href="/assets/css/gallery.css">
   {% block styles %}{% endblock %}
 </head>
 <body data-accent="{{ theme.accentStyle | default("border") }}">
@@ -51,6 +52,7 @@
   <script type="application/json" id="hours-data">{{ hours | json | safe }}</script>
   <script src="/assets/js/header-scroll.js" defer></script>
   <script src="/assets/js/open-now.js" defer></script>
+  {% if gallery and gallery.images %}<script src="/assets/js/gallery-hint.js" defer></script>{% endif %}
   {% block scripts %}{% endblock %}
 </body>
 </html>
