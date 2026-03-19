@@ -1,0 +1,20 @@
+/* About & Map Section */
+.about-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 52rem; margin: 0 auto; }
+@media (min-width: 768px) { .about-grid { grid-template-columns: 3fr 2fr; align-items: start; } }
+.about-text-content { line-height: 1.7; max-width: 65ch; }
+.about-map-link { text-align: center; }
+@media (min-width: 768px) { .about-map-link { text-align: left; } }
+.about-address { margin-top: 1rem; color: var(--silver); font-size: var(--font-size-small); }
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--card-radius);
+  font-weight: 600;
+  min-height: var(--touch-min);
+  transition: background var(--transition-fast);
+}
+.btn-primary:hover { background: var(--accentDark); }

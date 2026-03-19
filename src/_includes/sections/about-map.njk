@@ -1,0 +1,16 @@
+<section class="about-section section" id="about">
+  <div class="container about-grid">
+    {% if about and about.text %}
+      <div class="about-text">
+        <h2>{{ about.heading | default("About") }} {{ client.name }}</h2>
+        <p class="about-text-content">{{ about.text }}</p>
+      </div>
+    {% endif %}
+    <div class="about-map-link">
+      {% if location.mapLink %}
+        <a href="{{ location.mapLink }}" class="btn-primary" target="_blank" rel="noopener">View on Google Maps</a>
+      {% endif %}
+      <p class="about-address">{{ location.address | default("") }}<br>{{ location.city | default("") }}, {{ location.state | default("") }} {{ location.zip | default("") }}</p>
+    </div>
+  </div>
+</section>

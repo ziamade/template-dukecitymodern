@@ -1,0 +1,30 @@
+/* Quote Form Section */
+.form-section { background: var(--gradient-dark); color: var(--bodyTextColorWhite); }
+.quote-form { max-width: 36rem; margin: 0 auto; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.375rem; font-weight: 600; font-size: var(--font-size-small); }
+.form-group input,
+.form-group textarea {
+  width: 100%; padding: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--card-radius);
+  background: rgba(255,255,255,0.1);
+  color: var(--bodyTextColorWhite);
+  font-size: 1rem; font-family: inherit;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+.form-group input:focus,
+.form-group textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.form-group textarea { min-height: 120px; resize: vertical; }
+.form-submit {
+  width: 100%; padding: 0.875rem;
+  background: var(--accent); color: white; border: none;
+  border-radius: var(--card-radius);
+  font-weight: 600; font-size: 1rem; cursor: pointer;
+  min-height: var(--touch-min);
+  transition: background var(--transition-fast);
+}
+.form-submit:hover { background: var(--accentDark); }
+.form-section noscript p { text-align: center; margin-top: 1rem; }
+.form-section noscript a { color: var(--accent); }
