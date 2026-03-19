@@ -1,0 +1,188 @@
+/* =============================================
+   layout.css — Sticky header, action bar, body spacing
+   ============================================= */
+
+/* --- Body spacing for fixed elements --- */
+body {
+  padding-top: 48px;
+  padding-bottom: 72px;
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 56px;
+    padding-bottom: 0;
+  }
+}
+
+/* --- Sticky Header --- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: transparent;
+  transition: background var(--transition-base), box-shadow var(--transition-base);
+}
+
+.site-header.header-solid {
+  background: var(--dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.site-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 48px;
+}
+
+@media (min-width: 768px) {
+  .site-header .container {
+    height: 56px;
+  }
+}
+
+/* --- Site name --- */
+.site-name {
+  color: var(--bodyTextColorWhite);
+  font-weight: 700;
+  font-size: 1.125rem;
+  text-decoration: none;
+}
+
+/* --- Desktop nav --- */
+.nav-links {
+  display: none;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+  }
+}
+
+.nav-links a {
+  color: var(--bodyTextColorWhite);
+  font-size: var(--font-size-small);
+  text-decoration: none;
+}
+
+/* --- CTA button in nav --- */
+.nav-cta {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--card-radius);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* --- Hamburger button --- */
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .hamburger-btn {
+    display: none;
+  }
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--bodyTextColorWhite);
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+/* --- Mobile nav overlay --- */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--dark);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  z-index: 999;
+}
+
+.site-header.nav-open .mobile-nav {
+  display: flex;
+}
+
+.mobile-nav a {
+  color: var(--bodyTextColorWhite);
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+/* --- Hamburger X animation --- */
+.site-header.nav-open .hamburger-btn span:nth-child(1) {
+  transform: rotate(45deg) translateY(7px);
+}
+
+.site-header.nav-open .hamburger-btn span:nth-child(2) {
+  opacity: 0;
+}
+
+.site-header.nav-open .hamburger-btn span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-7px);
+}
+
+/* --- Mobile action bar --- */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: color-mix(in srgb, var(--dark) 95%, transparent);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .action-bar {
+    display: none;
+  }
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--bodyTextColorWhite);
+  text-decoration: none;
+  min-height: var(--touch-min);
+  gap: 0.25rem;
+  font-size: var(--font-size-small);
+}
+
+.action-icon {
+  font-size: 1.25rem;
+}

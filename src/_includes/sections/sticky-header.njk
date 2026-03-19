@@ -1,0 +1,20 @@
+<header class="site-header" id="site-header">
+  <div class="container">
+    <a href="#" class="site-name">{{ client.name }}</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      {% for link in navLinks %}
+        <a href="{{ link.href }}">{{ link.text }}</a>
+      {% endfor %}
+      <a href="{{ ctaHref }}" class="nav-cta">{{ ctaText }}</a>
+    </nav>
+    <button class="hamburger-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    {% for link in navLinks %}
+      <a href="{{ link.href }}">{{ link.text }}</a>
+    {% endfor %}
+    <a href="{{ ctaHref }}" class="nav-cta">{{ ctaText }}</a>
+  </nav>
+</header>

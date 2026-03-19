@@ -1,0 +1,8 @@
+<div class="action-bar" aria-label="Quick actions">
+  {% for action in actionBarLinks %}
+    <a href="{{ action.href }}" class="action-btn">
+      <span class="action-icon">{{ action.icon | safe }}</span>
+      <span class="action-label">{{ action.text }}</span>
+    </a>
+  {% endfor %}
+</div>

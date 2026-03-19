@@ -30,6 +30,7 @@
     }
   </style>
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
   {% block styles %}{% endblock %}
 </head>
 <body data-accent="{{ theme.accentStyle | default("border") }}">
@@ -45,6 +46,7 @@
     <script type="application/ld+json">{{ schema | json | safe }}</script>
   {% endif %}
   <script type="application/json" id="hours-data">{{ hours | json | safe }}</script>
+  <script src="/assets/js/header-scroll.js" defer></script>
   <script src="/assets/js/open-now.js" defer></script>
   {% block scripts %}{% endblock %}
 </body>
