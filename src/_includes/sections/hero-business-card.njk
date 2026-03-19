@@ -1,0 +1,28 @@
+<section class="hero" data-variant="{{ theme.heroVariant | default(1) }}" id="hero">
+  {% if theme.heroVariant == 2 %}
+    <div class="hero-backdrop" {% if hero and hero.heroImage %}style="background-image: url('{{ hero.heroImage }}')"{% endif %}></div>
+  {% endif %}
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <h1 class="hero-tagline">{{ hero.heroTagline | default(client.name) }}</h1>
+      <p class="hero-subtitle">{{ hero.heroSubtitle | default('') }}</p>
+      <div class="open-badge" id="open-badge">
+        <span class="badge-text">Loading hours...</span>
+      </div>
+      {% if location and location.address %}
+        <p class="hero-address">
+          <a href="{{ location.mapLink | default('#') }}">{{ location.address }}, {{ location.city | default('') }}</a>
+        </p>
+      {% endif %}
+      <a href="{{ heroCta.href | default('#') }}" class="btn-primary">{{ heroCta.text | default('Learn More') }}</a>
+    </div>
+    {% if theme.heroVariant != 2 %}
+      <div class="hero-photo">
+        {% if hero and hero.heroImage %}
+          <img src="{{ hero.heroImage }}" alt="{{ client.name }}"
+               {% if hero.fallbackImage %}data-fallback="{{ hero.fallbackImage }}" onerror="this.onerror=null;this.src=this.dataset.fallback;"{% endif %}>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
