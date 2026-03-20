@@ -1,5 +1,8 @@
 {
-  "heroVariant": 1,
+  "sectionOrder": ["hero", "services", "reviews", "faq", "hours", "about", "contact"],
+  "heroVariant": 2,
   "accentStyle": "underline",
-  "faviconShape": "squircle"
+  "faviconShape": "squircle",
+  "industry": "Contractor / Trades",
+  "defaultMode": "light"
 }
