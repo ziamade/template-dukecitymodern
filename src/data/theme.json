@@ -1,8 +1,8 @@
 {
-  "sectionOrder": ["hero", "menu", "reviews", "hours", "about", "contact"],
-  "heroVariant": 2,
+  "sectionOrder": ["hero", "trust", "services", "projects", "process", "reviews", "faq", "contact", "about"],
+  "heroVariant": 1,
   "accentStyle": "border",
-  "faviconShape": "circle",
-  "industry": "Restaurant",
+  "faviconShape": "squircle",
+  "industry": "Contractor / Trades",
   "defaultMode": "light"
 }

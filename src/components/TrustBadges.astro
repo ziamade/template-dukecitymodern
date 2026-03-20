@@ -1,0 +1,56 @@
+---
+// src/components/TrustBadges.astro
+import client from '../data/client.json';
+import testimonials from '../data/testimonials.json';
+
+const currentYear = new Date().getFullYear();
+const foundingYear = parseInt((client as any).foundingYear || '0', 10);
+const yearsInBusiness = foundingYear > 1900 ? currentYear - foundingYear : 0;
+
+const reviews = testimonials?.items || [];
+const reviewCount = reviews.length;
+const avgRating = reviewCount > 0
+  ? (reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) / reviewCount).toFixed(1)
+  : '0';
+const hasRating = reviewCount > 0 && parseFloat(avgRating) > 0;
+
+const license = (client as any).license || '';
+const insured = (client as any).insured === true;
+const serviceArea = (client as any).serviceArea || '';
+
+const hasBadges = yearsInBusiness > 0 || hasRating || license || insured || serviceArea;
+---
+{hasBadges && (
+  <section class="trust-section" id="trust">
+    <div class="container">
+      <div class="trust-badges">
+        {(license || insured) && (
+          <div class="trust-badge">
+            <span class="trust-badge-icon">&#9989;</span>
+            <span class="trust-badge-text">
+              {license ? license : 'Licensed & Insured'}
+            </span>
+          </div>
+        )}
+        {yearsInBusiness > 0 && (
+          <div class="trust-badge">
+            <span class="trust-badge-icon">&#9201;</span>
+            <span class="trust-badge-text">Est. {foundingYear}</span>
+          </div>
+        )}
+        {hasRating && (
+          <a href="#reviews" class="trust-badge trust-badge--link">
+            <span class="trust-badge-icon">&#9733;</span>
+            <span class="trust-badge-text">{avgRating} ({reviewCount} reviews)</span>
+          </a>
+        )}
+        {serviceArea && (
+          <div class="trust-badge">
+            <span class="trust-badge-icon">&#9906;</span>
+            <span class="trust-badge-text">{serviceArea}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}

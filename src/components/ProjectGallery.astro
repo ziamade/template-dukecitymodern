@@ -1,0 +1,61 @@
+---
+// src/components/ProjectGallery.astro
+import projects from '../data/projects.json';
+
+const items = (projects?.projects || []).filter(
+  (p: any) => p.before && p.after
+);
+const hasProjects = items.length > 0;
+---
+{hasProjects && (
+  <section class="projects-section section" id="projects">
+    <div class="container">
+      <h2 class="section-heading">Our Work</h2>
+      <div class="projects-grid">
+        {items.map((project: any, i: number) => (
+          <div class="project-card">
+            <div class="project-slider" data-index={i}>
+              <div class="project-slider-wrap">
+                <img
+                  src={project.after}
+                  alt={`${project.title} - after`}
+                  class="project-img project-img--after"
+                  loading="lazy"
+                  width="600"
+                  height="400"
+                />
+                <img
+                  src={project.before}
+                  alt={`${project.title} - before`}
+                  class="project-img project-img--before"
+                  loading="lazy"
+                  width="600"
+                  height="400"
+                />
+                <div class="project-slider-handle" aria-label="Drag to compare before and after" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+                  <div class="project-slider-line"></div>
+                  <div class="project-slider-knob">
+                    <span class="project-slider-arrows">&lsaquo; &rsaquo;</span>
+                  </div>
+                </div>
+              </div>
+              <div class="project-slider-labels">
+                <span class="project-label project-label--before">Before</span>
+                <span class="project-label project-label--after">After</span>
+              </div>
+            </div>
+            <div class="project-info">
+              <h3 class="project-title">{project.title}</h3>
+              {project.service && (
+                <span class="project-service-tag">{project.service}</span>
+              )}
+              {project.description && (
+                <p class="project-desc">{project.description}</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

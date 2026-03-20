@@ -5,6 +5,9 @@ import StickyHeader from '../components/StickyHeader.astro';
 import Hero from '../components/Hero.astro';
 import ServiceCards from '../components/ServiceCards.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
+import ProjectGallery from '../components/ProjectGallery.astro';
+import TrustBadges from '../components/TrustBadges.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
 import MenuSection from '../components/MenuSection.astro';
 import Reviews from '../components/Reviews.astro';
 import FAQ from '../components/FAQ.astro';
@@ -28,7 +31,10 @@ const hasReviews = testimonials?.items?.length > 0;
 // Section component map
 const sectionMap: Record<string, any> = {
   hero: Hero,
+  trust: TrustBadges,
   services: ServiceCards,
+  projects: ProjectGallery,
+  process: ProcessSteps,
   gallery: PhotoGallery,
   menu: MenuSection,
   reviews: Reviews,
@@ -41,7 +47,7 @@ const sectionMap: Record<string, any> = {
 // Use theme.json sectionOrder or fall back to defaults
 const defaultOrder = isRestaurant
   ? ['hero', 'menu', 'gallery', 'reviews', 'hours', 'about', 'contact']
-  : ['hero', 'services', 'reviews', 'faq', 'contact', 'about'];
+  : ['hero', 'trust', 'services', 'projects', 'process', 'reviews', 'faq', 'contact', 'about'];
 
 const sectionOrder: string[] = (theme as any).sectionOrder?.length > 0
   ? (theme as any).sectionOrder
@@ -49,8 +55,11 @@ const sectionOrder: string[] = (theme as any).sectionOrder?.length > 0
 
 // Build nav links from section order
 const sectionLabels: Record<string, string> = {
-  hero: '', // not in nav
+  hero: '',       // not in nav
+  trust: '',      // not in nav
   services: 'Services',
+  projects: 'Our Work',
+  process: '',    // not in nav
   gallery: 'Photos',
   menu: 'Menu',
   reviews: 'Reviews',

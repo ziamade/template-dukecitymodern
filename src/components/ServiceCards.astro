@@ -11,7 +11,7 @@ const services = Object.values(serviceFiles)
       <h2 class="section-heading">Our Services</h2>
       <div class="services-grid">
         {services.map((svc: any) => (
-          <a href="#quote-form" class="service-card">
+          <a href="#contact" class="service-card">
             {svc.beforeImage && (
               <img
                 src={svc.beforeImage}
@@ -24,6 +24,9 @@ const services = Object.values(serviceFiles)
             <div class="service-card-body">
               <h3>{svc.title}</h3>
               <p>{svc.description}</p>
+              {svc.startingPrice && (
+                <span class="service-card-price">Starting at {svc.startingPrice}</span>
+              )}
             </div>
           </a>
         ))}
