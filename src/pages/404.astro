@@ -1,0 +1,12 @@
+---
+// src/pages/404.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import client from '../data/client.json';
+---
+<BaseLayout>
+  <div style="text-align:center; padding:4rem 1rem;">
+    <h1>Page Not Found</h1>
+    <p>The page you're looking for doesn't exist.</p>
+    <a href="/" class="btn-primary">Back to {client.name}</a>
+  </div>
+</BaseLayout>
