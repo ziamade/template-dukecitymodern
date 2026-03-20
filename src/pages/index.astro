@@ -11,57 +11,82 @@ import FAQ from '../components/FAQ.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import OrderVisit from '../components/OrderVisit.astro';
 import AboutMap from '../components/AboutMap.astro';
+import HoursDisplay from '../components/HoursDisplay.astro';
 import Footer from '../components/Footer.astro';
 import StickyActionBar from '../components/StickyActionBar.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 import client from '../data/client.json';
 import contact from '../data/contact.json';
 import location from '../data/location.json';
 import testimonials from '../data/testimonials.json';
+import theme from '../data/theme.json';
 
 const isRestaurant = (client.industry || '').toLowerCase().includes('restaurant');
+const hasReviews = testimonials?.items?.length > 0;
 
-const navLinks = isRestaurant
-  ? [
-      { href: '#gallery', text: 'Photos' },
-      { href: '#menu', text: 'Menu' },
-      ...(testimonials?.items?.length > 0 ? [{ href: '#reviews', text: 'Reviews' }] : []),
-      { href: '#faq', text: 'FAQ' },
-      { href: '#order', text: 'Order' },
-    ]
-  : [
-      { href: '#services', text: 'Services' },
-      ...(testimonials?.items?.length > 0 ? [{ href: '#reviews', text: 'Reviews' }] : []),
-      { href: '#faq', text: 'FAQ' },
-      { href: '#quote-form', text: 'Contact' },
-    ];
+// Section component map
+const sectionMap: Record<string, any> = {
+  hero: Hero,
+  services: ServiceCards,
+  gallery: PhotoGallery,
+  menu: MenuSection,
+  reviews: Reviews,
+  faq: FAQ,
+  contact: isRestaurant ? OrderVisit : QuoteForm,
+  about: AboutMap,
+  hours: HoursDisplay,
+};
+
+// Use theme.json sectionOrder or fall back to defaults
+const defaultOrder = isRestaurant
+  ? ['hero', 'menu', 'gallery', 'reviews', 'hours', 'about', 'contact']
+  : ['hero', 'services', 'reviews', 'faq', 'contact', 'about'];
+
+const sectionOrder: string[] = (theme as any).sectionOrder?.length > 0
+  ? (theme as any).sectionOrder
+  : defaultOrder;
+
+// Build nav links from section order
+const sectionLabels: Record<string, string> = {
+  hero: '', // not in nav
+  services: 'Services',
+  gallery: 'Photos',
+  menu: 'Menu',
+  reviews: 'Reviews',
+  faq: 'FAQ',
+  contact: isRestaurant ? 'Order' : 'Contact',
+  about: 'About',
+  hours: 'Hours',
+};
+
+const navLinks = sectionOrder
+  .filter(s => sectionLabels[s] && s !== 'hero')
+  .filter(s => s !== 'reviews' || hasReviews)
+  .map(s => ({ href: `#${s}`, text: sectionLabels[s] }));
 
 const ctaText = isRestaurant ? 'Order Now' : 'Get Quote';
-const ctaHref = isRestaurant ? '#order' : '#quote-form';
+const ctaHref = isRestaurant ? '#contact' : '#contact';
 const heroCta = isRestaurant
   ? { text: 'View Our Menu', href: '#menu' }
-  : { text: 'Get Your Free Quote', href: '#quote-form' };
-const actionBarLinks = isRestaurant
-  ? [
-      { href: `tel:${contact.phoneForTel || ''}`, icon: '&#9742;', text: 'Call' },
-      { href: location.mapLink || '#', icon: '&#9906;', text: 'Directions' },
-      { href: '#order', icon: '&#9733;', text: 'Order' },
-    ]
-  : [
-      { href: `tel:${contact.phoneForTel || ''}`, icon: '&#9742;', text: 'Call' },
-      { href: location.mapLink || '#', icon: '&#9906;', text: 'Directions' },
-      { href: '#quote-form', icon: '&#9993;', text: 'Quote' },
-    ];
+  : { text: 'Get Your Free Quote', href: '#contact' };
+const actionBarLinks = [
+  { href: `tel:${contact.phoneForTel || ''}`, icon: '&#9742;', text: 'Call' },
+  { href: location.mapLink || '#', icon: '&#9906;', text: 'Directions' },
+  { href: '#contact', icon: isRestaurant ? '&#9733;' : '&#9993;', text: isRestaurant ? 'Order' : 'Quote' },
+];
 ---
 <BaseLayout>
   <StickyHeader navLinks={navLinks} ctaText={ctaText} ctaHref={ctaHref} />
-  <Hero heroCta={heroCta} />
-  {isRestaurant ? <PhotoGallery /> : <ServiceCards />}
-  {isRestaurant && <MenuSection />}
-  <Reviews />
-  <FAQ />
-  {isRestaurant ? <OrderVisit /> : <QuoteForm />}
-  <AboutMap />
+
+  {sectionOrder.map((sectionName) => {
+    const Component = sectionMap[sectionName];
+    if (!Component) return null;
+    if (sectionName === 'reviews' && !hasReviews) return null;
+    if (sectionName === 'hero') return <Component heroCta={heroCta} />;
+    return <Component />;
+  })}
+
   <Footer />
   <StickyActionBar links={actionBarLinks} />
 </BaseLayout>
