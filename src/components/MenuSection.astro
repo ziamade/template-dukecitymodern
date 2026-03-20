@@ -1,41 +1,66 @@
 ---
-// src/components/MenuSection.astro
-import client from '../data/client.json';
 import menu from '../data/menu.json';
+import client from '../data/client.json';
 
 const categories = menu?.categories || [];
-const delivery = client.delivery || {};
+const hasMenu = categories.length > 0 && categories.some((c: any) => c.items?.length > 0);
+const orderUrl = (client as Record<string, any>)?.orderUrl || '';
 ---
-{categories.length > 0 && (
+{hasMenu && (
   <section class="menu-section section" id="menu">
     <div class="container">
-      <h2 class="section-heading">Our Menu</h2>
-      {categories.length > 1 && (
-        <nav class="menu-cat-nav" aria-label="Menu categories">
-          {categories.map((cat: any, i: number) => (
-            <a href={`#menu-${i + 1}`} class="menu-cat-link">{cat.name}</a>
-          ))}
-        </nav>
-      )}
+      <h2 class="section-heading">Menu</h2>
+
+      <nav class="menu-nav" aria-label="Menu categories">
+        {categories.map((cat: any, i: number) => (
+          <a href={`#menu-cat-${i}`} class="menu-pill" data-cat-index={i}>
+            {cat.name}
+          </a>
+        ))}
+      </nav>
+
       {categories.map((cat: any, i: number) => (
-        <div class="menu-category" id={`menu-${i + 1}`}>
-          <h3>{cat.name}</h3>
-          {cat.items.map((item: any) => (
-            <div class="menu-item">
-              <div>
-                <span class="menu-item-name">{item.name}</span>
-                {item.description && <span class="menu-item-desc">{item.description}</span>}
+        <div class="menu-category" id={`menu-cat-${i}`}>
+          <h3 class="menu-category-name">{cat.name}</h3>
+          <div class="menu-items">
+            {cat.items.map((item: any) => (
+              <div class={`menu-item ${item.featured ? 'menu-item--featured' : ''}`}>
+                {item.featured && item.photo && (
+                  <img
+                    src={item.photo}
+                    alt={item.name}
+                    class="menu-item-photo"
+                    loading="lazy"
+                    width="280"
+                    height="200"
+                  />
+                )}
+                <div class="menu-item-content">
+                  <div class="menu-item-header">
+                    <span class="menu-item-name">{item.name}</span>
+                    {item.price && item.price !== 'Ask' && (
+                      <span class="menu-item-price">{item.price}</span>
+                    )}
+                    {item.price === 'Ask' && (
+                      <span class="menu-item-price menu-item-price--ask">Ask</span>
+                    )}
+                  </div>
+                  {item.description && (
+                    <p class="menu-item-desc">{item.description}</p>
+                  )}
+                </div>
               </div>
-              {item.price && <span class="menu-item-price">{item.price}</span>}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ))}
-      {(delivery.doordash || delivery.ubereats || delivery.grubhub) && (
-        <div class="delivery-buttons">
-          {delivery.doordash && <a href={delivery.doordash} class="delivery-btn doordash" target="_blank" rel="noopener">DoorDash</a>}
-          {delivery.ubereats && <a href={delivery.ubereats} class="delivery-btn ubereats" target="_blank" rel="noopener">Uber Eats</a>}
-          {delivery.grubhub && <a href={delivery.grubhub} class="delivery-btn grubhub" target="_blank" rel="noopener">Grubhub</a>}
+
+      {orderUrl && (
+        <div class="menu-order-cta">
+          <a href={orderUrl} class="btn-primary" target="_blank" rel="noopener">
+            Order Online
+          </a>
+          <p class="menu-order-note">Full menu and online ordering available</p>
         </div>
       )}
     </div>
