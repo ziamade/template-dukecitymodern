@@ -249,6 +249,40 @@ content:
           - { name: number, label: "Number/Value", type: string }
           - { name: label, label: Label, type: string }
 
+  # ── Projects (Before/After) ──────────────────────────────────────────────
+  - name: projects
+    label: "Projects (Before/After)"
+    type: file
+    path: src/data/projects.json
+    format: json
+    fields:
+      - name: projects
+        label: Projects
+        type: list
+        fields:
+          - name: title
+            label: Project Title
+            type: string
+            description: "Short project name. Example: Residential Pipe Fence"
+          - name: description
+            label: Description
+            type: text
+            required: false
+            description: "Brief context: scope, location, timeline. Example: 40-foot fence, Northeast Heights"
+          - name: before
+            label: Before Photo
+            type: image
+            description: "Photo showing the state before work started."
+          - name: after
+            label: After Photo
+            type: image
+            description: "Photo showing the completed work."
+          - name: service
+            label: Service Category
+            type: string
+            required: false
+            description: "Which service this project belongs to. Shown as a tag on the card."
+
   # ── Services ───────────────────────────────────────────────────────────────
   - name: services
     label: "Services (max 6)"
@@ -277,6 +311,11 @@ content:
       - name: beforeImage
         label: Before Image
         type: image
+      - name: startingPrice
+        label: Starting Price (optional)
+        type: string
+        required: false
+        description: "Displayed as 'Starting at $X'. Include the dollar sign. Example: $150"
       - name: afterImage
         label: After Image (optional)
         type: image
