@@ -1,0 +1,32 @@
+---
+// src/components/StickyHeader.astro
+import client from '../data/client.json';
+
+interface Props {
+  navLinks: Array<{ href: string; text: string }>;
+  ctaText: string;
+  ctaHref: string;
+}
+
+const { navLinks, ctaText, ctaHref } = Astro.props;
+---
+<header class="site-header" id="site-header">
+  <div class="container">
+    <a href="#" class="site-name">{client.name}</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      {navLinks.map(link => (
+        <a href={link.href}>{link.text}</a>
+      ))}
+      <a href={ctaHref} class="nav-cta">{ctaText}</a>
+    </nav>
+    <button class="hamburger-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    {navLinks.map(link => (
+      <a href={link.href}>{link.text}</a>
+    ))}
+    <a href={ctaHref} class="nav-cta">{ctaText}</a>
+  </nav>
+</header>

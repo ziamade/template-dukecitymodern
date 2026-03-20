@@ -1,0 +1,48 @@
+---
+// src/components/Hero.astro
+import client from '../data/client.json';
+import hero from '../data/hero.json';
+import location from '../data/location.json';
+import theme from '../data/theme.json';
+
+interface Props {
+  heroCta: { text: string; href: string };
+}
+
+const { heroCta } = Astro.props;
+const variant = theme.heroVariant || 1;
+---
+<section class="hero" data-variant={variant} id="hero">
+  {variant === 2 && (
+    <div class="hero-backdrop" style={hero?.heroImage ? `background-image: url('${hero.heroImage}')` : ''}></div>
+  )}
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <h1 class="hero-tagline">{hero?.heroTagline || client.name}</h1>
+      <p class="hero-subtitle">{hero?.heroSubtitle || ''}</p>
+      <div class="open-badge" id="open-badge">
+        <span class="badge-text">Loading hours...</span>
+      </div>
+      {location?.address && (
+        <p class="hero-address">
+          <a href={location.mapLink || '#'}>
+            {'\u{1F4CD} ' + location.address + ', ' + (location.city || '')}{location.state ? ` ${location.state}` : ''}{location.zip ? ` ${location.zip}` : ''}
+          </a>
+        </p>
+      )}
+      <a href={heroCta.href || '#'} class="btn-primary">{heroCta.text || 'Learn More'}</a>
+    </div>
+    {variant !== 2 && (
+      <div class="hero-photo">
+        {hero?.heroImage && (
+          <img
+            src={hero.heroImage}
+            alt={client.name}
+            data-fallback={hero.fallbackImage || ''}
+            onerror="this.onerror=null;this.src=this.dataset.fallback;"
+          />
+        )}
+      </div>
+    )}
+  </div>
+</section>

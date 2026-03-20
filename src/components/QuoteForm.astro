@@ -1,0 +1,40 @@
+---
+// src/components/QuoteForm.astro
+import client from '../data/client.json';
+import contact from '../data/contact.json';
+import { formatPhone } from '../lib/utils';
+---
+<section class="form-section section" id="quote-form">
+  <div class="container">
+    <h2 class="section-heading">Get Your Free Quote</h2>
+    <form class="quote-form" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="">
+      <input type="hidden" name="subject" value={`Quote request from ${client.name} website`}>
+      <input type="hidden" name="from_name" value={client.name}>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone">
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" required></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Quote Request</button>
+    </form>
+    <noscript>
+      <p>
+        {contact.phoneForTel && (
+          <>Call us directly: <a href={`tel:${contact.phoneForTel}`}>{formatPhone(contact.phoneForTel)}</a></>
+        )}
+      </p>
+    </noscript>
+  </div>
+</section>

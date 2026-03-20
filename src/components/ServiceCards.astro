@@ -1,0 +1,33 @@
+---
+// src/components/ServiceCards.astro
+const serviceFiles = import.meta.glob('../content/services/*.md', { eager: true });
+const services = Object.values(serviceFiles)
+  .map((mod: any) => mod.frontmatter)
+  .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+---
+{services.length > 0 && (
+  <section class="services-section section" id="services">
+    <div class="container">
+      <h2 class="section-heading">Our Services</h2>
+      <div class="services-grid">
+        {services.map((svc: any) => (
+          <a href="#quote-form" class="service-card">
+            {svc.beforeImage && (
+              <img
+                src={svc.beforeImage}
+                alt={svc.title}
+                loading="lazy"
+                data-fallback={svc.fallbackImage || ''}
+                onerror="this.onerror=null;this.src=this.dataset.fallback;"
+              />
+            )}
+            <div class="service-card-body">
+              <h3>{svc.title}</h3>
+              <p>{svc.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
