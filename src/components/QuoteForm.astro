@@ -1,10 +1,16 @@
+---
+// src/components/QuoteForm.astro
+import client from '../data/client.json';
+import contact from '../data/contact.json';
+import { formatPhone } from '../lib/utils';
+---
 <section class="form-section section" id="quote-form">
   <div class="container">
     <h2 class="section-heading">Get Your Free Quote</h2>
     <form class="quote-form" action="https://api.web3forms.com/submit" method="POST">
       <input type="hidden" name="access_key" value="">
-      <input type="hidden" name="subject" value="Quote request from {{ client.name }} website">
-      <input type="hidden" name="from_name" value="{{ client.name }}">
+      <input type="hidden" name="subject" value={`Quote request from ${client.name} website`}>
+      <input type="hidden" name="from_name" value={client.name}>
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required>
@@ -25,7 +31,9 @@
     </form>
     <noscript>
       <p>
-        {% if contact.phoneForTel %}Call us directly: <a href="tel:{{ contact.phoneForTel }}">{{ contact.phoneForTel | formatPhone }}</a>{% endif %}
+        {contact.phoneForTel && (
+          <>Call us directly: <a href={`tel:${contact.phoneForTel}`}>{formatPhone(contact.phoneForTel)}</a></>
+        )}
       </p>
     </noscript>
   </div>

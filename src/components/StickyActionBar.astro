@@ -1,0 +1,16 @@
+---
+// src/components/StickyActionBar.astro
+interface Props {
+  links: Array<{ href: string; icon: string; text: string }>;
+}
+
+const { links } = Astro.props;
+---
+<div class="action-bar" aria-label="Quick actions">
+  {links.map(action => (
+    <a href={action.href} class="action-btn">
+      <span class="action-icon" set:html={action.icon}></span>
+      <span class="action-label">{action.text}</span>
+    </a>
+  ))}
+</div>

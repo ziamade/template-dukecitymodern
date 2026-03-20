@@ -1,0 +1,67 @@
+---
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StickyHeader from '../components/StickyHeader.astro';
+import Hero from '../components/Hero.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
+import MenuSection from '../components/MenuSection.astro';
+import Reviews from '../components/Reviews.astro';
+import FAQ from '../components/FAQ.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import OrderVisit from '../components/OrderVisit.astro';
+import AboutMap from '../components/AboutMap.astro';
+import Footer from '../components/Footer.astro';
+import StickyActionBar from '../components/StickyActionBar.astro';
+
+import client from '../data/client.json';
+import contact from '../data/contact.json';
+import location from '../data/location.json';
+import testimonials from '../data/testimonials.json';
+
+const isRestaurant = (client.industry || '').toLowerCase().includes('restaurant');
+
+const navLinks = isRestaurant
+  ? [
+      { href: '#gallery', text: 'Photos' },
+      { href: '#menu', text: 'Menu' },
+      ...(testimonials?.items?.length > 0 ? [{ href: '#reviews', text: 'Reviews' }] : []),
+      { href: '#faq', text: 'FAQ' },
+      { href: '#order', text: 'Order' },
+    ]
+  : [
+      { href: '#services', text: 'Services' },
+      ...(testimonials?.items?.length > 0 ? [{ href: '#reviews', text: 'Reviews' }] : []),
+      { href: '#faq', text: 'FAQ' },
+      { href: '#quote-form', text: 'Contact' },
+    ];
+
+const ctaText = isRestaurant ? 'Order Now' : 'Get Quote';
+const ctaHref = isRestaurant ? '#order' : '#quote-form';
+const heroCta = isRestaurant
+  ? { text: 'View Our Menu', href: '#menu' }
+  : { text: 'Get Your Free Quote', href: '#quote-form' };
+const actionBarLinks = isRestaurant
+  ? [
+      { href: `tel:${contact.phoneForTel || ''}`, icon: '&#9742;', text: 'Call' },
+      { href: location.mapLink || '#', icon: '&#9906;', text: 'Directions' },
+      { href: '#order', icon: '&#9733;', text: 'Order' },
+    ]
+  : [
+      { href: `tel:${contact.phoneForTel || ''}`, icon: '&#9742;', text: 'Call' },
+      { href: location.mapLink || '#', icon: '&#9906;', text: 'Directions' },
+      { href: '#quote-form', icon: '&#9993;', text: 'Quote' },
+    ];
+---
+<BaseLayout>
+  <StickyHeader navLinks={navLinks} ctaText={ctaText} ctaHref={ctaHref} />
+  <Hero heroCta={heroCta} />
+  {isRestaurant ? <PhotoGallery /> : <ServiceCards />}
+  {isRestaurant && <MenuSection />}
+  <Reviews />
+  <FAQ />
+  {isRestaurant ? <OrderVisit /> : <QuoteForm />}
+  <AboutMap />
+  <Footer />
+  <StickyActionBar links={actionBarLinks} />
+</BaseLayout>

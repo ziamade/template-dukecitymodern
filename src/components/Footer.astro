@@ -1,0 +1,30 @@
+---
+// src/components/Footer.astro
+import client from '../data/client.json';
+import location from '../data/location.json';
+import contact from '../data/contact.json';
+import { formatPhone } from '../lib/utils';
+
+const addressLine = location.address + ", " + location.city + " " + location.state + " " + location.zip;
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div>
+        <div class="footer-name">{client.name}</div>
+        <div class="footer-details">
+          {location.address && <>{addressLine}<br /></>}
+          {contact.phoneForTel && <a href={`tel:${contact.phoneForTel}`}>{formatPhone(contact.phoneForTel)}</a>}
+        </div>
+      </div>
+      <div class="footer-socials">
+        {client.socials?.facebook && <a href={client.socials.facebook} target="_blank" rel="noopener" aria-label="Facebook">FB</a>}
+        {client.socials?.instagram && <a href={client.socials.instagram} target="_blank" rel="noopener" aria-label="Instagram">IG</a>}
+        {client.socials?.yelp && <a href={client.socials.yelp} target="_blank" rel="noopener" aria-label="Yelp">Yelp</a>}
+        {client.socials?.google && <a href={client.socials.google} target="_blank" rel="noopener" aria-label="Google">G</a>}
+      </div>
+    </div>
+    <div class="footer-copy">&copy; {new Date().getFullYear()} {client.name}. All rights reserved.</div>
+    <div class="footer-powered">Powered by <a href="https://ziamade.com" target="_blank" rel="noopener">ZiaMade</a></div>
+  </div>
+</footer>

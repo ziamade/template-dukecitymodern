@@ -1,0 +1,19 @@
+---
+// src/components/PhotoGallery.astro
+import gallery from '../data/gallery.json';
+---
+{gallery?.images?.length > 0 && (
+  <section class="gallery-section" id="gallery">
+    <div class="gallery-scroll">
+      {gallery.images.map((img: any) => (
+        <img
+          src={img.url}
+          alt={img.alt}
+          loading="lazy"
+          data-fallback={img.fallbackUrl}
+          onerror="this.onerror=null;this.src=this.dataset.fallback;"
+        />
+      ))}
+    </div>
+  </section>
+)}

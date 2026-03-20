@@ -1,0 +1,43 @@
+---
+// src/components/MenuSection.astro
+import client from '../data/client.json';
+import menu from '../data/menu.json';
+
+const categories = menu?.categories || [];
+const delivery = client.delivery || {};
+---
+{categories.length > 0 && (
+  <section class="menu-section section" id="menu">
+    <div class="container">
+      <h2 class="section-heading">Our Menu</h2>
+      {categories.length > 1 && (
+        <nav class="menu-cat-nav" aria-label="Menu categories">
+          {categories.map((cat: any, i: number) => (
+            <a href={`#menu-${i + 1}`} class="menu-cat-link">{cat.name}</a>
+          ))}
+        </nav>
+      )}
+      {categories.map((cat: any, i: number) => (
+        <div class="menu-category" id={`menu-${i + 1}`}>
+          <h3>{cat.name}</h3>
+          {cat.items.map((item: any) => (
+            <div class="menu-item">
+              <div>
+                <span class="menu-item-name">{item.name}</span>
+                {item.description && <span class="menu-item-desc">{item.description}</span>}
+              </div>
+              {item.price && <span class="menu-item-price">{item.price}</span>}
+            </div>
+          ))}
+        </div>
+      ))}
+      {(delivery.doordash || delivery.ubereats || delivery.grubhub) && (
+        <div class="delivery-buttons">
+          {delivery.doordash && <a href={delivery.doordash} class="delivery-btn doordash" target="_blank" rel="noopener">DoorDash</a>}
+          {delivery.ubereats && <a href={delivery.ubereats} class="delivery-btn ubereats" target="_blank" rel="noopener">Uber Eats</a>}
+          {delivery.grubhub && <a href={delivery.grubhub} class="delivery-btn grubhub" target="_blank" rel="noopener">Grubhub</a>}
+        </div>
+      )}
+    </div>
+  </section>
+)}

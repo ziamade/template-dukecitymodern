@@ -1,0 +1,32 @@
+---
+// src/components/FAQ.astro
+import faq from '../data/faq.json';
+
+const items = faq?.items || [];
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((item: any) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+---
+{items.length > 0 && (
+  <section class="faq-section section" id="faq">
+    <div class="container">
+      <h2 class="section-heading">Frequently Asked Questions</h2>
+      {items.map((item: any, i: number) => (
+        <details class="faq-item" open={i === 0}>
+          <summary class="faq-question">{item.question}</summary>
+          <p class="faq-answer">{item.answer}</p>
+        </details>
+      ))}
+    </div>
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+  </section>
+)}

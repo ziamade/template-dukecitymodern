@@ -1,0 +1,51 @@
+---
+// src/components/Reviews.astro
+import testimonials from '../data/testimonials.json';
+import client from '../data/client.json';
+
+const items = testimonials?.items || [];
+---
+{items.length > 0 && (
+  <section class="reviews-section section" id="reviews">
+    <div class="container">
+      <h2 class="section-heading">What Our Customers Say</h2>
+      <div class="reviews-scroll" style={`--review-count: ${items.length}`}>
+        {/* Original cards */}
+        {items.map((t: any) => (
+          <div class="review-card">
+            <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
+            <details class="review-text-wrap">
+              <summary class="review-text">{t.text}</summary>
+              <p>{t.text}</p>
+            </details>
+            <div class="review-footer">
+              <span class="review-avatar">{t.initials}</span>
+              <span class="review-author">{t.author}</span>
+              <span class="review-badge">{t.source} Review</span>
+            </div>
+          </div>
+        ))}
+        {/* Duplicated cards for infinite scroll */}
+        {items.map((t: any) => (
+          <div class="review-card" aria-hidden="true">
+            <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
+            <details class="review-text-wrap">
+              <summary class="review-text">{t.text}</summary>
+              <p>{t.text}</p>
+            </details>
+            <div class="review-footer">
+              <span class="review-avatar">{t.initials}</span>
+              <span class="review-author">{t.author}</span>
+              <span class="review-badge">{t.source} Review</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {client.socials?.google && (
+        <a href={client.socials.google} class="reviews-link" target="_blank" rel="noopener">
+          See all reviews on Google &rarr;
+        </a>
+      )}
+    </div>
+  </section>
+)}

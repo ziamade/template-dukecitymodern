@@ -1,0 +1,77 @@
+---
+// src/layouts/BaseLayout.astro
+import brand from '../data/brand.json';
+import seo from '../data/seo.json';
+import client from '../data/client.json';
+import theme from '../data/theme.json';
+import alert from '../data/alert.json';
+import schema from '../data/schema.json';
+import hours from '../data/hours.json';
+import gallery from '../data/gallery.json';
+import '../styles/base.css';
+import '../styles/layout.css';
+import '../styles/hero.css';
+import '../styles/faq.css';
+import '../styles/reviews.css';
+import '../styles/gallery.css';
+import '../styles/menu.css';
+import '../styles/services.css';
+import '../styles/form.css';
+import '../styles/about.css';
+import '../styles/footer.css';
+import '../styles/accents.css';
+
+const cssVars = `:root {
+  --primary: ${brand.primary || "#2d3436"};
+  --primaryLight: ${brand.primaryLight || "#575b5d"};
+  --secondary: ${brand.secondary || "#f5a87a"};
+  --secondaryLight: ${brand.secondaryLight || "#f9c9a8"};
+  --accent: ${brand.accent || "#e07c3e"};
+  --headerColor: ${brand.headerColor || "#1a1e1f"};
+  --bodyTextColor: ${brand.bodyTextColor || "#3a3a3a"};
+  --bodyTextColorWhite: ${brand.bodyTextColorWhite || "#f8f6f6"};
+  --offWhite: ${brand.offWhite || "#f8f6f6"};
+  --cream: ${brand.cream || "#f0eae0"};
+  --dark: ${brand.dark || "#111314"};
+  --medium: ${brand.medium || "#1f2324"};
+  --accentDark: ${brand.accentDark || "#b46332"};
+  --silver: ${brand.silver || "#a89f95"};
+  --gradient-dark: linear-gradient(135deg, ${brand.dark || "#111314"} 0%, ${brand.medium || "#1f2324"} 100%);
+}`;
+
+const schemaJson = JSON.stringify(schema);
+const hoursJson = JSON.stringify(hours);
+const hasGallery = gallery?.images?.length > 0;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{seo.pageTitle || client.name}</title>
+  <meta name="description" content={seo.metaDescription || ""}>
+  <meta property="og:title" content={seo.ogTitle || client.name}>
+  <meta property="og:description" content={seo.ogDescription || ""}>
+  {seo.ogImage && <meta property="og:image" content={seo.ogImage} />}
+  {seo.canonicalUrl && <link rel="canonical" href={seo.canonicalUrl} />}
+  <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml">
+  <style set:html={cssVars}></style>
+</head>
+<body data-accent={theme.accentStyle || "border"}>
+  {alert && alert.enabled && alert.text && (
+    <div class="alert-banner">{alert.text}</div>
+  )}
+
+  <slot />
+
+  {schema && (
+    <script type="application/ld+json" set:html={schemaJson}></script>
+  )}
+  <script type="application/json" id="hours-data" set:html={hoursJson}></script>
+  <script is:inline src="/scripts/header-scroll.js"></script>
+  <script is:inline src="/scripts/open-now.js"></script>
+  {hasGallery && (
+    <script is:inline src="/scripts/gallery-hint.js"></script>
+  )}
+</body>
+</html>

@@ -3,5 +3,6 @@
 .claude
 .playwright-mcp
 node_modules
-public
+dist
+.astro
 _site

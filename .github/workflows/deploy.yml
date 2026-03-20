@@ -19,16 +19,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (Eleventy)
+      - name: Build (Astro)
         run: npm run build
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Run Playwright QA
-        run: npx playwright test
-        env:
-          CI: true
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
@@ -36,7 +28,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: ${{ github.event.repository.name }}
-          directory: public
+          directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify on failure

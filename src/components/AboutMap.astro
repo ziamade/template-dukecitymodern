@@ -1,0 +1,22 @@
+---
+// src/components/AboutMap.astro
+import client from '../data/client.json';
+import location from '../data/location.json';
+import about from '../data/about.json';
+---
+<section class="about-section section" id="about">
+  <div class="container about-grid">
+    {about?.text && (
+      <div class="about-text">
+        <h2>{about.heading || 'About'} {client.name}</h2>
+        <p class="about-text-content">{about.text}</p>
+      </div>
+    )}
+    <div class="about-map-link">
+      {location.mapLink && (
+        <a href={location.mapLink} class="btn-primary" target="_blank" rel="noopener">View on Google Maps</a>
+      )}
+      <p class="about-address">{location.address || ''}<br />{location.city || ''}, {location.state || ''} {location.zip || ''}</p>
+    </div>
+  </div>
+</section>

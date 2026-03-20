@@ -1,0 +1,47 @@
+---
+// src/components/OrderVisit.astro
+import client from '../data/client.json';
+import hours from '../data/hours.json';
+import contact from '../data/contact.json';
+import location from '../data/location.json';
+import { formatPhone } from '../lib/utils';
+
+const delivery = client.delivery || {};
+const days = hours?.days || [];
+const addressLine = `${location.address}, ${location.city} ${location.state} ${location.zip}`;
+---
+<section class="order-section section" id="order">
+  <div class="container">
+    <h2 class="section-heading">Order &amp; Visit</h2>
+    {(delivery.doordash || delivery.ubereats || delivery.grubhub) && (
+      <div class="delivery-buttons" style="margin-bottom:2rem;">
+        {delivery.doordash && <a href={delivery.doordash} class="delivery-btn doordash" target="_blank" rel="noopener">DoorDash</a>}
+        {delivery.ubereats && <a href={delivery.ubereats} class="delivery-btn ubereats" target="_blank" rel="noopener">Uber Eats</a>}
+        {delivery.grubhub && <a href={delivery.grubhub} class="delivery-btn grubhub" target="_blank" rel="noopener">Grubhub</a>}
+      </div>
+    )}
+    <div class="order-details">
+      {days.length > 0 && (
+        <div class="hours-table">
+          <h3>Hours</h3>
+          <table>
+            {days.map((d: any) => (
+              <tr>
+                <td>{d.day}</td>
+                <td>{d.open ? `${d.open} - ${d.close}` : 'Closed'}</td>
+              </tr>
+            ))}
+          </table>
+        </div>
+      )}
+      <div class="contact-details">
+        {contact.phoneForTel && (
+          <p class="phone-large"><a href={`tel:${contact.phoneForTel}`}>{formatPhone(contact.phoneForTel)}</a></p>
+        )}
+        {location.address && (
+          <p><a href={location.mapLink}>{addressLine}</a></p>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
