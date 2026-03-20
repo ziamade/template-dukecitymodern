@@ -1,15 +1,17 @@
 {
-  "name": "Duran Central Pharmacy",
-  "foundingYear": "1970",
+  "name": "Martinez & Sons Welding",
+  "foundingYear": "2015",
   "license": "",
-  "industry": "Restaurant",
-  "delivery": {},
-  "orderUrl": "https://order.toasttab.com/online/durans-nm-diner",
+  "insured": true,
+  "serviceArea": "Albuquerque, Rio Rancho, and the East Mountains",
+  "industry": "Contractor / Trades",
+  "delivery": null,
+  "orderUrl": "",
   "socials": {
     "facebook": "",
     "instagram": "",
-    "google": "https://maps.google.com/?q=Duran+Central+Pharmacy+Albuquerque+NM",
+    "google": "",
     "yelp": ""
   },
-  "domain": ""
+  "domain": "martinezwelding.com"
 }
