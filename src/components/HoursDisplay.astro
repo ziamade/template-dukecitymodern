@@ -1,0 +1,33 @@
+---
+// src/components/HoursDisplay.astro
+import hours from '../data/hours.json';
+import contact from '../data/contact.json';
+import { formatPhone } from '../lib/utils';
+
+const days = hours?.days || [];
+const phone = contact?.phoneForTel || '';
+---
+<section class="hours-section section" id="hours">
+  <div class="container">
+    <h2 class="section-heading">Hours & Contact</h2>
+    <div class="hours-grid">
+      <div class="hours-schedule">
+        {days.map((d: any) => (
+          <div class="hours-row">
+            <span class="hours-day">{d.day}</span>
+            <span class="hours-time">
+              {d.open && d.close ? `${d.open} – ${d.close}` : 'Closed'}
+            </span>
+          </div>
+        ))}
+      </div>
+      {phone && (
+        <div class="hours-contact">
+          <a href={`tel:${phone}`} class="btn-primary hours-phone">
+            Call {formatPhone(phone)}
+          </a>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
