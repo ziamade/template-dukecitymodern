@@ -8,6 +8,7 @@ import alert from '../data/alert.json';
 import schema from '../data/schema.json';
 import hours from '../data/hours.json';
 import gallery from '../data/gallery.json';
+import projects from '../data/projects.json';
 import { generateThemeCSS, buildFontURL } from '../lib/brand';
 import type { Brand, Theme } from '../lib/types';
 import '../styles/base.css';
@@ -24,6 +25,8 @@ import '../styles/footer.css';
 import '../styles/accents.css';
 import '../styles/theme-toggle.css';
 import '../styles/hours.css';
+import '../styles/projects.css';
+import '../styles/trust.css';
 
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
@@ -32,6 +35,7 @@ const fontURL = buildFontURL(typedBrand, client.name || '');
 const schemaJson = JSON.stringify(schema);
 const hoursJson = JSON.stringify(hours);
 const hasGallery = gallery?.images?.length > 0;
+const hasProjects = (projects as any)?.projects?.length > 0;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -75,6 +79,9 @@ const hasGallery = gallery?.images?.length > 0;
   <script is:inline src="/scripts/menu-scroll.js"></script>
   {hasGallery && (
     <script is:inline src="/scripts/gallery-hint.js"></script>
+  )}
+  {hasProjects && (
+    <script is:inline src="/scripts/gallery-slider.js"></script>
   )}
 </body>
 </html>
