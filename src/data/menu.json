@@ -1,1 +1,197 @@
-{ "categories": [] }
+{
+  "categories": [
+    {
+      "name": "Duran's Favorites",
+      "items": [
+        {
+          "name": "Bowl of Our Famous Chile",
+          "description": "Red or green chile, pinto beans, choice of beef or chicken, hand-rolled flour tortilla",
+          "price": "11.85",
+          "featured": true,
+          "photo": "/assets/images/menu/bowl-of-chile.jpg"
+        },
+        {
+          "name": "Breakfast Burrito",
+          "description": "Hand-rolled flour tortilla, two scrambled eggs, potatoes, cheese, choice of meat and chile",
+          "price": "14.80",
+          "featured": true,
+          "photo": "/assets/images/menu/breakfast-burrito.jpg"
+        },
+        {
+          "name": "Enchilada Plate",
+          "description": "Three stacked corn tortillas layered with cheese and chile, side of beans, egg on top recommended",
+          "price": "14.80",
+          "featured": true,
+          "photo": "/assets/images/menu/enchilada-plate.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Chile & Enchiladas",
+      "items": [
+        {
+          "name": "Carne Adovada Plate",
+          "description": "Pork cubes slow-cooked in red chile and spices, beans, potatoes, flour tortilla",
+          "price": "16.95",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Duran's Chilaquiles",
+          "description": "Bed of beans, tortilla chips, jack and yellow cheese, choice of chile, topped with onions and eggs",
+          "price": "10.95",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Duran's Combination Plate",
+          "description": "Rolled cheese enchilada, tamale, taco, side of beans, lettuce and tomato",
+          "price": "16.95",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Stuffed Sopaipillas",
+          "description": "Two sopaipillas topped with beans, cheese and chile, lettuce and tomatoes. Wed/Fri only",
+          "price": "13.95",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Tamale Plate",
+          "description": "Two Duran's tamales, cheese, choice of chile, side of beans",
+          "price": "14.80",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Taco Plate",
+          "description": "Three hard shell tacos, choice of protein, cheese, lettuce, tomatoes, side of beans and salsa",
+          "price": "14.25",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Tostadas",
+          "description": "Two fried corn tortillas, spicy refried beans, cheese, lettuce, tomato, salsa and guacamole. Mon/Thu only",
+          "price": "11.95",
+          "featured": false,
+          "photo": null
+        }
+      ]
+    },
+    {
+      "name": "Burritos & Wraps",
+      "items": [
+        {
+          "name": "Burrito",
+          "description": "Hand-rolled flour tortilla, beans, cheese, and your choice of chile. Meat add 3.50-5.50",
+          "price": "14.95",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Burger in a Tortilla",
+          "description": "Third-pound patty, cheese, chile, lettuce, tomato, pickles and onion in a flour tortilla",
+          "price": "14.80",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Quesadilla",
+          "description": "Hand-rolled flour tortilla, melted cheese, tomato, green onion, chile on the side",
+          "price": "11.50",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Torpedo",
+          "description": "Hand-rolled flour tortilla filled with potatoes, choice of chile and cheese",
+          "price": "11.95",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Turkey and Jack in a Tortilla",
+          "description": "Sliced turkey, jack cheese, green chile, lettuce, tomato, onion, side of guacamole and chips",
+          "price": "16.45",
+          "featured": false,
+          "photo": null
+        }
+      ]
+    },
+    {
+      "name": "Starters & Sides",
+      "items": [
+        {
+          "name": "Salsa and Chips",
+          "description": "Housemade jalapeno salsa with house-fried corn tortilla chips",
+          "price": "6.60",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Guacamole, Salsa and Chips",
+          "description": "Fresh guacamole topped with tomatoes and jalapeno salsa with corn chips",
+          "price": "10.95",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Tortilla Soup",
+          "description": "Green chile chicken broth, corn tortilla chips, caramelized onions, cheese, avocado. Mon/Tue only",
+          "price": "9.85",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Duran's Frito Pie",
+          "description": "Fritos base, beans, chile, cheese, lettuce and tomatoes, choice of meat",
+          "price": "12.00",
+          "featured": false,
+          "photo": null
+        }
+      ]
+    },
+    {
+      "name": "Breakfast Plates",
+      "items": [
+        {
+          "name": "Duran's Style Huevos Rancheros",
+          "description": "Two eggs, beans, potatoes, cheese, choice of chile, flour tortilla on the side. No corn tortilla under the eggs",
+          "price": "13.75",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Breakfast Enchiladas",
+          "description": "Two rolled blue corn cheese enchiladas, egg on top, choice of chile, side of potatoes",
+          "price": "14.25",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Blue Corn Chicken Taco Plate",
+          "description": "Two blue corn chicken tacos, jack cheese, side of beans, guacamole and salsa",
+          "price": "15.35",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Bob's Special",
+          "description": "Beans, potatoes, choice of chile, garnish, flour tortilla. A Duran's original",
+          "price": "9.50",
+          "featured": false,
+          "photo": null
+        },
+        {
+          "name": "Paul's Special",
+          "description": "Rolled enchilada, pork tamale, beans, garnish, flour tortilla on the side",
+          "price": "14.80",
+          "featured": false,
+          "photo": null
+        }
+      ]
+    }
+  ]
+}

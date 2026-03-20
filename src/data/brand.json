@@ -1,23 +1,23 @@
 {
   "light": {
-    "primary": "#8c5d1d",
-    "background": "#faf7f0",
-    "surface": "#ffffff",
+    "primary": "#8B2500",
+    "background": "#FDF6EC",
+    "surface": "#FFFFFF",
     "text": "#1a1a1a",
     "textMuted": "#666666",
-    "accent": "#929a68",
-    "border": "#e0dcd4"
+    "accent": "#C84B31",
+    "border": "#E8DFD0"
   },
   "dark": {
-    "primary": "#c4924a",
+    "primary": "#D4724E",
     "background": "#121212",
     "surface": "#1e1e1e",
     "text": "#e8e8e8",
     "textMuted": "#999999",
-    "accent": "#b0b878",
+    "accent": "#E07850",
     "border": "#333333"
   },
-  "nameFont": "Alfa Slab One",
-  "headingFont": "Oswald",
-  "bodyFont": "Inter"
+  "nameFont": "Playfair Display",
+  "headingFont": "Lora",
+  "bodyFont": "DM Sans"
 }

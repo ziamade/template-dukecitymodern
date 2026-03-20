@@ -1,16 +1,15 @@
 {
-  "name": "Durans Station",
-  "foundingYear": null,
+  "name": "Duran Central Pharmacy",
+  "foundingYear": "1970",
   "license": "",
   "industry": "Restaurant",
-  "delivery": {
-    "doordash": "https://www.doordash.com/store/duran-s-station-albuquerque-263817/?srsltid=AfmBOopLbYQL6V6niJMnMlJAKFCtGn_exqtPmw-lSqhG9Vffd-ddjMNQ"
-  },
+  "delivery": {},
+  "orderUrl": "https://order.toasttab.com/online/durans-nm-diner",
   "socials": {
-    "facebook": "https://www.facebook.com/p/Durans-Station-100063573939940/",
-    "instagram": "https://www.instagram.com/duransstation/",
-    "google": "https://maps.google.com/?cid=4204959562492968368",
-    "yelp": "https://www.yelp.com/biz/durans-station-albuquerque"
+    "facebook": "",
+    "instagram": "",
+    "google": "https://maps.google.com/?q=Duran+Central+Pharmacy+Albuquerque+NM",
+    "yelp": ""
   },
-  "domain": "https://durans-station.pages.dev"
+  "domain": ""
 }

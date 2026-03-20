@@ -1,8 +1,8 @@
 {
-  "sectionOrder": ["hero", "gallery", "menu", "reviews", "faq", "hours", "about", "contact"],
+  "sectionOrder": ["hero", "menu", "reviews", "hours", "about", "contact"],
   "heroVariant": 2,
-  "accentStyle": "underline",
-  "faviconShape": "squircle",
+  "accentStyle": "border",
+  "faviconShape": "circle",
   "industry": "Restaurant",
   "defaultMode": "light"
 }
