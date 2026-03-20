@@ -1,0 +1,28 @@
+---
+// src/components/ProcessSteps.astro
+import client from '../data/client.json';
+
+const defaultSteps = [
+  { number: '1', title: 'Call for a Free Quote', desc: 'Tell us about your project and we will give you an honest estimate.' },
+  { number: '2', title: 'We Assess Your Project', desc: 'We visit your site, take measurements, and finalize the plan.' },
+  { number: '3', title: 'Work Completed on Time', desc: 'We do the work right the first time and clean up when we are done.' },
+];
+
+const steps = (client as any).processSteps || defaultSteps;
+---
+{steps.length > 0 && (
+  <section class="process-section section" id="process">
+    <div class="container">
+      <h2 class="section-heading">How It Works</h2>
+      <div class="process-steps">
+        {steps.map((step: any, i: number) => (
+          <div class="process-step">
+            <div class="process-step-number">{step.number || i + 1}</div>
+            <h3 class="process-step-title">{step.title}</h3>
+            <p class="process-step-desc">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
