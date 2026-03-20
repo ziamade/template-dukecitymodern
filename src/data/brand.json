@@ -1,16 +1,23 @@
 {
-  "primary": "#2d3436",
-  "primaryLight": "#575b5d",
-  "secondary": "#f5a87a",
-  "secondaryLight": "#f9c9a8",
-  "accent": "#e07c3e",
-  "headerColor": "#1a1e1f",
-  "bodyTextColor": "#3a3a3a",
-  "bodyTextColorWhite": "#f8f6f6",
-  "offWhite": "#f8f6f6",
-  "cream": "#f0eae0",
-  "dark": "#111314",
-  "medium": "#1f2324",
-  "accentDark": "#b46332",
-  "silver": "#a89f95"
+  "light": {
+    "primary": "#8c5d1d",
+    "background": "#faf7f0",
+    "surface": "#ffffff",
+    "text": "#1a1a1a",
+    "textMuted": "#666666",
+    "accent": "#929a68",
+    "border": "#e0dcd4"
+  },
+  "dark": {
+    "primary": "#c4924a",
+    "background": "#121212",
+    "surface": "#1e1e1e",
+    "text": "#e8e8e8",
+    "textMuted": "#999999",
+    "accent": "#b0b878",
+    "border": "#333333"
+  },
+  "nameFont": "Alfa Slab One",
+  "headingFont": "Oswald",
+  "bodyFont": "Inter"
 }

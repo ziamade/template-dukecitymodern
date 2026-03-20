@@ -8,21 +8,22 @@ export interface Client {
   domain: string;
 }
 
-export interface Brand {
+export interface ColorPalette {
   primary: string;
-  primaryLight: string;
-  secondary: string;
-  secondaryLight: string;
+  background: string;
+  surface: string;
+  text: string;
+  textMuted: string;
   accent: string;
-  headerColor: string;
-  bodyTextColor: string;
-  bodyTextColorWhite: string;
-  offWhite: string;
-  cream: string;
-  dark: string;
-  medium: string;
-  accentDark: string;
-  silver: string;
+  border: string;
+}
+
+export interface Brand {
+  light: ColorPalette;
+  dark: ColorPalette;
+  nameFont: string;
+  headingFont: string;
+  bodyFont: string;
 }
 
 export interface Contact {
@@ -61,9 +62,12 @@ export interface SEO {
 }
 
 export interface Theme {
+  sectionOrder: string[];
   heroVariant: number;
   accentStyle: string;
   faviconShape: string;
+  industry: string;
+  defaultMode: 'light' | 'dark';
 }
 
 export interface Alert {
@@ -116,6 +120,8 @@ export interface MenuItem {
   name: string;
   description?: string;
   price?: string;
+  featured?: boolean;
+  photo?: string | null;
 }
 
 export interface MenuCategory {
@@ -130,4 +136,17 @@ export interface Menu {
 export interface About {
   heading: string;
   text: string;
+}
+
+export interface Project {
+  title: string;
+  description: string;
+  before: string;
+  after: string;
+  during?: string;
+  service: string;
+}
+
+export interface Projects {
+  projects: Project[];
 }

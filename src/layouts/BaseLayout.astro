@@ -8,6 +8,8 @@ import alert from '../data/alert.json';
 import schema from '../data/schema.json';
 import hours from '../data/hours.json';
 import gallery from '../data/gallery.json';
+import { generateThemeCSS, buildFontURL } from '../lib/brand';
+import type { Brand, Theme } from '../lib/types';
 import '../styles/base.css';
 import '../styles/layout.css';
 import '../styles/hero.css';
@@ -20,25 +22,13 @@ import '../styles/form.css';
 import '../styles/about.css';
 import '../styles/footer.css';
 import '../styles/accents.css';
+import '../styles/theme-toggle.css';
+import '../styles/hours.css';
 
-const cssVars = `:root {
-  --primary: ${brand.primary || "#2d3436"};
-  --primaryLight: ${brand.primaryLight || "#575b5d"};
-  --secondary: ${brand.secondary || "#f5a87a"};
-  --secondaryLight: ${brand.secondaryLight || "#f9c9a8"};
-  --accent: ${brand.accent || "#e07c3e"};
-  --headerColor: ${brand.headerColor || "#1a1e1f"};
-  --bodyTextColor: ${brand.bodyTextColor || "#3a3a3a"};
-  --bodyTextColorWhite: ${brand.bodyTextColorWhite || "#f8f6f6"};
-  --offWhite: ${brand.offWhite || "#f8f6f6"};
-  --cream: ${brand.cream || "#f0eae0"};
-  --dark: ${brand.dark || "#111314"};
-  --medium: ${brand.medium || "#1f2324"};
-  --accentDark: ${brand.accentDark || "#b46332"};
-  --silver: ${brand.silver || "#a89f95"};
-  --gradient-dark: linear-gradient(135deg, ${brand.dark || "#111314"} 0%, ${brand.medium || "#1f2324"} 100%);
-}`;
-
+const typedBrand = brand as unknown as Brand;
+const typedTheme = theme as unknown as Theme;
+const themeCSS = generateThemeCSS(typedBrand, typedTheme.defaultMode || 'light');
+const fontURL = buildFontURL(typedBrand, client.name || '');
 const schemaJson = JSON.stringify(schema);
 const hoursJson = JSON.stringify(hours);
 const hasGallery = gallery?.images?.length > 0;
@@ -54,10 +44,21 @@ const hasGallery = gallery?.images?.length > 0;
   <meta property="og:description" content={seo.ogDescription || ""}>
   {seo.ogImage && <meta property="og:image" content={seo.ogImage} />}
   {seo.canonicalUrl && <link rel="canonical" href={seo.canonicalUrl} />}
-  <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml">
-  <style set:html={cssVars}></style>
+  <link rel="icon" href="/favicons/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href={fontURL} rel="stylesheet">
+  <style set:html={themeCSS}></style>
 </head>
-<body data-accent={theme.accentStyle || "border"}>
+<body data-accent={typedTheme.accentStyle || "border"}>
+  <script is:inline>
+    // Apply saved theme preference before paint (prevents flash)
+    (function() {
+      var saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
   {alert && alert.enabled && alert.text && (
     <div class="alert-banner">{alert.text}</div>
   )}
@@ -70,6 +71,7 @@ const hasGallery = gallery?.images?.length > 0;
   <script type="application/json" id="hours-data" set:html={hoursJson}></script>
   <script is:inline src="/scripts/header-scroll.js"></script>
   <script is:inline src="/scripts/open-now.js"></script>
+  <script is:inline src="/scripts/theme-toggle.js"></script>
   {hasGallery && (
     <script is:inline src="/scripts/gallery-hint.js"></script>
   )}

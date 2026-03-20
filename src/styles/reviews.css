@@ -1,4 +1,4 @@
-.reviews-section { background: var(--offWhite); overflow: hidden; }
+.reviews-section { background: var(--background); overflow: hidden; }
 
 .reviews-scroll {
   display: flex;
@@ -9,7 +9,7 @@
 .reviews-scroll:hover { animation-play-state: paused; }
 
 .review-card {
-  background: #fff;
+  background: var(--surface);
   border-radius: var(--card-radius);
   padding: 1.5rem;
   width: 320px;
@@ -37,14 +37,14 @@
 
 .review-avatar {
   width: 40px; height: 40px; border-radius: 50%;
-  background: var(--primaryLight); color: var(--bodyTextColorWhite);
+  background: var(--primary); color: var(--background);
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; font-size: var(--font-size-small);
   flex-shrink: 0;
 }
 
 .review-author { font-weight: 600; }
-.review-badge { font-size: var(--font-size-small); color: var(--silver); margin-left: auto; }
+.review-badge { font-size: var(--font-size-small); color: var(--textMuted); margin-left: auto; }
 
 .reviews-link {
   display: block; text-align: center; margin-top: 1.5rem;
