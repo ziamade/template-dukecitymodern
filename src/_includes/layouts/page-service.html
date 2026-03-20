@@ -1,11 +1,15 @@
 {% extends "layouts/base.html" %}
 
 {% set navLinks = [
-  { href: "#services", text: "Services" },
-  { href: "#reviews", text: "Reviews" },
+  { href: "#services", text: "Services" }
+] %}
+{% if testimonials and testimonials.items and testimonials.items.length > 0 %}
+  {% set navLinks = navLinks.concat([{ href: "#reviews", text: "Reviews" }]) %}
+{% endif %}
+{% set navLinks = navLinks.concat([
   { href: "#faq", text: "FAQ" },
   { href: "#quote-form", text: "Contact" }
-] %}
+]) %}
 {% set ctaText = "Get Quote" %}
 {% set ctaHref = "#quote-form" %}
 {% set heroCta = { text: "Get Your Free Quote", href: "#quote-form" } %}

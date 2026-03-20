@@ -24,7 +24,7 @@
       {% endif %}
       <div class="contact-details">
         {% if contact.phoneForTel %}
-          <p class="phone-large"><a href="tel:{{ contact.phoneForTel }}">{{ contact.phoneForTel }}</a></p>
+          <p class="phone-large"><a href="tel:{{ contact.phoneForTel }}">{{ contact.phoneForTel | formatPhone }}</a></p>
         {% endif %}
         {% if location.address %}
           <p><a href="{{ location.mapLink }}">{{ location.address }}, {{ location.city }} {{ location.state }} {{ location.zip }}</a></p>

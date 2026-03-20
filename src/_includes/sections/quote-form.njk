@@ -25,7 +25,7 @@
     </form>
     <noscript>
       <p>
-        {% if contact.phoneForTel %}Call us directly: <a href="tel:{{ contact.phoneForTel }}">{{ contact.phoneForTel }}</a>{% endif %}
+        {% if contact.phoneForTel %}Call us directly: <a href="tel:{{ contact.phoneForTel }}">{{ contact.phoneForTel | formatPhone }}</a>{% endif %}
       </p>
     </noscript>
   </div>
