@@ -24,7 +24,7 @@ content:
   - name: alert
     label: Alert Banner
     type: file
-    path: src/_data/alert.json
+    path: src/data/alert.json
     format: json
     fields:
       - name: enabled
@@ -51,7 +51,7 @@ content:
   - name: contact
     label: Contact Info
     type: file
-    path: src/_data/contact.json
+    path: src/data/contact.json
     format: json
     fields:
       - name: email
@@ -67,7 +67,7 @@ content:
   - name: location
     label: Location & Maps
     type: file
-    path: src/_data/location.json
+    path: src/data/location.json
     format: json
     fields:
       - name: address
@@ -100,23 +100,33 @@ content:
   - name: hours
     label: Business Hours
     type: file
-    path: src/_data/hours.json
+    path: src/data/hours.json
     format: json
     fields:
-      - name: hoursWeekdays
-        label: Weekday Hours
-        type: string
-        description: "Hours shown for your weekday schedule. Example: Mon-Sat: 9:00 AM - 6:00 PM"
-      - name: hoursWeekend
-        label: Weekend Hours
-        type: string
-        description: "Hours shown for weekend/Sunday. Example: Sunday: Closed"
+      - name: days
+        label: Business Hours
+        type: list
+        fields:
+          - name: day
+            label: Day
+            type: string
+            description: "Day of the week. Example: Monday"
+          - name: open
+            label: Opening Time
+            type: string
+            required: false
+            description: "Opening time, or leave blank if closed. Example: 9:00 AM"
+          - name: close
+            label: Closing Time
+            type: string
+            required: false
+            description: "Closing time, or leave blank if closed. Example: 6:00 PM"
 
   # ── Brand Colors ───────────────────────────────────────────────────────────
   - name: brand
     label: Brand Colors
     type: file
-    path: src/_data/brand.json
+    path: src/data/brand.json
     format: json
     fields:
       - { name: primary, label: Primary Color, type: string, description: "Main CTA color — buttons, links, active states. Hex value e.g. #ec5b13" }
@@ -138,7 +148,7 @@ content:
   - name: hero
     label: Hero Section
     type: file
-    path: src/_data/hero.json
+    path: src/data/hero.json
     format: json
     fields:
       - name: heroImage
@@ -158,7 +168,7 @@ content:
   - name: testimonials
     label: Customer Reviews
     type: file
-    path: src/_data/testimonials.json
+    path: src/data/testimonials.json
     format: json
     fields:
       - name: items
@@ -177,7 +187,7 @@ content:
   - name: trustbar
     label: Trust Bar Stats
     type: file
-    path: src/_data/trustbar.json
+    path: src/data/trustbar.json
     format: json
     fields:
       - name: items

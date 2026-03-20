@@ -35,7 +35,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy public --project-name=${{ github.event.repository.name }} --commit-hash=${{ github.sha }} --commit-dirty=true
+          command: pages deploy dist --project-name=${{ github.event.repository.name }} --commit-hash=${{ github.sha }} --commit-dirty=true
 
       - name: Output production URL
         run: echo "### Production deployed" >> $GITHUB_STEP_SUMMARY && echo "${{ steps.deploy.outputs.deployment-url }}" >> $GITHUB_STEP_SUMMARY
