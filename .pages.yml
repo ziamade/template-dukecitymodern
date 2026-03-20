@@ -129,20 +129,31 @@ content:
     path: src/data/brand.json
     format: json
     fields:
-      - { name: primary, label: Primary Color, type: string, description: "Main CTA color — buttons, links, active states. Hex value e.g. #ec5b13" }
-      - { name: primaryLight, label: Primary Light, type: string, description: "Hover state for primary. e.g. #f47a3e" }
-      - { name: secondary, label: Secondary Color, type: string, description: "Secondary accent — icons, nav button. e.g. #7a8d81" }
-      - { name: secondaryLight, label: Secondary Light, type: string, description: "Hover state for secondary. e.g. #95a89d" }
-      - { name: accent, label: Accent Color, type: string, description: "Subtle highlights and labels. e.g. #d9b382" }
-      - { name: headerColor, label: Heading Color, type: string, description: "Color for all headings. e.g. #221610" }
-      - { name: bodyTextColor, label: Body Text Color, type: string, description: "Main body text. e.g. #3a3a3a" }
-      - { name: bodyTextColorWhite, label: Light Text Color, type: string, description: "Text on dark backgrounds. e.g. #f8f6f6" }
-      - { name: offWhite, label: Off White Background, type: string, description: "Light section backgrounds. e.g. #f8f6f6" }
-      - { name: cream, label: Cream Background, type: string, description: "Warm neutral backgrounds. e.g. #f0eae0" }
-      - { name: dark, label: Dark Background, type: string, description: "Dark sections and dark mode bg. e.g. #221610" }
-      - { name: medium, label: Dark Surface, type: string, description: "Dark mode card surfaces. e.g. #2c1a10" }
-      - { name: accentDark, label: Dark Accent Surface, type: string, description: "Dark mode accent cards. e.g. #3a2a1e" }
-      - { name: silver, label: Muted / Silver, type: string, description: "Muted text and dividers. e.g. #a89f95" }
+      - name: light
+        label: Light Mode
+        type: object
+        fields:
+          - { name: primary, label: Primary, type: string, description: "Main brand color. Hex value e.g. #8B2500" }
+          - { name: background, label: Background, type: string, description: "Page background. e.g. #FDF6EC" }
+          - { name: surface, label: Surface, type: string, description: "Card and section backgrounds. e.g. #FFFFFF" }
+          - { name: text, label: Text, type: string, description: "Main text color. e.g. #1a1a1a" }
+          - { name: textMuted, label: Muted Text, type: string, description: "Secondary text. e.g. #666666" }
+          - { name: accent, label: Accent, type: string, description: "Buttons, links, highlights. e.g. #C84B31" }
+          - { name: border, label: Border, type: string, description: "Dividers and borders. e.g. #E8DFD0" }
+      - name: dark
+        label: Dark Mode
+        type: object
+        fields:
+          - { name: primary, label: Primary, type: string, description: "Main brand color (dark mode). e.g. #D4724E" }
+          - { name: background, label: Background, type: string, description: "Page background. e.g. #121212" }
+          - { name: surface, label: Surface, type: string, description: "Card and section backgrounds. e.g. #1e1e1e" }
+          - { name: text, label: Text, type: string, description: "Main text color. e.g. #e8e8e8" }
+          - { name: textMuted, label: Muted Text, type: string, description: "Secondary text. e.g. #999999" }
+          - { name: accent, label: Accent, type: string, description: "Buttons, links, highlights. e.g. #E07850" }
+          - { name: border, label: Border, type: string, description: "Dividers and borders. e.g. #333333" }
+      - { name: nameFont, label: Name Font, type: string, description: "Google Font for business name only." }
+      - { name: headingFont, label: Heading Font, type: string, description: "Google Font for headings (H1-H3)." }
+      - { name: bodyFont, label: Body Font, type: string, description: "Google Font for body text." }
 
   # ── Hero ───────────────────────────────────────────────────────────────────
   - name: hero
@@ -182,6 +193,47 @@ content:
           - { name: rating, label: Rating, type: number, default: 5 }
           - { name: source, label: Source, type: string, default: "Google" }
           - { name: url, label: Review URL, type: string, required: false }
+
+  # ── Menu (Restaurants) ────────────────────────────────────────────────────
+  - name: menu
+    label: Menu
+    type: file
+    path: src/data/menu.json
+    format: json
+    fields:
+      - name: categories
+        label: Categories
+        type: list
+        fields:
+          - name: name
+            label: Category Name
+            type: string
+            description: "Group heading like 'Breakfast' or 'Chile & Enchiladas'. Aim for 5-7 categories."
+          - name: items
+            label: Items
+            type: list
+            fields:
+              - name: name
+                label: Item Name
+                type: string
+              - name: description
+                label: Description
+                type: text
+                description: "Short sensory description, 10-15 words."
+              - name: price
+                label: "Price (no $ sign)"
+                type: string
+                description: "Price as a number without dollar sign. Example: 12.95"
+              - name: featured
+                label: Featured
+                type: boolean
+                default: false
+                description: "Featured items get subtle visual emphasis. Use for 1-3 items total."
+              - name: photo
+                label: Photo
+                type: image
+                required: false
+                description: "Optional photo, only shown for featured items."
 
   # ── Trust Bar ─────────────────────────────────────────────────────────────
   - name: trustbar
