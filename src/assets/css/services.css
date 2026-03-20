@@ -1,7 +1,15 @@
-/* Service Cards Section */
+/* Service Cards Section — supports 1-6 cards */
 .services-section { background: var(--offWhite); }
 .services-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-@media (min-width: 768px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 768px) {
+  .services-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  /* 1-2 cards: center them instead of stretching full width */
+  .services-grid:has(> :last-child:nth-child(1)),
+  .services-grid:has(> :last-child:nth-child(2)) {
+    max-width: 700px;
+    margin-inline: auto;
+  }
+}
 .service-card {
   background: white; border-radius: var(--card-radius); overflow: hidden;
   transition: transform var(--transition-fast); text-decoration: none; color: inherit; display: block;
