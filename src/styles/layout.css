@@ -22,14 +22,14 @@ body {
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: var(--dark);
+  background: var(--surface);
   transition: background var(--transition-base), box-shadow var(--transition-base);
 }
 
 /* header-over-hero removed: always dark for guaranteed contrast */
 
 .site-header.header-solid {
-  background: var(--dark);
+  background: var(--surface);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -48,7 +48,7 @@ body {
 
 /* --- Site name --- */
 .site-name {
-  color: var(--bodyTextColorWhite);
+  color: var(--text);
   font-weight: 700;
   font-size: 1.125rem;
   text-decoration: none;
@@ -68,7 +68,7 @@ body {
 }
 
 .nav-links a {
-  color: var(--bodyTextColorWhite);
+  color: var(--text);
   font-size: var(--font-size-small);
   text-decoration: none;
 }
@@ -78,7 +78,7 @@ body {
   display: inline-block;
   padding: 0.5rem 1.25rem;
   background: var(--accent);
-  color: white;
+  color: var(--background);
   border-radius: var(--card-radius);
   font-weight: 600;
   text-decoration: none;
@@ -109,7 +109,7 @@ body {
   display: block;
   width: 22px;
   height: 2px;
-  background: var(--bodyTextColorWhite);
+  background: var(--text);
   transition: transform var(--transition-fast), opacity var(--transition-fast);
 }
 
@@ -121,7 +121,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--dark);
+  background: var(--surface);
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -134,7 +134,7 @@ body {
 }
 
 .mobile-nav a {
-  color: var(--bodyTextColorWhite);
+  color: var(--text);
   font-size: 1.25rem;
   text-decoration: none;
 }
@@ -161,9 +161,9 @@ body {
   z-index: 1000;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: color-mix(in srgb, var(--dark) 95%, transparent);
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
   backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border);
   padding: 0.5rem;
 }
 
@@ -178,7 +178,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--bodyTextColorWhite);
+  color: var(--text);
   text-decoration: none;
   min-height: var(--touch-min);
   gap: 0.25rem;

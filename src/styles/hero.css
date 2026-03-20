@@ -1,7 +1,7 @@
 .hero {
   position: relative;
-  background: var(--gradient-dark);
-  color: var(--bodyTextColorWhite);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+  color: var(--text);
   padding: var(--section-gap) 0;
   overflow: hidden;
 }
@@ -20,7 +20,7 @@
 }
 
 .hero-tagline {
-  color: var(--bodyTextColorWhite);
+  color: var(--text);
 }
 
 .hero-subtitle {
@@ -55,7 +55,7 @@
   font-size: var(--font-size-small);
   opacity: 0.8;
 }
-.hero-address a { color: var(--bodyTextColorWhite); text-decoration: underline; }
+.hero-address a { color: var(--text); text-decoration: underline; }
 .hero .btn-primary { width: fit-content; max-width: 280px; text-align: center; }
 
 .hero-photo {

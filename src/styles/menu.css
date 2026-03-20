@@ -1,5 +1,5 @@
 /* Menu Section */
-.menu-section { background: var(--offWhite); }
+.menu-section { background: var(--background); }
 
 .menu-cat-nav {
   display: flex;
@@ -9,7 +9,7 @@
   top: 48px;
   gap: 0.5rem;
   padding: 0.75rem 0;
-  background: var(--offWhite);
+  background: var(--background);
   z-index: 10;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -19,17 +19,17 @@
 
 .menu-cat-link {
   padding: 0.5rem 1rem;
-  border: 1px solid var(--silver);
+  border: 1px solid var(--border);
   border-radius: 2rem;
   white-space: nowrap;
   scroll-snap-align: start;
   font-size: var(--font-size-small);
   text-decoration: none;
-  color: var(--bodyTextColor);
-  background: white;
+  color: var(--text);
+  background: var(--surface);
   transition: background var(--transition-fast), color var(--transition-fast);
 }
-.menu-cat-link:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.menu-cat-link:hover { background: var(--accent); color: var(--background); border-color: var(--accent); }
 
 .menu-category { margin-top: 2rem; }
 .menu-category h3 { padding-bottom: 0.75rem; border-bottom: 2px solid var(--accent); }
@@ -39,10 +39,10 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--border);
 }
 .menu-item-name { font-weight: 600; }
-.menu-item-desc { display: block; font-size: var(--font-size-small); color: var(--silver); margin-top: 0.25rem; }
+.menu-item-desc { display: block; font-size: var(--font-size-small); color: var(--textMuted); margin-top: 0.25rem; }
 .menu-item-price { white-space: nowrap; font-weight: 500; margin-left: 1rem; flex-shrink: 0; }
 
 .delivery-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 2rem; }
@@ -63,8 +63,8 @@
 .grubhub { background: #F63440; }
 
 /* Order & Visit Section */
-.order-section { background: var(--gradient-dark); color: var(--bodyTextColorWhite); }
-.order-section h2, .order-section h3 { color: var(--bodyTextColorWhite); }
+.order-section { background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%); color: var(--text); }
+.order-section h2, .order-section h3 { color: var(--text); }
 .order-details { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 42rem; margin: 0 auto; }
 @media (min-width: 768px) { .order-details { grid-template-columns: 1fr 1fr; } }
 .hours-table table { width: 100%; }
@@ -72,4 +72,4 @@
 .hours-table td:first-child { font-weight: 600; }
 .phone-large { font-size: 1.5rem; font-weight: 700; }
 .phone-large a { color: var(--accent); }
-.contact-details a { color: var(--bodyTextColorWhite); text-decoration: underline; }
+.contact-details a { color: var(--text); text-decoration: underline; }

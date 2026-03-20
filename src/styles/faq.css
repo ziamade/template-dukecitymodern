@@ -1,7 +1,7 @@
-.faq-section { background: #fff; }
+.faq-section { background: var(--surface); }
 
 .faq-item {
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--border);
   max-width: 42rem;
   margin: 0 auto;
 }
@@ -31,7 +31,7 @@
 
 .faq-answer {
   padding: 0 0 1.25rem;
-  color: var(--bodyTextColor);
+  color: var(--text);
   line-height: 1.7;
   max-width: 60ch;
 }
