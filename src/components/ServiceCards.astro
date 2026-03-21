@@ -1,5 +1,9 @@
 ---
 // src/components/ServiceCards.astro
+interface Props { variant?: string | number; }
+const { variant: variantProp } = Astro.props;
+const variant = String(variantProp || 'cards');
+
 const serviceFiles = import.meta.glob('../content/services/*.md', { eager: true });
 const services = Object.values(serviceFiles)
   .map((mod: any) => mod.frontmatter)
@@ -10,43 +14,74 @@ const featured = services.filter((s: any) => s.beforeImage).slice(0, MAX_FEATURE
 const secondary = services.slice(featured.length);
 ---
 {services.length > 0 && (
-  <section class="services-section section" id="services">
+  <section class="services-section section" data-variant={variant} id="services">
     <div class="container">
       <h2 class="section-heading">Our Services</h2>
-      <div class="services-grid">
-        {featured.map((svc: any) => (
-          <a href="#contact" class="service-card">
-            <img
-              src={svc.beforeImage}
-              alt={svc.title}
-              loading="lazy"
-              decoding="async"
-              width="600"
-              height="400"
-              data-fallback={svc.fallbackImage || ''}
-              onerror="this.onerror=null;this.src=this.dataset.fallback;"
-            />
-            <div class="service-card-body">
+
+      {variant === 'cards' && (
+        <>
+          <div class="services-grid">
+            {featured.map((svc: any) => (
+              <a href="#contact" class="service-card">
+                <img
+                  src={svc.beforeImage}
+                  alt={svc.title}
+                  loading="lazy"
+                  decoding="async"
+                  width="600"
+                  height="400"
+                  data-fallback={svc.fallbackImage || ''}
+                  onerror="this.onerror=null;this.src=this.dataset.fallback;"
+                />
+                <div class="service-card-body">
+                  <h3>{svc.title}</h3>
+                  <p>{svc.description}</p>
+                  {svc.startingPrice && (
+                    <span class="service-card-price">Starting at {svc.startingPrice}</span>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+          {secondary.length > 0 && (
+            <ul class="services-list">
+              {secondary.map((svc: any) => (
+                <li>
+                  <a href="#contact" class="services-list-item">
+                    <span class="services-list-name">{svc.title}</span>
+                    {svc.description && <span class="services-list-desc">{svc.description}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      )}
+
+      {variant === 'icon-grid' && (
+        <div class="services-icon-grid">
+          {services.map((svc: any) => (
+            <a href="#contact" class="service-icon-card">
+              {svc.beforeImage && (
+                <img src={svc.beforeImage} alt={svc.title} loading="lazy" decoding="async" width="120" height="120"
+                  data-fallback={svc.fallbackImage || ''} onerror="this.onerror=null;this.src=this.dataset.fallback;" />
+              )}
               <h3>{svc.title}</h3>
               <p>{svc.description}</p>
-              {svc.startingPrice && (
-                <span class="service-card-price">Starting at {svc.startingPrice}</span>
-              )}
-            </div>
-          </a>
-        ))}
-      </div>
-      {secondary.length > 0 && (
-        <ul class="services-list">
-          {secondary.map((svc: any) => (
-            <li>
-              <a href="#contact" class="services-list-item">
-                <span class="services-list-name">{svc.title}</span>
-                {svc.description && <span class="services-list-desc">{svc.description}</span>}
-              </a>
-            </li>
+            </a>
           ))}
-        </ul>
+        </div>
+      )}
+
+      {variant === 'compact' && (
+        <div class="services-compact">
+          {services.map((svc: any) => (
+            <a href="#contact" class="service-compact-item">
+              <span class="service-compact-name">{svc.title}</span>
+              {svc.description && <span class="service-compact-desc">{svc.description}</span>}
+            </a>
+          ))}
+        </div>
       )}
     </div>
   </section>

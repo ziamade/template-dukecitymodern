@@ -25,6 +25,11 @@ import location from '../data/location.json';
 import testimonials from '../data/testimonials.json';
 import theme from '../data/theme.json';
 
+interface SectionEntry {
+  id: string;
+  variant?: string | number;
+}
+
 const isRestaurant = (client.industry || '').toLowerCase().includes('restaurant');
 const hasReviews = testimonials?.items?.length > 0;
 
@@ -49,9 +54,16 @@ const defaultOrder = isRestaurant
   ? ['hero', 'menu', 'gallery', 'reviews', 'hours', 'about', 'contact']
   : ['hero', 'trust', 'services', 'projects', 'process', 'reviews', 'faq', 'contact', 'about'];
 
-const sectionOrder: string[] = (theme as any).sectionOrder?.length > 0
-  ? (theme as any).sectionOrder
-  : defaultOrder;
+function resolveSections(themeData: any): SectionEntry[] {
+  if (themeData.sections?.length > 0) return themeData.sections;
+  const order = themeData.sectionOrder?.length > 0 ? themeData.sectionOrder : defaultOrder;
+  return order.map((id: string) => {
+    if (id === 'hero' && themeData.heroVariant) return { id, variant: themeData.heroVariant };
+    return { id };
+  });
+}
+
+const sections = resolveSections(theme);
 
 // Build nav links from section order
 const sectionLabels: Record<string, string> = {
@@ -69,10 +81,10 @@ const sectionLabels: Record<string, string> = {
   hours: 'Hours',
 };
 
-const navLinks = sectionOrder
-  .filter(s => sectionLabels[s] && s !== 'hero')
-  .filter(s => s !== 'reviews' || hasReviews)
-  .map(s => ({ href: `#${s}`, text: sectionLabels[s] }));
+const navLinks = sections
+  .filter(s => sectionLabels[s.id] && s.id !== 'hero')
+  .filter(s => s.id !== 'reviews' || hasReviews)
+  .map(s => ({ href: `#${s.id}`, text: sectionLabels[s.id] }));
 
 const ctaText = isRestaurant ? 'Order Now' : 'Get Quote';
 const ctaHref = isRestaurant ? '#contact' : '#contact';
@@ -88,12 +100,12 @@ const actionBarLinks = [
 <BaseLayout>
   <StickyHeader navLinks={navLinks} ctaText={ctaText} ctaHref={ctaHref} />
 
-  {sectionOrder.map((sectionName) => {
-    const Component = sectionMap[sectionName];
+  {sections.map((entry) => {
+    const Component = sectionMap[entry.id];
     if (!Component) return null;
-    if (sectionName === 'reviews' && !hasReviews) return null;
-    if (sectionName === 'hero') return <Component heroCta={heroCta} />;
-    return <Component />;
+    if (entry.id === 'reviews' && !hasReviews) return null;
+    if (entry.id === 'hero') return <Component heroCta={heroCta} variant={entry.variant} />;
+    return <Component variant={entry.variant} />;
   })}
 
   <Footer />
