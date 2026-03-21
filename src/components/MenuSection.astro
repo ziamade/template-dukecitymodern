@@ -1,6 +1,7 @@
 ---
 import menu from '../data/menu.json';
 import client from '../data/client.json';
+import OptimizedImg from './OptimizedImg.astro';
 
 const categories = menu?.categories || [];
 const hasMenu = categories.length > 0 && categories.some((c: any) => c.items?.length > 0);
@@ -26,14 +27,12 @@ const orderUrl = (client as Record<string, any>)?.orderUrl || '';
             {cat.items.map((item: any) => (
               <div class={`menu-item ${item.featured ? 'menu-item--featured' : ''}`}>
                 {item.featured && item.photo && (
-                  <img
+                  <OptimizedImg
                     src={item.photo}
                     alt={item.name}
                     class="menu-item-photo"
-                    loading="lazy"
-                    decoding="async"
-                    width="280"
-                    height="200"
+                    width={280}
+                    height={200}
                   />
                 )}
                 <div class="menu-item-content">

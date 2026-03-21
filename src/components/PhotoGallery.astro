@@ -1,6 +1,7 @@
 ---
 // src/components/PhotoGallery.astro
 import gallery from '../data/gallery.json';
+import OptimizedImg from './OptimizedImg.astro';
 ---
 {(gallery?.images?.length > 0 || gallery?.items?.length > 0) && (
   <section class="gallery-section section" id="gallery">
@@ -9,15 +10,14 @@ import gallery from '../data/gallery.json';
     </div>
     <div class="gallery-scroll">
       {(gallery.images || gallery.items || []).map((img: any) => (
-        <img
+        <OptimizedImg
           src={img.url || img.image}
           alt={img.alt || ''}
-          loading="lazy"
-          decoding="async"
-          width="600"
-          height="400"
-          data-fallback={img.fallbackUrl || ''}
-          onerror="this.onerror=null;this.src=this.dataset.fallback;"
+          width={600}
+          height={400}
+          widths={[300, 600]}
+          sizes="(max-width: 768px) 80vw, 600px"
+          fallback={img.fallbackUrl || ''}
         />
       ))}
     </div>

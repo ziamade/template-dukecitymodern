@@ -4,6 +4,7 @@ import client from '../data/client.json';
 import hero from '../data/hero.json';
 import location from '../data/location.json';
 import theme from '../data/theme.json';
+import OptimizedImg from './OptimizedImg.astro';
 
 interface Props {
   heroCta: { text: string; href: string };
@@ -45,15 +46,16 @@ const isVideo = heroVideo && /\.(mp4|webm)$/i.test(heroVideo);
     {variant !== 2 && (
       <div class="hero-photo">
         {hero?.heroImage && (
-          <img
+          <OptimizedImg
             src={hero.heroImage}
             alt={client.name}
-            width="800"
-            height="600"
-            decoding="async"
+            width={800}
+            height={600}
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            loading="eager"
             fetchpriority="high"
-            data-fallback={hero.fallbackImage || ''}
-            onerror="this.onerror=null;this.src=this.dataset.fallback;"
+            fallback={hero.fallbackImage || ''}
           />
         )}
       </div>

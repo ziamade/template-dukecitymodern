@@ -1,6 +1,7 @@
 ---
 // src/components/ProjectGallery.astro
 import projects from '../data/projects.json';
+import OptimizedImg from './OptimizedImg.astro';
 
 const items = (projects?.projects || []).filter(
   (p: any) => p.before && p.after
@@ -16,23 +17,23 @@ const hasProjects = items.length > 0;
           <div class="project-card">
             <div class="project-slider" data-index={i}>
               <div class="project-slider-wrap">
-                <img
+                <OptimizedImg
                   src={project.after}
                   alt={`${project.title} - after`}
                   class="project-img project-img--after"
-                  loading="lazy"
-                  decoding="async"
-                  width="600"
-                  height="400"
+                  width={600}
+                  height={400}
+                  widths={[300, 600]}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <img
+                <OptimizedImg
                   src={project.before}
                   alt={`${project.title} - before`}
                   class="project-img project-img--before"
-                  loading="lazy"
-                  decoding="async"
-                  width="600"
-                  height="400"
+                  width={600}
+                  height={400}
+                  widths={[300, 600]}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div class="project-slider-handle" aria-label="Drag to compare before and after" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
                   <div class="project-slider-line"></div>
