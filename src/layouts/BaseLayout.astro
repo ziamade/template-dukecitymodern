@@ -9,7 +9,7 @@ import schema from '../data/schema.json';
 import hours from '../data/hours.json';
 import gallery from '../data/gallery.json';
 import projects from '../data/projects.json';
-import { generateThemeCSS, buildFontURL } from '../lib/brand';
+import { generateThemeCSS, buildFontURL, generateLayoutCSS } from '../lib/brand';
 import type { Brand, Theme } from '../lib/types';
 import '../styles/base.css';
 import '../styles/layout.css';
@@ -31,6 +31,7 @@ import '../styles/trust.css';
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
 const themeCSS = generateThemeCSS(typedBrand, typedTheme.defaultMode || 'light');
+const layoutCSS = generateLayoutCSS((theme as any).layout);
 const fontURL = buildFontURL(typedBrand, client.name || '');
 const schemaJson = JSON.stringify(schema);
 const hoursJson = JSON.stringify(hours);
@@ -53,6 +54,7 @@ const hasProjects = (projects as any)?.projects?.length > 0;
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href={fontURL} rel="stylesheet">
   <style set:html={themeCSS}></style>
+  {layoutCSS && <style set:html={layoutCSS}></style>}
 </head>
 <body data-accent={typedTheme.accentStyle || "border"}>
   <script is:inline>
