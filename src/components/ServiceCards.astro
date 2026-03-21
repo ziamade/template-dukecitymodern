@@ -4,23 +4,25 @@ const serviceFiles = import.meta.glob('../content/services/*.md', { eager: true 
 const services = Object.values(serviceFiles)
   .map((mod: any) => mod.frontmatter)
   .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+
+const MAX_FEATURED = 3;
+const featured = services.filter((s: any) => s.beforeImage).slice(0, MAX_FEATURED);
+const secondary = services.slice(featured.length);
 ---
 {services.length > 0 && (
   <section class="services-section section" id="services">
     <div class="container">
       <h2 class="section-heading">Our Services</h2>
       <div class="services-grid">
-        {services.map((svc: any) => (
+        {featured.map((svc: any) => (
           <a href="#contact" class="service-card">
-            {svc.beforeImage && (
-              <img
-                src={svc.beforeImage}
-                alt={svc.title}
-                loading="lazy"
-                data-fallback={svc.fallbackImage || ''}
-                onerror="this.onerror=null;this.src=this.dataset.fallback;"
-              />
-            )}
+            <img
+              src={svc.beforeImage}
+              alt={svc.title}
+              loading="lazy"
+              data-fallback={svc.fallbackImage || ''}
+              onerror="this.onerror=null;this.src=this.dataset.fallback;"
+            />
             <div class="service-card-body">
               <h3>{svc.title}</h3>
               <p>{svc.description}</p>
@@ -31,6 +33,18 @@ const services = Object.values(serviceFiles)
           </a>
         ))}
       </div>
+      {secondary.length > 0 && (
+        <ul class="services-list">
+          {secondary.map((svc: any) => (
+            <li>
+              <a href="#contact" class="services-list-item">
+                <span class="services-list-name">{svc.title}</span>
+                {svc.description && <span class="services-list-desc">{svc.description}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   </section>
 )}
