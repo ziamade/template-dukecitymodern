@@ -2,15 +2,21 @@
 // src/components/PhotoGallery.astro
 import gallery from '../data/gallery.json';
 ---
-{gallery?.images?.length > 0 && (
-  <section class="gallery-section" id="gallery">
+{(gallery?.images?.length > 0 || gallery?.items?.length > 0) && (
+  <section class="gallery-section section" id="gallery">
+    <div class="container">
+      <h2 class="section-heading">Our Work</h2>
+    </div>
     <div class="gallery-scroll">
-      {gallery.images.map((img: any) => (
+      {(gallery.images || gallery.items || []).map((img: any) => (
         <img
-          src={img.url}
-          alt={img.alt}
+          src={img.url || img.image}
+          alt={img.alt || ''}
           loading="lazy"
-          data-fallback={img.fallbackUrl}
+          decoding="async"
+          width="600"
+          height="400"
+          data-fallback={img.fallbackUrl || ''}
           onerror="this.onerror=null;this.src=this.dataset.fallback;"
         />
       ))}

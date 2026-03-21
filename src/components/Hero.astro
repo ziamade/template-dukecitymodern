@@ -11,11 +11,20 @@ interface Props {
 
 const { heroCta } = Astro.props;
 const variant = theme.heroVariant || 1;
+const heroVideo = (hero as any)?.heroVideo || '';
+const isVideo = heroVideo && /\.(mp4|webm)$/i.test(heroVideo);
 ---
 <section class="hero" data-variant={variant} id="hero">
   {variant === 2 && (
-    <div class="hero-backdrop" style={hero?.heroImage ? `background-image: url('${hero.heroImage}')` : ''}></div>
+    isVideo ? (
+      <video class="hero-video" autoplay muted loop playsinline poster={hero?.heroImage || ''}>
+        <source src={heroVideo} type={heroVideo.endsWith('.webm') ? 'video/webm' : 'video/mp4'} />
+      </video>
+    ) : (
+      <div class="hero-backdrop" style={hero?.heroImage ? `background-image: url('${hero.heroImage}')` : ''}></div>
+    )
   )}
+  {variant === 2 && <div class="hero-overlay"></div>}
   <div class="container hero-grid">
     <div class="hero-content">
       <h1 class="hero-tagline">{hero?.heroTagline || client.name}</h1>
@@ -38,6 +47,10 @@ const variant = theme.heroVariant || 1;
           <img
             src={hero.heroImage}
             alt={client.name}
+            width="800"
+            height="600"
+            decoding="async"
+            fetchpriority="high"
             data-fallback={hero.fallbackImage || ''}
             onerror="this.onerror=null;this.src=this.dataset.fallback;"
           />

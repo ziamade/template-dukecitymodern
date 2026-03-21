@@ -25,6 +25,7 @@ html {
   line-height: 1.6;
   color: var(--text);
   background: var(--background);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -67,6 +68,7 @@ a:hover { text-decoration: underline; }
 .btn-primary:hover { opacity: 0.9; text-decoration: none; }
 
 /* Alert banner */
+
 .alert-banner {
   background: var(--accent);
   color: var(--background);
@@ -74,4 +76,29 @@ a:hover { text-decoration: underline; }
   padding: 0.5rem 1rem;
   font-size: var(--font-size-small);
   font-weight: 600;
+}
+
+/* ── Scroll-driven section reveal ────────────────────────────────────── */
+@supports (animation-timeline: view()) {
+  .section {
+    animation: revealSection linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 40%;
+  }
+
+  @keyframes revealSection {
+    from { opacity: 0; transform: translateY(2rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .service-card,
+  .review-card,
+  .project-card,
+  .faq-section details,
+  .trust-badge,
+  .process-step {
+    animation: revealSection linear both;
+    animation-timeline: view();
+    animation-range: entry 5% entry 35%;
+  }
 }

@@ -20,6 +20,9 @@ const secondary = services.slice(featured.length);
               src={svc.beforeImage}
               alt={svc.title}
               loading="lazy"
+              decoding="async"
+              width="600"
+              height="400"
               data-fallback={svc.fallbackImage || ''}
               onerror="this.onerror=null;this.src=this.dataset.fallback;"
             />
