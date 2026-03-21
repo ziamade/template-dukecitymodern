@@ -7,10 +7,11 @@ import theme from '../data/theme.json';
 
 interface Props {
   heroCta: { text: string; href: string };
+  variant?: string | number;
 }
 
-const { heroCta } = Astro.props;
-const variant = theme.heroVariant || 1;
+const { heroCta, variant: variantProp } = Astro.props;
+const variant = variantProp ?? theme.heroVariant ?? 1;
 ---
 <section class="hero" data-variant={variant} id="hero">
   {variant === 2 && (
