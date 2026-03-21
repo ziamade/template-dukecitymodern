@@ -1,5 +1,6 @@
 ---
 // src/components/ServiceCards.astro
+import OptimizedImg from './OptimizedImg.astro';
 interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'cards');
@@ -23,15 +24,14 @@ const secondary = services.slice(featured.length);
           <div class="services-grid">
             {featured.map((svc: any) => (
               <a href="#contact" class="service-card">
-                <img
+                <OptimizedImg
                   src={svc.beforeImage}
                   alt={svc.title}
-                  loading="lazy"
-                  decoding="async"
-                  width="600"
-                  height="400"
-                  data-fallback={svc.fallbackImage || ''}
-                  onerror="this.onerror=null;this.src=this.dataset.fallback;"
+                  width={600}
+                  height={400}
+                  widths={[300, 600]}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  fallback={svc.fallbackImage || ''}
                 />
                 <div class="service-card-body">
                   <h3>{svc.title}</h3>
@@ -63,8 +63,13 @@ const secondary = services.slice(featured.length);
           {services.map((svc: any) => (
             <a href="#contact" class="service-icon-card">
               {svc.beforeImage && (
-                <img src={svc.beforeImage} alt={svc.title} loading="lazy" decoding="async" width="120" height="120"
-                  data-fallback={svc.fallbackImage || ''} onerror="this.onerror=null;this.src=this.dataset.fallback;" />
+                <OptimizedImg
+                  src={svc.beforeImage}
+                  alt={svc.title}
+                  width={120}
+                  height={120}
+                  fallback={svc.fallbackImage || ''}
+                />
               )}
               <h3>{svc.title}</h3>
               <p>{svc.description}</p>

@@ -1,0 +1,65 @@
+---
+// src/components/OptimizedImg.astro
+//
+// Wrapper that renders Astro's <Picture> for local images (AVIF/WebP)
+// and falls back to a plain <img> with onerror handler for external URLs
+// or images not found in src/assets/images/.
+import { Picture } from 'astro:assets';
+import { resolveImage } from '../lib/images';
+
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  widths?: number[];
+  sizes?: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  fallback?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  widths,
+  sizes,
+  loading = 'lazy',
+  fetchpriority,
+  fallback,
+  class: className,
+} = Astro.props;
+
+const optimized = resolveImage(src);
+---
+{optimized ? (
+  <Picture
+    src={optimized}
+    formats={['avif', 'webp']}
+    alt={alt}
+    width={width}
+    height={height}
+    widths={widths}
+    sizes={sizes}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+    class={className}
+  />
+) : src ? (
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+    class={className}
+    data-fallback={fallback || ''}
+    onerror="this.onerror=null;this.src=this.dataset.fallback;"
+  />
+) : null}
