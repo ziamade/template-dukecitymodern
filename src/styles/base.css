@@ -58,7 +58,7 @@ a:hover { text-decoration: underline; }
   padding: 0.875rem 2rem;
   background: var(--accent);
   color: var(--background);
-  border-radius: var(--card-radius);
+  border-radius: var(--btn-radius, var(--card-radius));
   font-weight: 600;
   text-decoration: none;
   min-height: var(--touch-min);
