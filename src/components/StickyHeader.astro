@@ -10,7 +10,8 @@ interface Props {
 }
 
 const { navLinks, ctaText, ctaHref } = Astro.props;
-const logoUrl = (client as any).logoUrl || '';
+// logoUrl is set by media-curator or image-expert — not in base client schema
+const logoUrl: string = (client as any).logoUrl || '';
 ---
 <header class="site-header" id="site-header">
   <div class="container">
