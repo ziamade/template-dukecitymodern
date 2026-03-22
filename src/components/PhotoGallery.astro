@@ -16,8 +16,6 @@ import OptimizedImg from './OptimizedImg.astro';
           alt={img.alt || ''}
           width={600}
           height={400}
-          widths={[300, 600]}
-          sizes="(max-width: 768px) 80vw, 600px"
           fallback={img.fallbackUrl || ''}
         />
       ))}
