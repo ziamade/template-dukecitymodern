@@ -2,6 +2,7 @@
 // src/components/StickyHeader.astro
 import client from '../data/client.json';
 import ThemeToggle from './ThemeToggle.astro';
+import OptimizedImg from './OptimizedImg.astro';
 
 interface Props {
   navLinks: Array<{ href: string; text: string }>;
@@ -17,7 +18,14 @@ const logoUrl: string = (client as any).logoUrl || '';
   <div class="container">
     {logoUrl ? (
       <a href="#" class="site-logo-link">
-        <img src={logoUrl} alt={client.name} class="site-logo" />
+        <OptimizedImg
+          src={logoUrl}
+          alt={client.name}
+          class="site-logo"
+          width={160}
+          height={40}
+          loading="eager"
+        />
       </a>
     ) : (
       <a href="#" class="site-name">{client.name}</a>
