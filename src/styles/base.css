@@ -43,6 +43,7 @@ a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 .section { padding: var(--section-gap) 0; }
+.section:nth-child(even) { background: var(--surface); }
 .container { max-width: var(--content-width); margin: 0 auto; padding: 0 1.25rem; }
 
 .section-heading {
