@@ -6,7 +6,7 @@ import contact from '../data/contact.json';
 import location from '../data/location.json';
 import { formatPhone } from '../lib/utils';
 
-const delivery = client.delivery || {};
+const delivery = (client.delivery || {}) as any;
 const days = hours?.days || [];
 const addressLine = `${location.address}, ${location.city} ${location.state} ${location.zip}`;
 ---
