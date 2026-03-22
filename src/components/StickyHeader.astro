@@ -10,10 +10,18 @@ interface Props {
 }
 
 const { navLinks, ctaText, ctaHref } = Astro.props;
+// logoUrl is set by media-curator or image-expert — not in base client schema
+const logoUrl: string = (client as any).logoUrl || '';
 ---
 <header class="site-header" id="site-header">
   <div class="container">
-    <a href="#" class="site-name">{client.name}</a>
+    {logoUrl ? (
+      <a href="#" class="site-logo-link">
+        <img src={logoUrl} alt={client.name} class="site-logo" />
+      </a>
+    ) : (
+      <a href="#" class="site-name">{client.name}</a>
+    )}
     <nav class="nav-links" aria-label="Main navigation">
       {navLinks.map(link => (
         <a href={link.href}>{link.text}</a>

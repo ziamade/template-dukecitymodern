@@ -55,6 +55,24 @@ body {
   text-decoration: none;
 }
 
+/* --- Site logo image --- */
+.site-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.site-logo {
+  height: 32px;
+  width: auto;
+}
+
+@media (min-width: 768px) {
+  .site-logo {
+    height: 40px;
+  }
+}
+
 /* --- Desktop nav --- */
 .nav-links {
   display: none;
