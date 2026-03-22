@@ -6,6 +6,18 @@ import contact from '../data/contact.json';
 import { formatPhone } from '../lib/utils';
 
 const addressLine = location.address + ", " + location.city + " " + location.state + " " + location.zip;
+
+const socialIcons = import.meta.glob('/src/assets/svgs/social/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true
+});
+
+function getSocialIcon(platform: string): string | null {
+  const key = `/src/assets/svgs/social/${platform}.svg`;
+  const fallback = `/src/assets/svgs/social/external-link.svg`;
+  return (socialIcons[key] as string) || (socialIcons[fallback] as string) || null;
+}
 ---
 <footer class="site-footer">
   <div class="container">
@@ -18,13 +30,45 @@ const addressLine = location.address + ", " + location.city + " " + location.sta
         </div>
       </div>
       <div class="footer-socials">
-        {client.socials?.facebook && <a href={client.socials.facebook} target="_blank" rel="noopener" aria-label="Facebook">FB</a>}
-        {client.socials?.instagram && <a href={client.socials.instagram} target="_blank" rel="noopener" aria-label="Instagram">IG</a>}
-        {client.socials?.yelp && <a href={client.socials.yelp} target="_blank" rel="noopener" aria-label="Yelp">Yelp</a>}
-        {client.socials?.google && <a href={client.socials.google} target="_blank" rel="noopener" aria-label="Google">G</a>}
+        {client.socials && Object.entries(client.socials).map(([platform, url]) => {
+          if (!url) return null;
+          const iconSvg = getSocialIcon(platform);
+          const label = platform.charAt(0).toUpperCase() + platform.slice(1);
+          return (
+            <a href={url as string} target="_blank" rel="noopener" aria-label={label} class="social-icon">
+              {iconSvg ? <Fragment set:html={iconSvg} /> : <span>{label}</span>}
+            </a>
+          );
+        })}
       </div>
     </div>
     <div class="footer-copy">&copy; {new Date().getFullYear()} {client.name}. All rights reserved.</div>
     <div class="footer-powered">Powered by <a href="https://ziamade.com" target="_blank" rel="noopener">ZiaMade</a></div>
   </div>
 </footer>
+
+<style>
+  .footer-socials {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--textMuted, #999);
+    transition: color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .social-icon:hover {
+    color: var(--primary);
+    opacity: 0.8;
+  }
+
+  .social-icon :global(svg) {
+    width: 24px;
+    height: 24px;
+  }
+</style>
