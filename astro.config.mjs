@@ -4,5 +4,13 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   output: 'static',
   site: 'https://placeholder.com',
-  integrations: [sitemap()],
+  image: {
+    layout: 'constrained',
+  },
+  integrations: [
+    sitemap({
+      changefreq: 'monthly',
+      priority: 0.7,
+    }),
+  ],
 });

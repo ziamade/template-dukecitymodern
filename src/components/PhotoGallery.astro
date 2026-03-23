@@ -1,6 +1,7 @@
 ---
 // src/components/PhotoGallery.astro
-import gallery from '../data/gallery.json';
+import galleryRaw from '../data/gallery.json';
+const gallery = galleryRaw as any;
 import OptimizedImg from './OptimizedImg.astro';
 ---
 {(gallery?.images?.length > 0 || gallery?.items?.length > 0) && (
@@ -15,8 +16,6 @@ import OptimizedImg from './OptimizedImg.astro';
           alt={img.alt || ''}
           width={600}
           height={400}
-          widths={[300, 600]}
-          sizes="(max-width: 768px) 80vw, 600px"
           fallback={img.fallbackUrl || ''}
         />
       ))}

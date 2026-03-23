@@ -12,7 +12,7 @@
 import type { ImageMetadata } from 'astro';
 
 const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/images/**/*.{jpg,jpeg,png,webp,gif,svg}',
+  '/src/assets/images/**/*.{jpg,jpeg,JPG,JPEG,png,PNG,webp,gif,svg}',
   { eager: true },
 );
 
