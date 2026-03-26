@@ -96,10 +96,15 @@ body {
 .nav-cta {
   display: inline-block;
   padding: 0.5rem 1.25rem;
-  background: var(--accent);
+  background: var(--primary);
   color: var(--background);
-  border-radius: var(--card-radius);
+  border-radius: var(--btn-radius, var(--card-radius));
   font-weight: 600;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+.nav-cta:hover {
+  opacity: 0.9;
   text-decoration: none;
 }
 
