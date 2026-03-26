@@ -4,107 +4,91 @@ import testimonials from '../data/testimonials.json';
 import client from '../data/client.json';
 
 interface Props { variant?: string | number; }
-const { variant: variantProp } = Astro.props;
-const variant = String(variantProp || 'scroll');
+
+// Always use scroll variant — stacked/featured removed per feedback
+const variant = 'scroll';
 
 const items = testimonials?.items || [];
 
-// For featured variant: sort by rating then text length
-const sortedItems = [...items].sort((a: any, b: any) => b.rating - a.rating || b.text.length - a.text.length);
-const featuredReview = sortedItems[0];
-const restReviews = sortedItems.slice(1);
+// Real review count from Google, NOT items.length
+const reviewCount = (testimonials as any)?.reviewCount || (testimonials as any)?.totalReviews || null;
+const averageRating = (testimonials as any)?.averageRating || null;
+
+// Build the "See all reviews" link
+let allReviewsUrl = client.socials?.google || '';
+try {
+  const googleLinks = await import('../data/google-links.json').catch(() => null);
+  if (googleLinks?.default?.allReviews) allReviewsUrl = googleLinks.default.allReviews;
+} catch {}
+
+// Load source icons
+const sourceIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });
+function sourceIcon(name: string): string {
+  return (sourceIcons[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
+}
+
+// Build heading with real count
+const headingParts: string[] = ['What Our Customers Say'];
+if (averageRating && reviewCount) {
+  headingParts[0] = `${averageRating} Stars from ${reviewCount}+ Reviews`;
+} else if (reviewCount) {
+  headingParts[0] = `${reviewCount}+ Customer Reviews`;
+}
 ---
 {items.length > 0 && (
-  <section class="reviews-section section" data-variant={variant} id="reviews">
+  <section class="reviews-section section" id="reviews">
     <div class="container">
-      <h2 class="section-heading">What Our Customers Say</h2>
+      <h2 class="section-heading">{headingParts[0]}</h2>
 
-      {variant === 'scroll' && (
-        <div class="reviews-scroll" style={`--review-count: ${items.length}`}>
-          {items.map((t: any) => (
-            <div class="review-card">
-              <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
-              <details class="review-text-wrap">
-                <summary class="review-text">{t.text}</summary>
-                <p>{t.text}</p>
-              </details>
-              <div class="review-footer">
-                <span class="review-avatar">{t.initials}</span>
-                <span class="review-author">{t.author}</span>
-                <span class="review-badge">{t.source} Review</span>
-              </div>
+      <div class="reviews-scroll" style={`--review-count: ${items.length}`}>
+        {items.map((t: any) => (
+          <a
+            class:list={["review-card", { "review-card--linked": t.url || allReviewsUrl }]}
+            href={t.url || allReviewsUrl || undefined}
+            target={t.url || allReviewsUrl ? "_blank" : undefined}
+            rel={t.url || allReviewsUrl ? "noopener" : undefined}
+          >
+            <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
+            <details class="review-text-wrap">
+              <summary class="review-text">{t.text}</summary>
+              <p>{t.text}</p>
+            </details>
+            <div class="review-footer">
+              <span class="review-avatar">{t.initials}</span>
+              <span class="review-author">{t.author}</span>
+              <span class="review-badge">
+                <span class="review-badge-icon" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+              </span>
             </div>
-          ))}
-          {items.map((t: any) => (
-            <div class="review-card" aria-hidden="true">
-              <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
-              <details class="review-text-wrap">
-                <summary class="review-text">{t.text}</summary>
-                <p>{t.text}</p>
-              </details>
-              <div class="review-footer">
-                <span class="review-avatar">{t.initials}</span>
-                <span class="review-author">{t.author}</span>
-                <span class="review-badge">{t.source} Review</span>
-              </div>
+          </a>
+        ))}
+        {items.map((t: any) => (
+          <a
+            class:list={["review-card", { "review-card--linked": t.url || allReviewsUrl }]}
+            href={t.url || allReviewsUrl || undefined}
+            target={t.url || allReviewsUrl ? "_blank" : undefined}
+            rel={t.url || allReviewsUrl ? "noopener" : undefined}
+            aria-hidden="true"
+          >
+            <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
+            <details class="review-text-wrap">
+              <summary class="review-text">{t.text}</summary>
+              <p>{t.text}</p>
+            </details>
+            <div class="review-footer">
+              <span class="review-avatar">{t.initials}</span>
+              <span class="review-author">{t.author}</span>
+              <span class="review-badge">
+                <span class="review-badge-icon" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+              </span>
             </div>
-          ))}
-        </div>
-      )}
+          </a>
+        ))}
+      </div>
 
-      {variant === 'stack' && (
-        <div class="reviews-stack">
-          {items.map((t: any) => (
-            <div class="review-card">
-              <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
-              <p class="review-text-full">{t.text}</p>
-              <div class="review-footer">
-                <span class="review-avatar">{t.initials}</span>
-                <span class="review-author">{t.author}</span>
-                <span class="review-badge">{t.source} Review</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {variant === 'featured' && featuredReview && (
-        <>
-          <div class="review-featured">
-            <div class="review-card review-card--large">
-              <div class="review-stars review-stars--large">{Array.from({ length: featuredReview.rating }, () => '\u2605').join('')}</div>
-              <p class="review-text-full review-text--large">{featuredReview.text}</p>
-              <div class="review-footer">
-                <span class="review-avatar">{featuredReview.initials}</span>
-                <span class="review-author">{featuredReview.author}</span>
-                <span class="review-badge">{featuredReview.source} Review</span>
-              </div>
-            </div>
-          </div>
-          {restReviews.length > 0 && (
-            <div class="reviews-rest">
-              {restReviews.map((t: any) => (
-                <div class="review-card">
-                  <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
-                  <details class="review-text-wrap">
-                    <summary class="review-text">{t.text}</summary>
-                    <p>{t.text}</p>
-                  </details>
-                  <div class="review-footer">
-                    <span class="review-avatar">{t.initials}</span>
-                    <span class="review-author">{t.author}</span>
-                    <span class="review-badge">{t.source} Review</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
-
-      {client.socials?.google && (
-        <a href={client.socials.google} class="reviews-link" target="_blank" rel="noopener">
-          See all reviews on Google &rarr;
+      {allReviewsUrl && (
+        <a href={allReviewsUrl} class="reviews-link" target="_blank" rel="noopener">
+          See all {reviewCount ? `${reviewCount}+` : ''} reviews on Google &rarr;
         </a>
       )}
     </div>
