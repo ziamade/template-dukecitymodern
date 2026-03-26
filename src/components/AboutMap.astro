@@ -3,13 +3,19 @@
 import client from '../data/client.json';
 import location from '../data/location.json';
 import about from '../data/about.json';
+import brand from '../data/brand.json';
+import type { Brand } from '../lib/types';
+import BrandName from './BrandName.astro';
+import { brandify } from '../lib/brandify';
+
+const typedBrand = brand as unknown as Brand;
 ---
 <section class="about-section section" id="about">
   <div class="container about-grid">
     {about?.text && (
       <div class="about-text">
-        <h2>{about.heading || 'About'} {client.name}</h2>
-        <p class="about-text-content">{about.text}</p>
+        <h2>{about.heading || 'About'} <BrandName size="inline" /></h2>
+        <p class="about-text-content" set:html={brandify(about.text, client.name, typedBrand)} />
       </div>
     )}
     <div class="about-map-link">

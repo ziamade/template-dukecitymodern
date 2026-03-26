@@ -18,12 +18,24 @@ export interface ColorPalette {
   border: string;
 }
 
+export interface NamePart {
+  text: string;
+  font: 'name' | 'heading' | 'body';
+  color: 'accent' | 'primary' | 'text' | 'textMuted' | 'gradient';
+}
+
+export interface NameTreatment {
+  parts: NamePart[];
+  layout: 'inline' | 'stacked';
+}
+
 export interface Brand {
   light: ColorPalette;
   dark: ColorPalette;
   nameFont: string;
   headingFont: string;
   bodyFont: string;
+  nameTreatment?: NameTreatment;
 }
 
 export interface Contact {

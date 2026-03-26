@@ -3,6 +3,7 @@
 import client from '../data/client.json';
 import ThemeToggle from './ThemeToggle.astro';
 import OptimizedImg from './OptimizedImg.astro';
+import BrandName from './BrandName.astro';
 
 interface Props {
   navLinks: Array<{ href: string; text: string }>;
@@ -28,7 +29,7 @@ const logoUrl: string = (client as any).logoUrl || '';
         />
       </a>
     ) : (
-      <a href="#" class="site-name">{client.name}</a>
+      <a href="#" class="site-name"><BrandName size="header" /></a>
     )}
     <nav class="nav-links" aria-label="Main navigation">
       {navLinks.map(link => (

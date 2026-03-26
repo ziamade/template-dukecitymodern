@@ -6,6 +6,7 @@ import contact from '../data/contact.json';
 import { formatPhone } from '../lib/utils';
 import googleLinks from '../data/google-links.json';
 import { getGoogleLinkEntries } from '../lib/google-links';
+import BrandName from './BrandName.astro';
 
 const mapLinks = getGoogleLinkEntries(googleLinks);
 
@@ -27,7 +28,7 @@ function getSocialIcon(platform: string): string | null {
   <div class="container">
     <div class="footer-content">
       <div>
-        <div class="footer-name">{client.name}</div>
+        <div class="footer-name"><BrandName size="footer" /></div>
         <div class="footer-details">
           {location.address && <>{addressLine}<br /></>}
           {contact.phoneForTel && <a href={`tel:${contact.phoneForTel}`}>{formatPhone(contact.phoneForTel)}</a>}
