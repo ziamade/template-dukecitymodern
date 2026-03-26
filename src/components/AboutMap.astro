@@ -6,9 +6,11 @@ import about from '../data/about.json';
 import brand from '../data/brand.json';
 import type { Brand } from '../lib/types';
 import BrandName from './BrandName.astro';
+import OptimizedImg from './OptimizedImg.astro';
 import { brandify } from '../lib/brandify';
 
 const typedBrand = brand as unknown as Brand;
+const logoUrl: string = (client as any).logoUrl || '';
 ---
 <section class="about-section section" id="about">
   <div class="container about-grid">
@@ -18,11 +20,24 @@ const typedBrand = brand as unknown as Brand;
         <p class="about-text-content" set:html={brandify(about.text, client.name, typedBrand)} />
       </div>
     )}
-    <div class="about-map-link">
-      {location.mapLink && (
-        <a href={location.mapLink} class="btn-primary" target="_blank" rel="noopener">View on Google Maps</a>
+    <div class="about-sidebar">
+      {logoUrl && (
+        <div class="about-logo">
+          <OptimizedImg
+            src={logoUrl}
+            alt={client.name}
+            class="about-logo-img"
+            width={240}
+            height={240}
+          />
+        </div>
       )}
-      <p class="about-address">{location.address || ''}<br />{location.city || ''}, {location.state || ''} {location.zip || ''}</p>
+      <div class="about-map-link">
+        {location.mapLink && (
+          <a href={location.mapLink} class="btn-primary" target="_blank" rel="noopener">View on Google Maps</a>
+        )}
+        <p class="about-address">{location.address || ''}<br />{location.city || ''}, {location.state || ''} {location.zip || ''}</p>
+      </div>
     </div>
   </div>
 </section>

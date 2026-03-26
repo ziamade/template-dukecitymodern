@@ -2,12 +2,13 @@
 // src/components/TrustBadges.astro
 // Renders trust bar from trustbar.json (curated by copy-expert).
 // Falls back to auto-generated badges from client/testimonials data.
-let trustbar: any = { items: [] };
-try { trustbar = (await import('../data/trustbar.json')).default; } catch {}
 import client from '../data/client.json';
 import testimonials from '../data/testimonials.json';
 import attributes from '../data/attributes.json';
 import { getAttributeBadges } from '../lib/attribute-badges';
+
+let trustbar: any = { items: [] };
+try { trustbar = (await import('../data/trustbar.json')).default; } catch {}
 
 const attrBadges = getAttributeBadges(attributes);
 

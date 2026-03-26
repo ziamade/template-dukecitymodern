@@ -4,13 +4,13 @@
 
 /* --- Body spacing for fixed elements --- */
 body {
-  padding-top: 48px;
+  padding-top: 52px;
   padding-bottom: 72px;
 }
 
 @media (min-width: 768px) {
   body {
-    padding-top: 56px;
+    padding-top: 60px;
     padding-bottom: 0;
   }
 }
@@ -37,12 +37,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 48px;
+  height: 52px;
 }
 
 @media (min-width: 768px) {
   .site-header .container {
-    height: 56px;
+    height: 60px;
   }
 }
 
@@ -68,14 +68,34 @@ body {
 
 /* --- Site logo image --- */
 .site-logo {
-  height: 32px;
+  height: 40px;
   width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 @media (min-width: 768px) {
   .site-logo {
-    height: 40px;
+    height: 48px;
+    max-width: 200px;
   }
+}
+
+/* Logo background handling: blend away white bg in light mode */
+[data-theme="light"] .site-logo,
+[data-theme="light"] .about-logo-img,
+[data-theme="light"] .footer-logo-img {
+  mix-blend-mode: multiply;
+}
+
+/* Dark mode: give logos a subtle light container so opaque backgrounds don't clash */
+[data-theme="dark"] .site-logo,
+[data-theme="dark"] .about-logo-img,
+[data-theme="dark"] .footer-logo-img {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px;
+  border-radius: 6px;
 }
 
 /* --- Desktop nav --- */
@@ -151,7 +171,7 @@ body {
 .mobile-nav {
   display: none;
   position: fixed;
-  top: 48px;
+  top: 52px;
   left: 0;
   right: 0;
   bottom: 0;
