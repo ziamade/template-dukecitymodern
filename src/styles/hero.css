@@ -94,16 +94,27 @@
 .hero[data-variant="2"] .hero-backdrop {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+}
+.hero[data-variant="2"] .hero-backdrop picture {
+  position: absolute;
+  inset: 0;
+}
+.hero[data-variant="2"] .hero-backdrop img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 .hero[data-variant="2"] .hero-backdrop::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(to right, rgba(0,0,0,0.75) 40%, rgba(0,0,0,0.3));
+  z-index: 1;
 }
-.hero[data-variant="2"] .hero-grid { position: relative; z-index: 1; }
+.hero[data-variant="2"] .hero-grid { position: relative; z-index: 2; }
 .hero[data-variant="2"] .hero-photo { display: none; }
 
 /* Variant 3: Photo left, text right */
