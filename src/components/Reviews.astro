@@ -11,15 +11,16 @@ const variant = 'scroll';
 const items = testimonials?.items || [];
 
 // Real review count from Google, NOT items.length
-const reviewCount = (testimonials as any)?.reviewCount || (testimonials as any)?.totalReviews || null;
+const reviewCount = (testimonials as any)?.reviewCount
+  || (testimonials as any)?.totalReviewCount
+  || (testimonials as any)?.totalReviews
+  || null;
 const averageRating = (testimonials as any)?.averageRating || null;
 
 // Build the "See all reviews" link
 let allReviewsUrl = client.socials?.google || '';
-try {
-  const googleLinks = await import('../data/google-links.json').catch(() => null);
-  if (googleLinks?.default?.allReviews) allReviewsUrl = googleLinks.default.allReviews;
-} catch {}
+const googleLinks = await import('../data/google-links.json').catch(() => null);
+if (googleLinks?.default?.allReviews) allReviewsUrl = googleLinks.default.allReviews;
 
 // Load source icons
 const sourceIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });

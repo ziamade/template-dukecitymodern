@@ -58,6 +58,8 @@
 .review-badge-icon { display: flex; align-items: center; }
 .review-badge-icon :global(svg) { width: 20px; height: 20px; }
 
+.review-card--linked { cursor: pointer; }
+
 .reviews-link {
   display: block; text-align: center; margin-top: 1.5rem;
   font-weight: 600; color: var(--accent);
