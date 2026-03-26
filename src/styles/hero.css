@@ -116,6 +116,11 @@
 }
 .hero[data-variant="2"] .hero-grid { position: relative; z-index: 2; }
 .hero[data-variant="2"] .hero-photo { display: none; }
+/* Full-bleed hero always needs white text regardless of light/dark mode */
+.hero[data-variant="2"] .hero-content { color: #F0EAEC; }
+.hero[data-variant="2"] .hero-tagline { color: #FFFFFF; }
+.hero[data-variant="2"] .hero-subtitle { color: #E0E0E0; }
+.hero[data-variant="2"] .hero-location { color: #D0D0D0; }
 
 /* ── Hero text entrance ─────────────────────────────────────────── */
 @media (prefers-reduced-motion: no-preference) {

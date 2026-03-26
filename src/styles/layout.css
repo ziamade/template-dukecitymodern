@@ -4,13 +4,13 @@
 
 /* --- Body spacing for fixed elements --- */
 body {
-  padding-top: 52px;
+  padding-top: 56px;
   padding-bottom: 72px;
 }
 
 @media (min-width: 768px) {
   body {
-    padding-top: 60px;
+    padding-top: 64px;
     padding-bottom: 0;
   }
 }
@@ -37,12 +37,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 52px;
+  height: 56px;
 }
 
 @media (min-width: 768px) {
   .site-header .container {
-    height: 60px;
+    height: 64px;
   }
 }
 
@@ -68,17 +68,17 @@ body {
 
 /* --- Site logo image --- */
 .site-logo {
-  height: 40px;
+  height: 44px;
   width: auto;
-  max-width: 160px;
+  max-width: 180px;
   object-fit: contain;
   border-radius: 4px;
 }
 
 @media (min-width: 768px) {
   .site-logo {
-    height: 48px;
-    max-width: 200px;
+    height: 52px;
+    max-width: 220px;
   }
 }
 
@@ -174,7 +174,7 @@ body {
 .mobile-nav {
   display: none;
   position: fixed;
-  top: 52px;
+  top: 56px;
   left: 0;
   right: 0;
   bottom: 0;

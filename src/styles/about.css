@@ -10,8 +10,8 @@
 .about-logo { display: flex; justify-content: center; }
 @media (min-width: 768px) { .about-logo { justify-content: flex-start; } }
 .about-logo-img {
-  max-width: 180px;
-  max-height: 140px;
+  max-width: 240px;
+  max-height: 180px;
   width: auto;
   height: auto;
   object-fit: contain;
