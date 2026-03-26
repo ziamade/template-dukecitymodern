@@ -4,6 +4,10 @@ import client from '../data/client.json';
 import location from '../data/location.json';
 import contact from '../data/contact.json';
 import { formatPhone } from '../lib/utils';
+import googleLinks from '../data/google-links.json';
+import { getGoogleLinkEntries } from '../lib/google-links';
+
+const mapLinks = getGoogleLinkEntries(googleLinks);
 
 const addressLine = location.address + ", " + location.city + " " + location.state + " " + location.zip;
 
@@ -28,6 +32,15 @@ function getSocialIcon(platform: string): string | null {
           {location.address && <>{addressLine}<br /></>}
           {contact.phoneForTel && <a href={`tel:${contact.phoneForTel}`}>{formatPhone(contact.phoneForTel)}</a>}
         </div>
+        {mapLinks.length > 0 && (
+          <div class="footer-map-links">
+            {mapLinks.map(link => (
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="footer-map-link">
+                <span>{link.icon}</span> {link.label}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
       <div class="footer-socials">
         {client.socials && Object.entries(client.socials).map(([platform, url]) => {
@@ -70,5 +83,29 @@ function getSocialIcon(platform: string): string | null {
   .social-icon :global(svg) {
     width: 24px;
     height: 24px;
+  }
+
+  .footer-map-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .footer-map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--textMuted, #999);
+    text-decoration: none;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border, rgba(255,255,255,0.1));
+    border-radius: var(--cardRadius, 6px);
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .footer-map-link:hover {
+    color: var(--primary);
+    border-color: var(--primary);
   }
 </style>
