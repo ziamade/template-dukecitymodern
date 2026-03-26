@@ -46,7 +46,18 @@ body {
   }
 }
 
-/* --- Site name --- */
+/* --- Site brand (logo + name) --- */
+.site-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--text);
+}
+.site-brand-link:hover {
+  text-decoration: none;
+}
+
 .site-name {
   color: var(--text);
   font-family: var(--font-name);
@@ -56,12 +67,6 @@ body {
 }
 
 /* --- Site logo image --- */
-.site-logo-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
 .site-logo {
   height: 32px;
   width: auto;

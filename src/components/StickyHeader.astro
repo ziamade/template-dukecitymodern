@@ -17,8 +17,8 @@ const logoUrl: string = (client as any).logoUrl || '';
 ---
 <header class="site-header" id="site-header">
   <div class="container">
-    {logoUrl ? (
-      <a href="#" class="site-logo-link">
+    <a href="#" class="site-brand-link">
+      {logoUrl && (
         <OptimizedImg
           src={logoUrl}
           alt={client.name}
@@ -27,10 +27,9 @@ const logoUrl: string = (client as any).logoUrl || '';
           height={40}
           loading="eager"
         />
-      </a>
-    ) : (
-      <a href="#" class="site-name"><BrandName size="header" /></a>
-    )}
+      )}
+      <BrandName size="header" />
+    </a>
     <nav class="nav-links" aria-label="Main navigation">
       {navLinks.map(link => (
         <a href={link.href}>{link.text}</a>

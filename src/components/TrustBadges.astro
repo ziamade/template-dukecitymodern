@@ -1,5 +1,9 @@
 ---
 // src/components/TrustBadges.astro
+// Renders trust bar from trustbar.json (curated by copy-expert).
+// Falls back to auto-generated badges from client/testimonials data.
+let trustbar: any = { items: [] };
+try { trustbar = (await import('../data/trustbar.json')).default; } catch {}
 import client from '../data/client.json';
 import testimonials from '../data/testimonials.json';
 import attributes from '../data/attributes.json';
@@ -13,12 +17,20 @@ function icon(name: string): string {
   return (iconFiles[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
 }
 
+// Use trustbar.json items if curated by copy-expert
+const curatedItems = (trustbar as any)?.items || [];
+const hasCuratedItems = curatedItems.length > 0 && (trustbar as any)?.source;
+
+// Fallback: auto-generate badges from raw data
 const currentYear = new Date().getFullYear();
 const foundingYear = parseInt((client as any).foundingYear || '0', 10);
 const yearsInBusiness = foundingYear > 1900 ? currentYear - foundingYear : 0;
 
 const reviews = testimonials?.items || [];
-const reviewCount = (testimonials as any)?.totalReviewCount || reviews.length;
+const reviewCount = (testimonials as any)?.reviewCount
+  || (testimonials as any)?.totalReviewCount
+  || (testimonials as any)?.totalReviews
+  || reviews.length;
 const avgRating = (testimonials as any)?.averageRating
   ? String((testimonials as any).averageRating)
   : reviews.length > 0
@@ -30,44 +42,71 @@ const license = (client as any).license || '';
 const insured = (client as any).insured === true;
 const serviceArea = (client as any).serviceArea || '';
 
-const hasBadges = yearsInBusiness > 0 || hasRating || license || insured || serviceArea || attrBadges.length > 0;
+const hasFallbackBadges = yearsInBusiness > 0 || hasRating || license || insured || serviceArea || attrBadges.length > 0;
+const hasBadges = hasCuratedItems || hasFallbackBadges;
+
+// Icon mapping for curated trustbar items
+function badgeIcon(label: string): string {
+  const lower = label.toLowerCase();
+  if (lower.includes('rating') || lower.includes('star')) return icon('star');
+  if (lower.includes('review')) return icon('star');
+  if (lower.includes('year') || lower.includes('since') || lower.includes('est')) return icon('clock');
+  if (lower.includes('license') || lower.includes('insured') || lower.includes('certified')) return icon('shield-check');
+  if (lower.includes('area') || lower.includes('location')) return icon('map-pin');
+  return icon('shield-check');
+}
 ---
 {hasBadges && (
   <section class="trust-section" id="trust">
     <div class="container">
       <div class="trust-badges">
-        {(license || insured) && (
-          <div class="trust-badge">
-            <span class="trust-badge-icon" set:html={icon('shield-check')} />
-            <span class="trust-badge-text">
-              {license ? license : 'Licensed & Insured'}
-            </span>
-          </div>
+        {hasCuratedItems ? (
+          /* Curated trustbar from copy-expert */
+          curatedItems.map((item: any) => (
+            <div class="trust-badge">
+              <span class="trust-badge-icon" set:html={badgeIcon(item.label || item.number || '')} />
+              <span class="trust-badge-text">
+                {item.number}{item.number && item.label ? ' ' : ''}{item.label}
+              </span>
+            </div>
+          ))
+        ) : (
+          /* Auto-generated fallback badges */
+          <>
+            {(license || insured) && (
+              <div class="trust-badge">
+                <span class="trust-badge-icon" set:html={icon('shield-check')} />
+                <span class="trust-badge-text">
+                  {license ? license : 'Licensed & Insured'}
+                </span>
+              </div>
+            )}
+            {yearsInBusiness > 0 && (
+              <div class="trust-badge">
+                <span class="trust-badge-icon" set:html={icon('clock')} />
+                <span class="trust-badge-text">Est. {foundingYear}</span>
+              </div>
+            )}
+            {hasRating && (
+              <a href="#reviews" class="trust-badge trust-badge--link">
+                <span class="trust-badge-icon" set:html={icon('star')} />
+                <span class="trust-badge-text">{avgRating} ({reviewCount}+ reviews)</span>
+              </a>
+            )}
+            {serviceArea && (
+              <div class="trust-badge">
+                <span class="trust-badge-icon" set:html={icon('map-pin')} />
+                <span class="trust-badge-text">{serviceArea}</span>
+              </div>
+            )}
+            {attrBadges.map(badge => (
+              <div class="trust-badge">
+                <span class="trust-badge-icon">{badge.icon}</span>
+                <span class="trust-badge-text">{badge.label}</span>
+              </div>
+            ))}
+          </>
         )}
-        {yearsInBusiness > 0 && (
-          <div class="trust-badge">
-            <span class="trust-badge-icon" set:html={icon('clock')} />
-            <span class="trust-badge-text">Est. {foundingYear}</span>
-          </div>
-        )}
-        {hasRating && (
-          <a href="#reviews" class="trust-badge trust-badge--link">
-            <span class="trust-badge-icon" set:html={icon('star')} />
-            <span class="trust-badge-text">{avgRating} ({reviewCount} reviews)</span>
-          </a>
-        )}
-        {serviceArea && (
-          <div class="trust-badge">
-            <span class="trust-badge-icon" set:html={icon('map-pin')} />
-            <span class="trust-badge-text">{serviceArea}</span>
-          </div>
-        )}
-        {attrBadges.map(badge => (
-          <div class="trust-badge">
-            <span class="trust-badge-icon">{badge.icon}</span>
-            <span class="trust-badge-text">{badge.label}</span>
-          </div>
-        ))}
       </div>
     </div>
   </section>
