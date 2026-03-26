@@ -215,5 +215,14 @@ body {
 }
 
 .action-icon {
-  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+}
+.action-icon :global(svg) {
+  width: 20px;
+  height: 20px;
+}
+.action-label {
+  font-size: 0.7rem;
 }

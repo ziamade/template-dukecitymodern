@@ -54,6 +54,25 @@ a:hover { text-decoration: underline; }
   margin-bottom: 2rem;
 }
 
+/* ── Section heading variants (set via data-heading attribute) ────── */
+.section[data-heading="left"] .section-heading {
+  text-align: left;
+}
+
+.section[data-heading="eyebrow"] .section-heading {
+  text-align: center;
+}
+.section-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-family: var(--font-body);
+}
+
 .brand-name {
   font-family: var(--font-name);
 }

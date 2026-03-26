@@ -102,10 +102,32 @@
   bottom: -1px;
   left: 0;
   right: 0;
-  height: 24px;
+  height: 48px;
   background: inherit;
   clip-path: ellipse(55% 100% at 50% 0%);
   z-index: 1;
+}
+
+/* ── Angle divider variant ─────────────────────────────────────────── */
+[data-section-pattern="angle"] .section {
+  position: relative;
+}
+[data-section-pattern="angle"] .section:nth-child(even) {
+  background: var(--surface);
+}
+[data-section-pattern="angle"] .section::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 60%, 100% 100%, 0 100%);
+  z-index: 1;
+}
+[data-section-pattern="angle"] .section:last-of-type::after {
+  display: none;
 }
 /* Don't add wave after the last section */
 [data-section-pattern="wave"] .section:last-of-type::after {
