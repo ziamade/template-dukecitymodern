@@ -37,7 +37,13 @@
 }
 
 .trust-badge-icon {
-  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+}
+.trust-badge-icon :global(svg) {
+  width: 16px;
+  height: 16px;
 }
 
 .trust-badge-text {

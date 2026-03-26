@@ -91,10 +91,16 @@ const ctaHref = isRestaurant ? '#contact' : '#contact';
 const heroCta = isRestaurant
   ? { text: 'View Our Menu', href: '#menu' }
   : { text: 'Get Your Free Quote', href: '#contact' };
+// Load SVG icons for action bar
+const actionIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });
+function actionIcon(name: string): string {
+  return (actionIcons[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
+}
+
 const actionBarLinks = [
-  { href: `tel:${contact.phoneForTel || ''}`, icon: '&#9742;', text: 'Call' },
-  { href: location.mapLink || '#', icon: '&#9906;', text: 'Directions' },
-  { href: '#contact', icon: isRestaurant ? '&#9733;' : '&#9993;', text: isRestaurant ? 'Order' : 'Quote' },
+  { href: `tel:${contact.phoneForTel || ''}`, icon: actionIcon('phone'), text: 'Call' },
+  { href: location.mapLink || '#', icon: actionIcon('navigation'), text: 'Directions' },
+  { href: '#contact', icon: isRestaurant ? actionIcon('utensils') : actionIcon('mail'), text: isRestaurant ? 'Order' : 'Quote' },
 ];
 ---
 <BaseLayout>

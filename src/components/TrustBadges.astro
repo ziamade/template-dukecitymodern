@@ -7,6 +7,12 @@ import { getAttributeBadges } from '../lib/attribute-badges';
 
 const attrBadges = getAttributeBadges(attributes);
 
+// Load SVG icons
+const iconFiles = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });
+function icon(name: string): string {
+  return (iconFiles[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
+}
+
 const currentYear = new Date().getFullYear();
 const foundingYear = parseInt((client as any).foundingYear || '0', 10);
 const yearsInBusiness = foundingYear > 1900 ? currentYear - foundingYear : 0;
@@ -32,7 +38,7 @@ const hasBadges = yearsInBusiness > 0 || hasRating || license || insured || serv
       <div class="trust-badges">
         {(license || insured) && (
           <div class="trust-badge">
-            <span class="trust-badge-icon">&#9989;</span>
+            <span class="trust-badge-icon" set:html={icon('shield-check')} />
             <span class="trust-badge-text">
               {license ? license : 'Licensed & Insured'}
             </span>
@@ -40,19 +46,19 @@ const hasBadges = yearsInBusiness > 0 || hasRating || license || insured || serv
         )}
         {yearsInBusiness > 0 && (
           <div class="trust-badge">
-            <span class="trust-badge-icon">&#9201;</span>
+            <span class="trust-badge-icon" set:html={icon('clock')} />
             <span class="trust-badge-text">Est. {foundingYear}</span>
           </div>
         )}
         {hasRating && (
           <a href="#reviews" class="trust-badge trust-badge--link">
-            <span class="trust-badge-icon">&#9733;</span>
+            <span class="trust-badge-icon" set:html={icon('star')} />
             <span class="trust-badge-text">{avgRating} ({reviewCount} reviews)</span>
           </a>
         )}
         {serviceArea && (
           <div class="trust-badge">
-            <span class="trust-badge-icon">&#9906;</span>
+            <span class="trust-badge-icon" set:html={icon('map-pin')} />
             <span class="trust-badge-text">{serviceArea}</span>
           </div>
         )}
