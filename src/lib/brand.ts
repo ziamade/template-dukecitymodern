@@ -67,6 +67,23 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
     pill: '2rem',
     square: '0',
   };
+  const IMG_RADIUS_MAP: Record<string, string> = {
+    rounded: '0.75rem',
+    sharp: '0',
+    masked: '0.375rem',
+  };
+  const TYPO_SCALE: Record<string, { base: string; h1: string; h2: string }> = {
+    compact: {
+      base: 'clamp(0.9rem, 0.875rem + 0.2vw, 1rem)',
+      h1: 'clamp(1.75rem, 1.25rem + 2vw, 2.75rem)',
+      h2: 'clamp(1.25rem, 1rem + 1vw, 1.75rem)',
+    },
+    editorial: {
+      base: 'clamp(1.05rem, 1rem + 0.3vw, 1.25rem)',
+      h1: 'clamp(2.25rem, 1.75rem + 3vw, 4rem)',
+      h2: 'clamp(1.75rem, 1.5rem + 1.5vw, 2.75rem)',
+    },
+  };
 
   const vars: string[] = [];
 
@@ -79,8 +96,17 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
   if (layout.buttonStyle && BUTTON_MAP[layout.buttonStyle]) {
     vars.push(`  --btn-radius: ${BUTTON_MAP[layout.buttonStyle]};`);
   }
+  if (layout.imageStyle && IMG_RADIUS_MAP[layout.imageStyle]) {
+    vars.push(`  --img-radius: ${IMG_RADIUS_MAP[layout.imageStyle]};`);
+  }
+  if (layout.typographyScale && TYPO_SCALE[layout.typographyScale]) {
+    const scale = TYPO_SCALE[layout.typographyScale];
+    vars.push(`  --font-size-base: ${scale.base};`);
+    vars.push(`  --font-size-h1: ${scale.h1};`);
+    vars.push(`  --font-size-h2: ${scale.h2};`);
+  }
 
-  return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';
+  return vars.length > 0 ? `html:root {\n${vars.join('\n')}\n}` : '';
 }
 
 /**

@@ -23,6 +23,7 @@ import '../styles/form.css';
 import '../styles/about.css';
 import '../styles/footer.css';
 import '../styles/accents.css';
+import '../styles/tokens.css';
 import '../styles/theme-toggle.css';
 import '../styles/hours.css';
 import '../styles/projects.css';
@@ -31,12 +32,19 @@ import '../styles/trust.css';
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
 const themeCSS = generateThemeCSS(typedBrand, typedTheme.defaultMode || 'light');
-const layoutCSS = generateLayoutCSS((theme as any).layout);
+const layout = (theme as any).layout || {};
+const layoutCSS = generateLayoutCSS(layout);
 const fontURL = buildFontURL(typedBrand, client.name || '');
 const schemaJson = JSON.stringify(schema);
 const hoursJson = JSON.stringify(hours);
 const hasGallery = gallery?.images?.length > 0;
 const hasProjects = (projects as any)?.projects?.length > 0;
+
+// Structural layout tokens → data attributes on body
+const headerStyle = layout.headerStyle || 'solid';
+const cardStyle = layout.cardStyle || 'shadow';
+const sectionPattern = layout.sectionPattern || 'alternating';
+const headerPosition = layout.headerPosition || 'hidden-on-scroll';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +65,13 @@ const hasProjects = (projects as any)?.projects?.length > 0;
   <style set:html={themeCSS}></style>
   {layoutCSS && <style set:html={layoutCSS}></style>}
 </head>
-<body data-accent={typedTheme.accentStyle || "border"}>
+<body
+  data-accent={typedTheme.accentStyle || "border"}
+  data-header-style={headerStyle}
+  data-card-style={cardStyle}
+  data-section-pattern={sectionPattern}
+  data-header-position={headerPosition}
+>
   <script is:inline>
     // Apply saved theme preference before paint (prevents flash)
     (function() {
@@ -81,7 +95,10 @@ const hasProjects = (projects as any)?.projects?.length > 0;
   <script is:inline src="/scripts/theme-toggle.js"></script>
   <script is:inline src="/scripts/menu-scroll.js"></script>
   {hasGallery && (
-    <script is:inline src="/scripts/gallery-hint.js"></script>
+    <>
+      <script is:inline src="/scripts/gallery-hint.js"></script>
+      <script is:inline src="/scripts/gallery-lightbox.js"></script>
+    </>
   )}
   {hasProjects && (
     <script is:inline src="/scripts/gallery-slider.js"></script>
