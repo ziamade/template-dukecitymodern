@@ -8,10 +8,10 @@
   gap: 1.5rem;
 }
 @media (min-width: 768px) {
-  .services-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-  .services-grid:has(> :last-child:nth-child(1)),
-  .services-grid:has(> :last-child:nth-child(2)) {
-    max-width: 700px;
+  .services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    justify-items: center;
+    max-width: 960px;
     margin-inline: auto;
   }
 }
@@ -89,8 +89,10 @@
 /* ── Variant: icon-grid ─────────────────────────────────────────────── */
 .services-icon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.25rem;
+  max-width: 960px;
+  margin-inline: auto;
 }
 
 .service-icon-card {
