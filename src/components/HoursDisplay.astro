@@ -3,9 +3,11 @@
 import hours from '../data/hours.json';
 import contact from '../data/contact.json';
 import { formatPhone } from '../lib/utils';
+import { getSecondaryHoursEntries } from '../lib/secondary-hours';
 
 const days = hours?.days || [];
 const phone = contact?.phoneForTel || '';
+const secondaryEntries = getSecondaryHoursEntries((hours as any)?.secondaryHours);
 ---
 <section class="hours-section section" id="hours">
   <div class="container">
@@ -21,6 +23,16 @@ const phone = contact?.phoneForTel || '';
           </div>
         ))}
       </div>
+      {secondaryEntries.map(entry => (
+        <div class="hours-secondary">
+          <h3 class="hours-secondary-label">{entry.label} Hours</h3>
+          {entry.hours.map((h: string) => (
+            <div class="hours-row">
+              <span class="hours-time">{h}</span>
+            </div>
+          ))}
+        </div>
+      ))}
       {phone && (
         <div class="hours-contact">
           <a href={`tel:${phone}`} class="btn-primary hours-phone">
@@ -31,3 +43,18 @@ const phone = contact?.phoneForTel || '';
     </div>
   </div>
 </section>
+
+<style>
+.hours-secondary {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.1));
+}
+
+.hours-secondary-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+</style>
