@@ -82,20 +82,23 @@ body {
   }
 }
 
-/* Logo background handling: blend away white bg in light mode */
-[data-theme="light"] .site-logo,
-[data-theme="light"] .about-logo-img,
-[data-theme="light"] .footer-logo-img {
-  mix-blend-mode: multiply;
-}
-
-/* Dark mode: give logos a subtle light container so opaque backgrounds don't clash */
+/* Dark mode: subtle container so logos with opaque backgrounds don't clash */
 [data-theme="dark"] .site-logo,
 [data-theme="dark"] .about-logo-img,
 [data-theme="dark"] .footer-logo-img {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 3px;
   border-radius: 6px;
+}
+/* Also cover OS dark preference when toggle hasn't been clicked */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .site-logo,
+  :root:not([data-theme]) .about-logo-img,
+  :root:not([data-theme]) .footer-logo-img {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 3px;
+    border-radius: 6px;
+  }
 }
 
 /* --- Desktop nav --- */

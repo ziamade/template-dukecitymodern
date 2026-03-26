@@ -10,7 +10,7 @@ import OptimizedImg from './OptimizedImg.astro';
 import { brandify } from '../lib/brandify';
 
 const typedBrand = brand as unknown as Brand;
-const logoUrl: string = (client as any).logoUrl || '';
+const logoUrl = client.logoUrl || '';
 ---
 <section class="about-section section" id="about">
   <div class="container about-grid">
@@ -27,8 +27,8 @@ const logoUrl: string = (client as any).logoUrl || '';
             src={logoUrl}
             alt={client.name}
             class="about-logo-img"
-            width={240}
-            height={240}
+            width={180}
+            height={140}
           />
         </div>
       )}

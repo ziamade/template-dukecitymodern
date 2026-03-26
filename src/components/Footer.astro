@@ -10,7 +10,7 @@ import BrandName from './BrandName.astro';
 import OptimizedImg from './OptimizedImg.astro';
 
 const mapLinks = getGoogleLinkEntries(googleLinks);
-const logoUrl: string = (client as any).logoUrl || '';
+const logoUrl = client.logoUrl || '';
 
 const addressLine = location.address + ", " + location.city + " " + location.state + " " + location.zip;
 
@@ -36,8 +36,8 @@ function getSocialIcon(platform: string): string | null {
               src={logoUrl}
               alt={client.name}
               class="footer-logo-img"
-              width={120}
-              height={40}
+              width={100}
+              height={36}
             />
           )}
           <BrandName size="footer" />

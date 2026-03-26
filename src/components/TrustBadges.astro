@@ -7,6 +7,7 @@ import testimonials from '../data/testimonials.json';
 import attributes from '../data/attributes.json';
 import { getAttributeBadges } from '../lib/attribute-badges';
 
+// Dynamic import must follow static imports to avoid ESBuild parse errors
 let trustbar: any = { items: [] };
 try { trustbar = (await import('../data/trustbar.json')).default; } catch {}
 
