@@ -117,6 +117,24 @@
 .hero[data-variant="2"] .hero-grid { position: relative; z-index: 2; }
 .hero[data-variant="2"] .hero-photo { display: none; }
 
+/* ── Hero text entrance ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-content > * {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    animation: heroEntrance 0.7s ease forwards;
+  }
+
+  .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.3s; }
+  .hero-content > *:nth-child(3) { animation-delay: 0.5s; }
+  .hero-content > *:nth-child(4) { animation-delay: 0.7s; }
+
+  @keyframes heroEntrance {
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
 /* Variant 3: Photo left, text right */
 @media (min-width: 768px) {
   .hero[data-variant="3"] .hero-grid {

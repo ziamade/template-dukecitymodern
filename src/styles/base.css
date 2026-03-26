@@ -122,14 +122,43 @@ a:hover { text-decoration: underline; }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .service-card,
+  /* Cards NOT handled by stagger keep scroll-driven reveal */
   .review-card,
   .project-card,
-  .faq-section details,
-  .trust-badge,
-  .process-step {
+  .faq-section details {
     animation: revealSection linear both;
     animation-timeline: view();
     animation-range: entry 5% entry 35%;
   }
+}
+
+/* ── Stagger animation (time-based, IO-triggered) ────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .services-grid .service-card,
+  .services-grid .service-icon-card,
+  .services-grid .service-compact-item,
+  .trust-badges .trust-badge,
+  .trust-stats .stat,
+  .process-steps .process-step {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: opacity var(--reveal-duration, 600ms) var(--reveal-ease, ease),
+                transform var(--reveal-duration, 600ms) var(--reveal-ease, ease);
+  }
+
+  .stagger-in .service-card,
+  .stagger-in .service-icon-card,
+  .stagger-in .service-compact-item,
+  .stagger-in .trust-badge,
+  .stagger-in .stat,
+  .stagger-in .process-step {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .stagger-in > :nth-child(2) { transition-delay: var(--stagger-delay, 100ms); }
+  .stagger-in > :nth-child(3) { transition-delay: calc(var(--stagger-delay, 100ms) * 2); }
+  .stagger-in > :nth-child(4) { transition-delay: calc(var(--stagger-delay, 100ms) * 3); }
+  .stagger-in > :nth-child(5) { transition-delay: calc(var(--stagger-delay, 100ms) * 4); }
+  .stagger-in > :nth-child(6) { transition-delay: calc(var(--stagger-delay, 100ms) * 5); }
 }

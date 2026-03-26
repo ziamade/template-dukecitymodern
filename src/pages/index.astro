@@ -7,6 +7,7 @@ import ServiceCards from '../components/ServiceCards.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
 import ProjectGallery from '../components/ProjectGallery.astro';
 import TrustBadges from '../components/TrustBadges.astro';
+import TrustStats from '../components/TrustStats.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import MenuSection from '../components/MenuSection.astro';
 import Reviews from '../components/Reviews.astro';
@@ -33,10 +34,14 @@ interface SectionEntry {
 const isRestaurant = (client.industry || '').toLowerCase().includes('restaurant');
 const hasReviews = testimonials?.items?.length > 0;
 
+// Resolve trust component from theme variant
+const trustVariant = (theme as any).sections?.find((s: any) => s.id === 'trust')?.variant;
+const TrustComponent = trustVariant === 'stats' ? TrustStats : TrustBadges;
+
 // Section component map
 const sectionMap: Record<string, any> = {
   hero: Hero,
-  trust: TrustBadges,
+  trust: TrustComponent,
   services: ServiceCards,
   projects: ProjectGallery,
   process: ProcessSteps,

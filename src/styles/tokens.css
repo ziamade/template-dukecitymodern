@@ -134,6 +134,23 @@
   display: none;
 }
 
+/* ── Motion Personalities ─────────────────────────────────────────── */
+[data-motion="crisp"] {
+  --stagger-delay: 60ms;
+  --reveal-duration: 400ms;
+  --reveal-ease: ease-out;
+}
+[data-motion="smooth"] {
+  --stagger-delay: 100ms;
+  --reveal-duration: 600ms;
+  --reveal-ease: ease;
+}
+[data-motion="relaxed"] {
+  --stagger-delay: 150ms;
+  --reveal-duration: 800ms;
+  --reveal-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
 /* ── Header Position ───────────────────────────────────────────────── */
 
 [data-header-position="static"] {
