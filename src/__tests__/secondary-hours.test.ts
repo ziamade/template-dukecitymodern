@@ -33,4 +33,10 @@ describe('getSecondaryHoursEntries', () => {
     expect(entries).toHaveLength(1);
     expect(entries[0].label).toBe('Takeout');
   });
+
+  it('handles non-array values gracefully', () => {
+    const secondary = { delivery: null, takeout: 'not-an-array' } as any;
+    const entries = getSecondaryHoursEntries(secondary);
+    expect(entries).toHaveLength(0);
+  });
 });

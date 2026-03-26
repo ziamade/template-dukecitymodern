@@ -27,4 +27,13 @@ describe('getGoogleLinkEntries', () => {
     expect(getGoogleLinkEntries(null as any)).toHaveLength(0);
     expect(getGoogleLinkEntries(undefined as any)).toHaveLength(0);
   });
+
+  it('rejects javascript: and data: URLs', () => {
+    const links = {
+      directions: 'javascript:alert(1)',
+      writeReview: 'data:text/html,<script>alert(1)</script>',
+    };
+    const entries = getGoogleLinkEntries(links);
+    expect(entries).toHaveLength(0);
+  });
 });

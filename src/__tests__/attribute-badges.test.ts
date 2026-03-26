@@ -31,11 +31,12 @@ describe('getAttributeBadges', () => {
   it('caps at 6 badges', () => {
     const attrs = {
       accessibility: { wheelchairEntrance: true },
-      parking: { freeParkingLot: true, freeStreetParking: true, valetParking: true },
+      parking: { freeParkingLot: true },
       payment: { creditCards: true, nfc: true },
-      atmosphere: { outdoorSeating: true, allowsDogs: true },
+      atmosphere: { outdoorSeating: true, allowsDogs: true, goodForChildren: true, liveMusic: true },
     };
-    expect(getAttributeBadges(attrs).length).toBeLessThanOrEqual(6);
+    const badges = getAttributeBadges(attrs);
+    expect(badges).toHaveLength(6);
   });
 
   it('returns empty array for empty/null input', () => {

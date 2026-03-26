@@ -7,7 +7,7 @@ import { getSecondaryHoursEntries } from '../lib/secondary-hours';
 
 const days = hours?.days || [];
 const phone = contact?.phoneForTel || '';
-const secondaryEntries = getSecondaryHoursEntries((hours as any)?.secondaryHours);
+const secondaryEntries = getSecondaryHoursEntries(hours.secondaryHours);
 ---
 <section class="hours-section section" id="hours">
   <div class="container">
