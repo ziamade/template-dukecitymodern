@@ -13,11 +13,17 @@
 }
 .gallery-scroll::-webkit-scrollbar { display: none; }
 
+/* Make <picture> from OptimizedImg transparent to flex layout */
+.gallery-scroll picture {
+  display: contents;
+}
+
 .gallery-scroll img {
   flex: 0 0 85vw;
   scroll-snap-align: center;
   object-fit: cover;
   aspect-ratio: 3 / 2;
+  min-height: 200px;
   border-radius: var(--card-radius);
 }
 
@@ -29,5 +35,6 @@
   }
   .gallery-scroll img {
     flex: 0 0 calc(33.33% - 0.67rem);
+    min-height: 240px;
   }
 }

@@ -47,7 +47,7 @@ const sectionPattern = layout.sectionPattern || 'alternating';
 const headerPosition = layout.headerPosition || 'hidden-on-scroll';
 ---
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme={typedTheme.defaultMode || 'light'}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,8 +57,9 @@ const headerPosition = layout.headerPosition || 'hidden-on-scroll';
   <meta property="og:description" content={seo.ogDescription || ""}>
   {seo.ogImage && <meta property="og:image" content={seo.ogImage} />}
   {seo.canonicalUrl && <link rel="canonical" href={seo.canonicalUrl} />}
-  <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/favicons/favicon.png" type="image/png">
+  <link rel="icon" href="/assets/favicons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/favicons/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/assets/favicons/favicon-96x96.png" type="image/png" sizes="96x96">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href={fontURL} rel="stylesheet">

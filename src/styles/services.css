@@ -128,10 +128,7 @@
 .service-icon-card p {
   font-size: var(--font-size-small);
   color: var(--textMuted);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.5;
 }
 
 /* ── Variant: compact ───────────────────────────────────────────────── */
