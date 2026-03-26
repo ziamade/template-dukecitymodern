@@ -30,6 +30,8 @@ import '../styles/theme-toggle.css';
 import '../styles/hours.css';
 import '../styles/projects.css';
 import '../styles/trust.css';
+import '../styles/trust-stats.css';
+import '../styles/bg-presets.css';
 
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
@@ -47,6 +49,8 @@ const headerStyle = layout.headerStyle || 'solid';
 const cardStyle = layout.cardStyle || 'shadow';
 const sectionPattern = layout.sectionPattern || 'alternating';
 const headerPosition = layout.headerPosition || 'hidden-on-scroll';
+const motionStyle = layout.motionStyle || 'smooth';
+const bgPreset = layout.backgroundPreset || 'clean';
 ---
 <!DOCTYPE html>
 <html lang="en" data-theme={typedTheme.defaultMode || 'light'}>
@@ -72,6 +76,8 @@ const headerPosition = layout.headerPosition || 'hidden-on-scroll';
   data-card-style={cardStyle}
   data-section-pattern={sectionPattern}
   data-header-position={headerPosition}
+  data-motion={motionStyle}
+  data-bg-preset={bgPreset}
 >
   <script is:inline>
     // Apply saved theme preference before paint (prevents flash)
@@ -92,6 +98,8 @@ const headerPosition = layout.headerPosition || 'hidden-on-scroll';
   )}
   <script type="application/json" id="hours-data" set:html={hoursJson}></script>
   <script is:inline src="/scripts/header-scroll.js"></script>
+  <script is:inline src="/scripts/stagger.js"></script>
+  <script is:inline src="/scripts/stat-counters.js"></script>
   <script is:inline src="/scripts/open-now.js"></script>
   <script is:inline src="/scripts/theme-toggle.js"></script>
   <script is:inline src="/scripts/menu-scroll.js"></script>
