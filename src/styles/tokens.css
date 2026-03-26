@@ -1,0 +1,131 @@
+/* ===== Layout Token Variants =====
+   Applied via data attributes on <body> and CSS custom properties from generateLayoutCSS().
+   Tokens: headerStyle, cardStyle, sectionPattern, headerPosition, imageStyle, typographyScale
+   Value tokens (cardRadius, sectionGap, buttonStyle, imageStyle, typographyScale)
+   are handled by --card-radius, --section-gap, --btn-radius, --img-radius, --font-size-* */
+
+/* ── Image radius token ────────────────────────────────────────────── */
+.service-card img,
+.gallery-image img,
+.project-card img,
+.hero-image img {
+  border-radius: var(--img-radius, 0);
+}
+
+/* ── Header Style ──────────────────────────────────────────────────── */
+
+[data-header-style="solid"] .site-header {
+  background: var(--surface);
+}
+
+[data-header-style="glass"] .site-header {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+[data-header-style="glass"] .site-header.header-solid {
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+[data-header-style="transparent"] .site-header {
+  background: transparent;
+}
+[data-header-style="transparent"] .site-header.header-solid {
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Card Style ────────────────────────────────────────────────────── */
+
+[data-card-style="bordered"] .service-card,
+[data-card-style="bordered"] .review-card,
+[data-card-style="bordered"] .service-icon-card {
+  border: 1px solid var(--border);
+  box-shadow: none;
+  background: var(--background);
+}
+
+[data-card-style="shadow"] .service-card,
+[data-card-style="shadow"] .review-card,
+[data-card-style="shadow"] .service-icon-card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+[data-card-style="flat"] .service-card,
+[data-card-style="flat"] .review-card,
+[data-card-style="flat"] .service-icon-card {
+  border: none;
+  box-shadow: none;
+  background: var(--surface);
+}
+
+[data-card-style="elevated"] .service-card,
+[data-card-style="elevated"] .review-card,
+[data-card-style="elevated"] .service-icon-card {
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(0);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+[data-card-style="elevated"] .service-card:hover,
+[data-card-style="elevated"] .review-card:hover,
+[data-card-style="elevated"] .service-icon-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+/* ── Section Pattern ───────────────────────────────────────────────── */
+
+[data-section-pattern="none"] .section:nth-child(even) {
+  background: var(--background);
+}
+
+/* alternating is the default in base.css — no override needed */
+
+[data-section-pattern="gradient"] .section:nth-child(even) {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--background) 100%);
+}
+
+[data-section-pattern="wave"] .section {
+  position: relative;
+}
+[data-section-pattern="wave"] .section:nth-child(even) {
+  background: var(--surface);
+}
+[data-section-pattern="wave"] .section::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: inherit;
+  clip-path: ellipse(55% 100% at 50% 0%);
+  z-index: 1;
+}
+/* Don't add wave after the last section */
+[data-section-pattern="wave"] .section:last-of-type::after {
+  display: none;
+}
+
+/* ── Header Position ───────────────────────────────────────────────── */
+
+[data-header-position="static"] {
+  padding-top: 0;
+}
+[data-header-position="static"] .site-header {
+  position: relative;
+}
+
+[data-header-position="hidden-on-scroll"] .site-header {
+  transition: transform 0.3s ease, background var(--transition-fast), box-shadow var(--transition-fast);
+}
+[data-header-position="hidden-on-scroll"] .site-header.header-hidden {
+  transform: translateY(-100%);
+}
+
+/* sticky is the default fixed behavior — no override needed */

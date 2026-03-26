@@ -61,6 +61,18 @@ export interface SEO {
   canonicalUrl: string;
 }
 
+export interface LayoutTokens {
+  cardRadius?: 'sharp' | 'soft' | 'round';
+  sectionGap?: 'tight' | 'normal' | 'spacious';
+  buttonStyle?: 'rounded' | 'pill' | 'square';
+  headerStyle?: 'solid' | 'glass' | 'transparent';
+  cardStyle?: 'bordered' | 'shadow' | 'flat' | 'elevated';
+  typographyScale?: 'compact' | 'standard' | 'editorial';
+  imageStyle?: 'rounded' | 'sharp' | 'masked';
+  sectionPattern?: 'none' | 'alternating' | 'gradient' | 'wave';
+  headerPosition?: 'sticky' | 'static' | 'hidden-on-scroll';
+}
+
 export interface Theme {
   sectionOrder: string[];
   heroVariant: number;
@@ -68,6 +80,7 @@ export interface Theme {
   faviconShape: string;
   industry: string;
   defaultMode: 'light' | 'dark';
+  layout?: LayoutTokens;
 }
 
 export interface Alert {
