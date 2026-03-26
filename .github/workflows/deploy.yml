@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -22,14 +25,24 @@ jobs:
       - name: Build (Astro)
         run: npm run build
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+      - name: Ensure CF Pages project exists
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ github.event.repository.name }}
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages project create ${{ github.event.repository.name }} --production-branch=main
+        continue-on-error: true
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ github.event.repository.name }} --commit-hash=${{ github.sha }} --commit-dirty=true
+
+      - name: Output deploy URL
+        run: echo "### Deployed" >> $GITHUB_STEP_SUMMARY && echo "${{ steps.deploy.outputs.deployment-url }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Notify on failure
         if: failure()
