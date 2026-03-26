@@ -10,9 +10,9 @@ const services = Object.values(serviceFiles)
   .map((mod: any) => mod.frontmatter)
   .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
-const MAX_FEATURED = 3;
+const MAX_FEATURED = 6;
 const featured = services.filter((s: any) => s.beforeImage).slice(0, MAX_FEATURED);
-const secondary = services.slice(featured.length);
+const secondary = services.filter((s: any) => !featured.includes(s));
 ---
 {services.length > 0 && (
   <section class="services-section section" data-variant={variant} id="services">
