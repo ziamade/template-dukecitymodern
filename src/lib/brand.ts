@@ -106,7 +106,7 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
     vars.push(`  --font-size-h2: ${scale.h2};`);
   }
 
-  return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';
+  return vars.length > 0 ? `html:root {\n${vars.join('\n')}\n}` : '';
 }
 
 /**
