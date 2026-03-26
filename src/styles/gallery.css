@@ -10,6 +10,9 @@
   -webkit-overflow-scrolling: touch;
   padding: 0 1.25rem;
   scrollbar-width: none;
+  /* Edge fade hints at more content */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
 }
 .gallery-scroll::-webkit-scrollbar { display: none; }
 
@@ -25,6 +28,7 @@
   aspect-ratio: 3 / 2;
   min-height: 200px;
   border-radius: var(--card-radius);
+  transition: transform 250ms ease;
 }
 
 @media (min-width: 768px) {
@@ -36,5 +40,9 @@
   .gallery-scroll img {
     flex: 0 0 calc(33.33% - 0.67rem);
     min-height: 240px;
+    cursor: pointer;
+  }
+  .gallery-scroll img:hover {
+    transform: scale(1.03);
   }
 }

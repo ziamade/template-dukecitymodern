@@ -4,7 +4,8 @@
   display: flex;
   gap: 1rem;
   width: max-content;
-  animation: scroll-reviews 30s linear infinite;
+  /* Duration scales with review count: ~6s per review */
+  animation: scroll-reviews calc(var(--review-count, 5) * 6s) linear infinite;
 }
 .reviews-scroll:hover { animation-play-state: paused; }
 
@@ -14,6 +15,11 @@
   padding: 1.5rem;
   width: 320px;
   flex-shrink: 0;
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.10);
 }
 
 @media (min-width: 768px) {

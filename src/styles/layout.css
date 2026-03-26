@@ -90,6 +90,11 @@ body {
   color: var(--text);
   font-size: var(--font-size-small);
   text-decoration: none;
+  transition: color var(--transition-fast);
+}
+.nav-links a:hover {
+  color: var(--accent);
+  text-decoration: none;
 }
 
 /* --- CTA button in nav --- */
