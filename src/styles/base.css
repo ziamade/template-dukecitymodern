@@ -67,9 +67,17 @@ a:hover { text-decoration: underline; }
   font-weight: 600;
   text-decoration: none;
   min-height: var(--touch-min);
-  transition: opacity var(--transition-fast);
+  transition: transform 180ms ease, box-shadow 180ms ease;
 }
-.btn-primary:hover { opacity: 0.9; text-decoration: none; }
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 25%, transparent);
+  text-decoration: none;
+}
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
 
 /* Alert banner */
 

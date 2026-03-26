@@ -7,16 +7,21 @@
 .form-group input,
 .form-group textarea {
   width: 100%; padding: 0.75rem;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid var(--border);
   border-radius: var(--card-radius);
-  background: rgba(255,255,255,0.1);
+  background: color-mix(in srgb, var(--text) 5%, var(--surface));
   color: var(--text);
   font-size: 1rem; font-family: inherit;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 .form-group input::placeholder,
-.form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+.form-group textarea::placeholder { color: var(--textMuted); opacity: 0.6; }
 .form-group input:focus,
-.form-group textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+}
 .form-group textarea { min-height: 120px; resize: vertical; }
 .form-submit {
   width: 100%; padding: 0.875rem;
@@ -24,8 +29,15 @@
   border-radius: var(--card-radius);
   font-weight: 600; font-size: 1rem; cursor: pointer;
   min-height: var(--touch-min);
-  transition: background var(--transition-fast);
+  transition: transform 180ms ease, box-shadow 180ms ease;
 }
-.form-submit:hover { opacity: 0.9; }
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+.form-submit:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
 .form-section noscript p { text-align: center; margin-top: 1rem; }
 .form-section noscript a { color: var(--accent); }
