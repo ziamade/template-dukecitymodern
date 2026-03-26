@@ -8,10 +8,12 @@ const foundingYear = parseInt((client as any).foundingYear || '0', 10);
 const yearsInBusiness = foundingYear > 1900 ? currentYear - foundingYear : 0;
 
 const reviews = testimonials?.items || [];
-const reviewCount = reviews.length;
-const avgRating = reviewCount > 0
-  ? (reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) / reviewCount).toFixed(1)
-  : '0';
+const reviewCount = (testimonials as any)?.totalReviewCount || reviews.length;
+const avgRating = (testimonials as any)?.averageRating
+  ? String((testimonials as any).averageRating)
+  : reviews.length > 0
+    ? (reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
+    : '0';
 const hasRating = reviewCount > 0 && parseFloat(avgRating) > 0;
 
 const license = (client as any).license || '';

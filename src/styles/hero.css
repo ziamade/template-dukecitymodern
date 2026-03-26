@@ -51,11 +51,17 @@
   50% { opacity: 0.4; transform: scale(0.8); }
 }
 
-.hero-address {
+.hero-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: var(--font-size-small);
-  opacity: 0.8;
+  opacity: 0.7;
+  text-decoration: none;
+  color: inherit;
+  margin-top: 0.5rem;
 }
-.hero-address a { color: var(--text); text-decoration: underline; }
+.hero-location:hover { opacity: 1; }
 .hero .btn-primary { width: fit-content; max-width: 280px; text-align: center; }
 
 .hero-photo {
