@@ -2,6 +2,10 @@
 // src/components/TrustBadges.astro
 import client from '../data/client.json';
 import testimonials from '../data/testimonials.json';
+import attributes from '../data/attributes.json';
+import { getAttributeBadges } from '../lib/attribute-badges';
+
+const attrBadges = getAttributeBadges(attributes);
 
 const currentYear = new Date().getFullYear();
 const foundingYear = parseInt((client as any).foundingYear || '0', 10);
@@ -20,7 +24,7 @@ const license = (client as any).license || '';
 const insured = (client as any).insured === true;
 const serviceArea = (client as any).serviceArea || '';
 
-const hasBadges = yearsInBusiness > 0 || hasRating || license || insured || serviceArea;
+const hasBadges = yearsInBusiness > 0 || hasRating || license || insured || serviceArea || attrBadges.length > 0;
 ---
 {hasBadges && (
   <section class="trust-section" id="trust">
@@ -52,6 +56,12 @@ const hasBadges = yearsInBusiness > 0 || hasRating || license || insured || serv
             <span class="trust-badge-text">{serviceArea}</span>
           </div>
         )}
+        {attrBadges.map(badge => (
+          <div class="trust-badge">
+            <span class="trust-badge-icon">{badge.icon}</span>
+            <span class="trust-badge-text">{badge.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   </section>
