@@ -9,10 +9,12 @@ import schema from '../data/schema.json';
 import hours from '../data/hours.json';
 import gallery from '../data/gallery.json';
 import projects from '../data/projects.json';
-import { generateThemeCSS, buildFontURL, generateLayoutCSS } from '../lib/brand';
+import { generateThemeCSS, generateLayoutCSS } from '../lib/brand';
+import { buildFontFaceCSS } from '../lib/fonts';
 import type { Brand, Theme } from '../lib/types';
 import '../styles/base.css';
 import '../styles/layout.css';
+import '../styles/brand-name.css';
 import '../styles/hero.css';
 import '../styles/faq.css';
 import '../styles/reviews.css';
@@ -34,7 +36,7 @@ const typedTheme = theme as unknown as Theme;
 const themeCSS = generateThemeCSS(typedBrand, typedTheme.defaultMode || 'light');
 const layout = (theme as any).layout || {};
 const layoutCSS = generateLayoutCSS(layout);
-const fontURL = buildFontURL(typedBrand, client.name || '');
+const fontFaceCSS = buildFontFaceCSS(typedBrand);
 const schemaJson = JSON.stringify(schema);
 const hoursJson = JSON.stringify(hours);
 const hasGallery = gallery?.images?.length > 0;
@@ -60,9 +62,7 @@ const headerPosition = layout.headerPosition || 'hidden-on-scroll';
   <link rel="icon" href="/assets/favicons/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/favicons/favicon.ico" sizes="32x32">
   <link rel="icon" href="/assets/favicons/favicon-96x96.png" type="image/png" sizes="96x96">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href={fontURL} rel="stylesheet">
+  <style set:html={fontFaceCSS}></style>
   <style set:html={themeCSS}></style>
   {layoutCSS && <style set:html={layoutCSS}></style>}
 </head>

@@ -109,29 +109,5 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
   return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';
 }
 
-/**
- * Build Google Fonts URL with name font subsetted to business name.
- * When nameFont === headingFont, skip the subsetted request to avoid
- * Google Fonts serving conflicting @font-face declarations for the
- * same family (subsetted glyphs vs full character set).
- */
-export function buildFontURL(brand: Brand, businessName: string): string {
-  const nameParam = encodeURIComponent(businessName);
-  const parts: string[] = [];
-
-  if (brand.nameFont === brand.headingFont) {
-    // Same font for name and headings — load once with full weights
-    parts.push(`family=${encodeURIComponent(brand.headingFont)}:wght@400;600;700`);
-  } else {
-    // Different fonts — subset the name font, full weights for headings
-    parts.push(`family=${encodeURIComponent(brand.nameFont)}&text=${nameParam}`);
-    parts.push(`family=${encodeURIComponent(brand.headingFont)}:wght@400;600;700`);
-  }
-
-  // Only add body font if it's different from heading font
-  if (brand.bodyFont !== brand.headingFont) {
-    parts.push(`family=${encodeURIComponent(brand.bodyFont)}:wght@400;500;600`);
-  }
-
-  return `https://fonts.googleapis.com/css2?${parts.join('&')}&display=swap`;
-}
+// buildFontURL() removed — replaced by self-hosted fonts in src/lib/fonts.ts
+// Use buildFontFaceCSS(brand) from '../lib/fonts' instead.

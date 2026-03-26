@@ -1,0 +1,39 @@
+/* ===== BrandName Component Styles ===== */
+
+/* Container */
+.bn { display: inline; white-space: nowrap; }
+.bn--stacked { display: inline-flex; flex-direction: column; white-space: normal; }
+
+/* Font assignments */
+.bn__p { display: inline; }
+.bn__p--name { font-family: var(--font-name); }
+.bn__p--heading { font-family: var(--font-heading); }
+.bn__p--body { font-family: var(--font-body); }
+
+/* Color assignments */
+.bn__p--accent { color: var(--accent); }
+.bn__p--primary { color: var(--primary); }
+.bn__p--text { color: var(--text); }
+.bn__p--textMuted { color: var(--textMuted); }
+.bn__p--gradient {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Size variants */
+.bn--hero { font-size: clamp(1.8rem, 1.5rem + 2vw, 2.5rem); line-height: 1.15; }
+.bn--header { font-size: 1.125rem; }
+.bn--footer { font-size: 1.125rem; }
+.bn--inline { font-size: inherit; }
+
+/* Stacked layout: descriptor drops to a smaller line below */
+.bn--stacked .bn__p--body,
+.bn--stacked .bn__p--textMuted {
+  display: block;
+  font-size: 0.45em;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 0.15em;
+}
