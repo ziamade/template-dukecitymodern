@@ -6,6 +6,7 @@ export interface Client {
   delivery: Record<string, string>;
   socials: { facebook: string; instagram: string; google: string; yelp: string };
   domain: string;
+  logoUrl?: string;
 }
 
 export interface ColorPalette {
