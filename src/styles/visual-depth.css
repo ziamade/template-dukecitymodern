@@ -223,37 +223,37 @@
    ║  Any section can opt in via data-section-mood="dark"                ║
    ╚═══════════════════════════════════════════════════════════════════════╝ */
 
+/* Dark accent section uses hardcoded dark values so it stays dark
+   regardless of light/dark theme mode */
 [data-section-mood="dark"] {
-  background: var(--text) !important;
-  color: var(--background);
+  background: #1a1a1a !important;
+  color: #f0f0f0;
   position: relative;
 }
 [data-section-mood="dark"] h2,
-[data-section-mood="dark"] h3 {
-  color: var(--background);
-}
+[data-section-mood="dark"] h3,
 [data-section-mood="dark"] .section-heading {
-  color: var(--background);
+  color: #f0f0f0;
 }
 [data-section-mood="dark"] .section-eyebrow {
   color: var(--accent);
 }
 [data-section-mood="dark"] p,
 [data-section-mood="dark"] .review-text-wrap summary {
-  color: color-mix(in srgb, var(--background) 80%, transparent);
+  color: rgba(240, 240, 240, 0.8);
 }
 [data-section-mood="dark"] .review-author {
-  color: var(--background);
+  color: #f0f0f0;
 }
 [data-section-mood="dark"] .review-badge-icon {
-  color: color-mix(in srgb, var(--background) 60%, transparent);
+  color: rgba(240, 240, 240, 0.6);
 }
 [data-section-mood="dark"] .review-stars {
   color: #f5a623;
 }
 [data-section-mood="dark"] .review-avatar {
   background: var(--accent);
-  color: var(--background);
+  color: #1a1a1a;
 }
 [data-section-mood="dark"] .reviews-link {
   color: var(--accent);
@@ -280,6 +280,7 @@
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,0.08);
   border-left: 3px solid var(--accent);
+  color: rgba(240, 240, 240, 0.85);
 }
 
 /* Bold dark section: accent bottom borders on cards, no glass */
