@@ -168,3 +168,13 @@
 }
 
 /* sticky is the default fixed behavior — no override needed */
+
+/* ── Depth: Bold Typography Boost ──────────────────────────────────── */
+[data-depth="bold"] {
+  --font-size-h1: clamp(2.75rem, 1.75rem + 5vw, 5rem);
+  --font-size-h2: clamp(2rem, 1.5rem + 2vw, 3rem);
+  --letter-spacing-heading: -0.02em;
+  --line-height-h1: 1.08;
+  --card-radius: 4px;
+  --btn-radius: 4px;
+}

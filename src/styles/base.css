@@ -13,6 +13,10 @@
   --content-width: min(72rem, 90vw);
   --card-radius: 0.5rem;
 
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.04), 0 16px 32px rgba(0,0,0,0.05);
+  --shadow-card-hover: 0 2px 4px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.06), 0 24px 48px rgba(0,0,0,0.08);
+
   /* Interaction */
   --touch-min: 44px;
   --transition-fast: 150ms ease;
@@ -33,9 +37,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 { font-family: var(--font-heading); line-height: 1.2; color: var(--text); }
-h1 { font-size: var(--font-size-h1); }
-h2 { font-size: var(--font-size-h2); }
+h1, h2, h3 { font-family: var(--font-heading); line-height: var(--line-height-h1, 1.2); color: var(--text); }
+h1 { font-size: var(--font-size-h1); letter-spacing: var(--letter-spacing-heading, 0); }
+h2 { font-size: var(--font-size-h2); letter-spacing: var(--letter-spacing-heading, 0); }
 
 img { max-width: 100%; height: auto; display: block; }
 
@@ -44,9 +48,9 @@ a:hover { text-decoration: underline; }
 
 .section { padding: var(--section-gap) 0; }
 .section:nth-child(even) { background: var(--surface); }
-.section + .section {
-  border-top: 1px solid var(--border);
-}
+.section + .section { border-top: 1px solid var(--border); }
+/* Depth personalities provide their own visual flow between sections */
+[data-depth] .section + .section { border-top: none; }
 .container { max-width: var(--content-width); margin: 0 auto; padding: 0 1.25rem; }
 
 .section-heading {
@@ -86,6 +90,7 @@ a:hover { text-decoration: underline; }
   font-weight: 600;
   text-decoration: none;
   min-height: var(--touch-min);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 .btn-primary:hover {
