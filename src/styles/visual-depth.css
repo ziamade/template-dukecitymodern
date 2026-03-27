@@ -138,20 +138,23 @@
    ║  Best for: auto, general contractors, moving, industrial            ║
    ╚═══════════════════════════════════════════════════════════════════════╝ */
 
-/* ── Dark hero ───────────────────────────────────────────────────────── */
+/* ── Dark hero (hardcoded dark — stays dark in both themes) ──────────── */
 [data-depth="bold"] .hero {
-  background: var(--text);
-  color: var(--background);
+  background: #18181b;
+  color: #fff;
 }
 [data-depth="bold"] .hero .hero-tagline,
 [data-depth="bold"] .hero .hero-content {
-  color: var(--background);
+  color: #fff;
 }
 [data-depth="bold"] .hero .hero-subtitle {
-  color: color-mix(in srgb, var(--background) 75%, transparent);
+  color: rgba(255, 255, 255, 0.7);
 }
 [data-depth="bold"] .hero .hero-location {
-  color: color-mix(in srgb, var(--background) 60%, transparent);
+  color: rgba(255, 255, 255, 0.55);
+}
+[data-depth="bold"] .hero .open-badge {
+  color: #fff;
 }
 
 /* Radial glow behind hero content */
@@ -174,19 +177,61 @@
   background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
 }
 
-/* ── Gradient text on hero heading ───────────────────────────────────── */
+/* ── Gradient text on hero heading (white → gold) ────────────────────── */
 [data-depth="bold"] .hero-tagline {
-  background: linear-gradient(135deg, var(--background) 0%, color-mix(in srgb, var(--accent) 80%, var(--background)) 70%);
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 70%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-/* Variant 2 override: gradient on white text */
+/* Variant 2: same gradient, photo hero already has dark overlay */
 [data-depth="bold"] .hero[data-variant="2"] .hero-tagline {
-  background: linear-gradient(135deg, #fff 0%, color-mix(in srgb, var(--accent) 70%, #fff) 70%);
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 70%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* ── Dark nav bar to match dark hero ─────────────────────────────────── */
+[data-depth="bold"] .site-header {
+  background: #18181b;
+}
+[data-depth="bold"] .site-header .site-name,
+[data-depth="bold"] .site-header .nav-links a,
+[data-depth="bold"] .site-header .hamburger-btn span {
+  color: #fff;
+}
+[data-depth="bold"] .site-header .nav-links a:hover {
+  color: var(--accent);
+}
+[data-depth="bold"] .site-header.header-solid {
+  background: #18181b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+[data-depth="bold"] .mobile-nav {
+  background: #18181b;
+}
+[data-depth="bold"] .mobile-nav a {
+  color: #fff;
+}
+
+/* ── Trust bar on dark with gold numbers ──────────────────────────────── */
+[data-depth="bold"] .trust-section {
+  background: #18181b;
+  border-bottom: 3px solid var(--accent);
+}
+[data-depth="bold"] .trust-section .trust-badge,
+[data-depth="bold"] .trust-section .trust-badge-text {
+  color: rgba(255, 255, 255, 0.8);
+}
+[data-depth="bold"] .trust-section .trust-badge-icon {
+  color: var(--accent);
+}
+[data-depth="bold"] .trust-stats .stat-number {
+  color: var(--accent);
+}
+[data-depth="bold"] .trust-stats .stat-label {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* ── Uppercase CTA buttons ───────────────────────────────────────────── */
@@ -211,12 +256,6 @@
   transform: translateY(-6px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
 }
-
-/* ── Trust bar accent border ─────────────────────────────────────────── */
-[data-depth="bold"] .trust-section {
-  border-bottom: 3px solid var(--accent);
-}
-
 
 /* ╔═══════════════════════════════════════════════════════════════════════╗
    ║  SHARED: Dark Accent Sections                                       ║
