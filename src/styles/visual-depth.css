@@ -1,0 +1,315 @@
+/* ===== Visual Depth Personalities =====
+   Three full-page visual treatments driven by data-depth on <body>.
+   Each personality controls: texture, nav style, shadows, section transitions,
+   dark accent sections, and card treatments.
+   Missing data-depth = zero visual changes (backwards compatible). */
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  EDITORIAL — warm, magazine-like, organic                           ║
+   ║  Best for: restaurants, salons, bakeries, spas, landscaping         ║
+   ╚═══════════════════════════════════════════════════════════════════════╝ */
+
+/* ── Page-wide grain texture ─────────────────────────────────────────── */
+[data-depth="editorial"]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E") repeat;
+  background-size: 182px;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="editorial"] > * { position: relative; z-index: 1; }
+
+/* Dark mode: increase grain visibility */
+[data-theme="dark"][data-depth="editorial"]::after { opacity: 0.10; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme])[data-depth="editorial"]::after { opacity: 0.10; }
+}
+
+/* ── Glass navigation ────────────────────────────────────────────────── */
+[data-depth="editorial"] .site-header {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+[data-depth="editorial"] .site-header.header-solid {
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+/* ── Multi-layer card shadows ────────────────────────────────────────── */
+[data-depth="editorial"] .service-card,
+[data-depth="editorial"] .service-icon-card,
+[data-depth="editorial"] .review-card {
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+[data-depth="editorial"] .service-card:hover,
+[data-depth="editorial"] .service-icon-card:hover,
+[data-depth="editorial"] .review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  GLASS — clean, app-like, precise                                   ║
+   ║  Best for: trades, HVAC, electrical, plumbing, professional svcs    ║
+   ╚═══════════════════════════════════════════════════════════════════════╝ */
+
+/* ── Glass navigation (heavier blur) ─────────────────────────────────── */
+[data-depth="glass"] .site-header {
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+[data-depth="glass"] .site-header.header-solid {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* ── Glass cards ─────────────────────────────────────────────────────── */
+[data-depth="glass"] .service-card,
+[data-depth="glass"] .service-icon-card {
+  background: color-mix(in srgb, var(--background) 70%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+[data-depth="glass"] .service-card:hover,
+[data-depth="glass"] .service-icon-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05), 0 12px 28px rgba(0,0,0,0.08);
+}
+
+/* Glass review cards */
+[data-depth="glass"] .review-card {
+  background: color-mix(in srgb, var(--background) 65%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+}
+
+/* ── Gradient section fades ──────────────────────────────────────────── */
+[data-depth="glass"] .section {
+  position: relative;
+}
+[data-depth="glass"] .section:nth-child(even)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--background));
+  pointer-events: none;
+  z-index: 1;
+}
+[data-depth="glass"] .section:nth-child(odd)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--surface));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Gradient CTA band ───────────────────────────────────────────────── */
+[data-depth="glass"] .cta-band {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  BOLD — high-contrast, confident, direct                            ║
+   ║  Best for: auto, general contractors, moving, industrial            ║
+   ╚═══════════════════════════════════════════════════════════════════════╝ */
+
+/* ── Dark hero ───────────────────────────────────────────────────────── */
+[data-depth="bold"] .hero {
+  background: var(--text);
+  color: var(--background);
+}
+[data-depth="bold"] .hero .hero-tagline,
+[data-depth="bold"] .hero .hero-content {
+  color: var(--background);
+}
+[data-depth="bold"] .hero .hero-subtitle {
+  color: color-mix(in srgb, var(--background) 75%, transparent);
+}
+[data-depth="bold"] .hero .hero-location {
+  color: color-mix(in srgb, var(--background) 60%, transparent);
+}
+
+/* Radial glow behind hero content */
+[data-depth="bold"] .hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 80%;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--accent) 15%, transparent) 0%, transparent 60%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Skip dark hero when full-bleed photo (variant 2 already provides drama) */
+[data-depth="bold"] .hero[data-variant="2"] {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+}
+
+/* ── Gradient text on hero heading ───────────────────────────────────── */
+[data-depth="bold"] .hero-tagline {
+  background: linear-gradient(135deg, var(--background) 0%, color-mix(in srgb, var(--accent) 80%, var(--background)) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* Variant 2 override: gradient on white text */
+[data-depth="bold"] .hero[data-variant="2"] .hero-tagline {
+  background: linear-gradient(135deg, #fff 0%, color-mix(in srgb, var(--accent) 70%, #fff) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Uppercase CTA buttons ───────────────────────────────────────────── */
+[data-depth="bold"] .btn-primary {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+[data-depth="bold"] .btn-primary:hover {
+  box-shadow: 0 6px 28px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* ── Strong card shadows ─────────────────────────────────────────────── */
+[data-depth="bold"] .service-card,
+[data-depth="bold"] .service-icon-card {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+[data-depth="bold"] .service-card:hover,
+[data-depth="bold"] .service-icon-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+/* ── Trust bar accent border ─────────────────────────────────────────── */
+[data-depth="bold"] .trust-section {
+  border-bottom: 3px solid var(--accent);
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  SHARED: Dark Accent Sections                                       ║
+   ║  Any section can opt in via data-section-mood="dark"                ║
+   ╚═══════════════════════════════════════════════════════════════════════╝ */
+
+[data-section-mood="dark"] {
+  background: var(--text) !important;
+  color: var(--background);
+  position: relative;
+}
+[data-section-mood="dark"] h2,
+[data-section-mood="dark"] h3 {
+  color: var(--background);
+}
+[data-section-mood="dark"] .section-heading {
+  color: var(--background);
+}
+[data-section-mood="dark"] .section-eyebrow {
+  color: var(--accent);
+}
+[data-section-mood="dark"] p,
+[data-section-mood="dark"] .review-text-wrap summary {
+  color: color-mix(in srgb, var(--background) 80%, transparent);
+}
+[data-section-mood="dark"] .review-author {
+  color: var(--background);
+}
+[data-section-mood="dark"] .review-badge-icon {
+  color: color-mix(in srgb, var(--background) 60%, transparent);
+}
+[data-section-mood="dark"] .review-stars {
+  color: #f5a623;
+}
+[data-section-mood="dark"] .review-avatar {
+  background: var(--accent);
+  color: var(--background);
+}
+[data-section-mood="dark"] .reviews-link {
+  color: var(--accent);
+}
+
+/* Editorial dark section: grain overlay + glass review cards */
+[data-depth="editorial"] [data-section-mood="dark"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E") repeat;
+  background-size: 182px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="editorial"] [data-section-mood="dark"] > * {
+  position: relative;
+  z-index: 1;
+}
+[data-depth="editorial"] [data-section-mood="dark"] .review-card {
+  background: rgba(255,255,255,0.06);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-left: 3px solid var(--accent);
+}
+
+/* Bold dark section: accent bottom borders on cards, no glass */
+[data-depth="bold"] [data-section-mood="dark"] .review-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 3px solid var(--accent);
+}
+
+/* Glass: no dark sections by default, but support it if manually set */
+[data-depth="glass"] [data-section-mood="dark"] .review-card {
+  background: rgba(255,255,255,0.06);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  Section Divider Component                                          ║
+   ╚═══════════════════════════════════════════════════════════════════════╝ */
+
+.section-divider {
+  display: block;
+  width: 100%;
+  height: clamp(30px, 5vw, 60px);
+  pointer-events: none;
+  position: relative;
+  z-index: 3;
+  /* Pull tight against adjacent sections */
+  margin-top: -1px;
+  margin-bottom: -1px;
+}
