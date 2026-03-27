@@ -4,5 +4,9 @@
   "accentStyle": "border",
   "faviconShape": "squircle",
   "industry": "Contractor / Trades",
-  "defaultMode": "light"
+  "defaultMode": "light",
+  "layout": {
+    "depth": "editorial",
+    "darkSection": "reviews"
+  }
 }
