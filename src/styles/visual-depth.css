@@ -288,7 +288,8 @@
 
 /* Dark accent section uses hardcoded dark values so it stays dark
    regardless of light/dark theme mode */
-[data-section-mood="dark"] {
+[data-section-mood="dark"],
+[data-section-mood="dark"] .section {
   background: #1a1a1a !important;
   color: #f0f0f0;
   position: relative;
