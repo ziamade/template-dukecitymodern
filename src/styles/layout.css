@@ -18,7 +18,7 @@ body {
 /* --- Sticky Header --- */
 .site-header {
   position: fixed;
-  top: 0;
+  top: var(--nav-offset, 0px);
   left: 0;
   width: 100%;
   z-index: 1000;
