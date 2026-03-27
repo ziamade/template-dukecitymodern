@@ -32,6 +32,8 @@ import '../styles/projects.css';
 import '../styles/trust.css';
 import '../styles/trust-stats.css';
 import '../styles/bg-presets.css';
+import '../styles/visual-depth.css';
+import { ClientRouter } from "astro:transitions";
 
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
@@ -51,6 +53,7 @@ const sectionPattern = layout.sectionPattern || 'alternating';
 const headerPosition = layout.headerPosition || 'hidden-on-scroll';
 const motionStyle = layout.motionStyle || 'smooth';
 const bgPreset = layout.backgroundPreset || 'clean';
+const depth = layout.depth || '';
 ---
 <!DOCTYPE html>
 <html lang="en" data-theme={typedTheme.defaultMode || 'light'}>
@@ -63,6 +66,7 @@ const bgPreset = layout.backgroundPreset || 'clean';
   <meta property="og:description" content={seo.ogDescription || ""}>
   {seo.ogImage && <meta property="og:image" content={seo.ogImage} />}
   {seo.canonicalUrl && <link rel="canonical" href={seo.canonicalUrl} />}
+  <ClientRouter fallback="swap" />
   <link rel="icon" href="/assets/favicons/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/favicons/favicon.ico" sizes="32x32">
   <link rel="icon" href="/assets/favicons/favicon-96x96.png" type="image/png" sizes="96x96">
@@ -78,6 +82,7 @@ const bgPreset = layout.backgroundPreset || 'clean';
   data-header-position={headerPosition}
   data-motion={motionStyle}
   data-bg-preset={bgPreset}
+  data-depth={depth || undefined}
 >
   <script is:inline>
     // Apply saved theme preference before paint (prevents flash)
@@ -85,6 +90,11 @@ const bgPreset = layout.backgroundPreset || 'clean';
       var saved = localStorage.getItem('theme');
       if (saved) document.documentElement.setAttribute('data-theme', saved);
     })();
+    // Persist dark mode across View Transitions
+    document.addEventListener('astro:before-swap', function(e) {
+      var saved = localStorage.getItem('theme');
+      if (saved) e.newDocument.documentElement.setAttribute('data-theme', saved);
+    });
   </script>
 
   {alert && alert.enabled && alert.text && (

@@ -1,0 +1,32 @@
+---
+// src/components/Divider.astro
+// Organic SVG section divider. Color-matched to destination section.
+// Only rendered when depth="editorial" (controlled by index.astro).
+
+interface Props {
+  /** CSS color value for the fill — should match destination section bg */
+  to?: string;
+  /** Path shape variant */
+  variant?: 'wave' | 'curve' | 'gentle';
+  /** Flip vertically (for bottom-to-top transitions) */
+  flip?: boolean;
+}
+
+const { to = 'var(--surface)', variant = 'wave', flip = false } = Astro.props;
+
+const paths: Record<string, string> = {
+  wave: 'M0,35 C200,55 400,15 600,35 C800,50 1000,20 1200,30 L1200,60 L0,60 Z',
+  curve: 'M0,45 Q600,0 1200,45 L1200,60 L0,60 Z',
+  gentle: 'M0,40 C300,55 900,25 1200,40 L1200,60 L0,60 Z',
+};
+---
+<svg
+  class="section-divider"
+  viewBox="0 0 1200 60"
+  preserveAspectRatio="none"
+  fill={to}
+  style={flip ? 'transform: scaleY(-1)' : undefined}
+  aria-hidden="true"
+>
+  <path d={paths[variant] || paths.wave} />
+</svg>
