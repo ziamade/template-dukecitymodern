@@ -34,7 +34,7 @@ const statement = foundingYear > 1900
 const canRender = depth && (
   (depth === 'editorial' && bestReview) ||
   (depth === 'glass' && hasStats) ||
-  (depth === 'bold')
+  (depth === 'bold' && statement)
 );
 ---
 {canRender && (

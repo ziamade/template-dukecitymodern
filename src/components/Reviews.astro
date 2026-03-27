@@ -8,7 +8,8 @@ interface Props { variant?: string | number; }
 // Always use scroll variant — stacked/featured removed per feedback
 const variant = 'scroll';
 
-const items = testimonials?.items || [];
+// Sort by rating desc so depth personalities that show only the first review get the best one
+const items = [...(testimonials?.items || [])].sort((a: any, b: any) => (b.rating || 0) - (a.rating || 0));
 
 // Real review count from Google, NOT items.length
 const reviewCount = (testimonials as any)?.reviewCount

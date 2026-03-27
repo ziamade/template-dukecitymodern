@@ -765,6 +765,15 @@
    ╚═══════════════════════════════════════════════════════════════════════╝ */
 
 
+/* ── Guard: disable section-pattern shapes when depth is active ────────── */
+/* Depth personalities provide their own section transitions (gradient fades,
+   divider lines, ambient blobs). Section-pattern wave/angle ::after shapes
+   would collide with depth's ::after pseudo-elements. */
+[data-depth] .section::after {
+  -webkit-clip-path: none !important;
+  clip-path: none !important;
+}
+
 /* ── Step 1: Typography Tokens Per Personality ─────────────────────────── */
 
 /* EDITORIAL: generous, readable, magazine typesetting */
@@ -787,9 +796,9 @@
   letter-spacing: 0.03em;
   line-height: 1.1;
 }
+[data-depth="glass"] .section-heading + *,
 [data-depth="glass"] .section {
   --section-gap: clamp(3.5rem, 6vw, 7rem);
-  padding: var(--section-gap) 0;
 }
 
 /* BOLD: dense, impactful, oversized */
@@ -802,6 +811,11 @@
 
 
 /* ── Step 2: Services Layout Per Personality ────────────────────────────── */
+/* NOTE: depth overrides target .services-grid / .service-card only (the "cards"
+   variant). Icon-grid (.services-icon-grid) and compact (.services-compact)
+   variants get depth card styles (shadows, glass treatment) but not layout
+   changes — their simpler layouts don't benefit from alternating rows or
+   bento grids. */
 
 /* EDITORIAL: alternating image+text rows */
 [data-depth="editorial"] .services-grid {
