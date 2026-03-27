@@ -9,8 +9,10 @@ import schema from '../data/schema.json';
 import hours from '../data/hours.json';
 import gallery from '../data/gallery.json';
 import projects from '../data/projects.json';
+import hero from '../data/hero.json';
 import { generateThemeCSS, generateLayoutCSS } from '../lib/brand';
 import { buildFontFaceCSS } from '../lib/fonts';
+import { resolveImage } from '../lib/images';
 import type { Brand, Theme } from '../lib/types';
 import '../styles/base.css';
 import '../styles/layout.css';
@@ -46,6 +48,10 @@ const hoursJson = JSON.stringify(hours);
 const hasGallery = gallery?.images?.length > 0;
 const hasProjects = (projects as any)?.projects?.length > 0;
 
+// Preload hero image for LCP optimization
+const heroImage = (hero as any)?.heroImage;
+const heroResolved = heroImage ? resolveImage(heroImage) : null;
+
 // Structural layout tokens → data attributes on body
 const headerStyle = layout.headerStyle || 'solid';
 const cardStyle = layout.cardStyle || 'shadow';
@@ -67,6 +73,7 @@ const depth = layout.depth || '';
   {seo.ogImage && <meta property="og:image" content={seo.ogImage} />}
   {seo.canonicalUrl && <link rel="canonical" href={seo.canonicalUrl} />}
   <ClientRouter fallback="swap" />
+  {heroResolved && <link rel="preload" as="image" type="image/webp" href={heroResolved.src} fetchpriority="high" />}
   <link rel="icon" href="/assets/favicons/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/favicons/favicon.ico" sizes="32x32">
   <link rel="icon" href="/assets/favicons/favicon-96x96.png" type="image/png" sizes="96x96">

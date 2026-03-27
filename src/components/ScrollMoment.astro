@@ -6,6 +6,7 @@ import testimonials from '../data/testimonials.json';
 import client from '../data/client.json';
 import hero from '../data/hero.json';
 import theme from '../data/theme.json';
+import OptimizedImg from './OptimizedImg.astro';
 
 let schema: any = {};
 try { schema = (await import('../data/schema.json')).default; } catch {}
@@ -43,7 +44,7 @@ const canRender = depth && (
       <>
         {(hero as any)?.heroImage && (
           <div class="scroll-moment-bg">
-            <img src={(hero as any).heroImage} alt="" loading="lazy" />
+            <OptimizedImg src={(hero as any).heroImage} alt="" width={1600} height={900} loading="lazy" />
           </div>
         )}
         <div class="scroll-moment-overlay">
