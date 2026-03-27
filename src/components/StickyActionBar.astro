@@ -8,7 +8,7 @@ const { links } = Astro.props;
 ---
 <div class="action-bar" aria-label="Quick actions">
   {links.map(action => (
-    <a href={action.href} class="action-btn">
+    <a href={action.href} class="action-btn" aria-label={action.text}>
       <span class="action-icon" set:html={action.icon}></span>
       <span class="action-label">{action.text}</span>
     </a>
