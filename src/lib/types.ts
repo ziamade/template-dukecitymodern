@@ -13,10 +13,13 @@ export interface ColorPalette {
   primary: string;
   background: string;
   surface: string;
+  surfaceAlt?: string;
+  surfaceAccent?: string;
   text: string;
   textMuted: string;
   accent: string;
   border: string;
+  borderSubtle?: string;
 }
 
 export interface NamePart {

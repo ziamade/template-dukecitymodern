@@ -1,21 +1,27 @@
 {
   "light": {
     "primary": "#553811",
-    "background": "#FAF7F0",
-    "surface": "#FFFFFF",
-    "text": "#1a1a1a",
-    "textMuted": "#666666",
+    "background": "#faf7ef",
+    "surface": "#f6f5f3",
+    "surfaceAlt": "#f0f0eb",
+    "surfaceAccent": "#eee8de",
+    "text": "#1c1a17",
+    "textMuted": "#676664",
     "accent": "#8c5d1d",
-    "border": "#E8E0D0"
+    "border": "#e2e0dc",
+    "borderSubtle": "#f2f0ee"
   },
   "dark": {
-    "primary": "#C4944A",
-    "background": "#121212",
-    "surface": "#1e1e1e",
-    "text": "#e8e8e8",
-    "textMuted": "#999999",
-    "accent": "#D4A456",
-    "border": "#333333"
+    "primary": "#664314",
+    "background": "#0e0d0b",
+    "surface": "#191714",
+    "surfaceAlt": "#1e1c19",
+    "surfaceAccent": "#17130f",
+    "text": "#e9e8e7",
+    "textMuted": "#9a9998",
+    "accent": "#a16b21",
+    "border": "#2c2a27",
+    "borderSubtle": "#232220"
   },
   "nameFont": "Oswald",
   "headingFont": "Roboto Slab",
