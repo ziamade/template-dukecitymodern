@@ -157,17 +157,28 @@
   color: #fff;
 }
 
-/* Radial glow behind hero content */
+/* Multi-color glow behind hero content */
 [data-depth="bold"] .hero::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 35%;
-  transform: translate(-50%, -50%);
+  top: -10%;
+  right: -5%;
   width: 60%;
-  height: 80%;
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--accent) 15%, transparent) 0%, transparent 60%);
-  filter: blur(50px);
+  height: 70%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 25%, transparent) 0%, transparent 65%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="bold"] .hero::after {
+  content: '';
+  position: absolute;
+  bottom: -15%;
+  left: 5%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 20%, transparent) 0%, transparent 65%);
+  filter: blur(70px);
   pointer-events: none;
   z-index: 0;
 }
@@ -232,6 +243,19 @@
 }
 [data-depth="bold"] .trust-stats .stat-label {
   color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Section rhythm: warm cream sections between dark blocks ──────────── */
+/* Bold wants visible contrast between sections, not subtle alternation */
+[data-depth="bold"] .section {
+  background: #FAF7F0;
+}
+[data-depth="bold"] .section:nth-child(even) {
+  background: #f3efe8;
+}
+/* CTA band keeps its accent color */
+[data-depth="bold"] .cta-band {
+  background: var(--accent);
 }
 
 /* ── Uppercase CTA buttons ───────────────────────────────────────────── */
