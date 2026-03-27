@@ -56,6 +56,51 @@
   box-shadow: var(--shadow-card-hover);
 }
 
+/* ── Warm ambient blobs at section boundaries ──────────────────────── */
+[data-depth="editorial"] .section {
+  position: relative;
+  overflow: hidden;
+}
+[data-depth="editorial"] .section:nth-child(3n)::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -10%;
+  width: 45%;
+  height: 200px;
+  background: radial-gradient(ellipse,
+    color-mix(in srgb, var(--accent) 6%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="editorial"] .section:nth-child(3n+2)::before {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: -5%;
+  width: 40%;
+  height: 180px;
+  background: radial-gradient(ellipse,
+    color-mix(in srgb, var(--primary) 5%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="editorial"] .section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── CTA band upgrade ──────────────────────────────────────────────── */
+[data-depth="editorial"] .cta-band {
+  background: var(--surfaceAccent);
+}
+
 
 /* ╔═══════════════════════════════════════════════════════════════════════╗
    ║  GLASS — clean, app-like, precise                                   ║
@@ -100,11 +145,35 @@
   border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
 }
 
-/* ── Gradient section fades ──────────────────────────────────────────── */
+/* ── Gradient section fades (3-tone aware) ──────────────────────────── */
 [data-depth="glass"] .section {
   position: relative;
+  overflow: hidden;
 }
-[data-depth="glass"] .section:nth-child(even)::after {
+/* Fade to next section's background tone */
+[data-depth="glass"] .section:nth-child(3n+1)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--surface));
+  pointer-events: none;
+  z-index: 1;
+}
+[data-depth="glass"] .section:nth-child(3n+2)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--surfaceAlt));
+  pointer-events: none;
+  z-index: 1;
+}
+[data-depth="glass"] .section:nth-child(3n)::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -115,16 +184,45 @@
   pointer-events: none;
   z-index: 1;
 }
-[data-depth="glass"] .section:nth-child(odd)::after {
+
+/* ── Cool edge gradients at section boundaries ─────────────────────── */
+[data-depth="glass"] .section:nth-child(3n)::before {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  background: linear-gradient(to bottom, transparent, var(--surface));
+  top: 0;
+  right: 0;
+  width: 35%;
+  height: 150px;
+  background: radial-gradient(ellipse at 100% 0%,
+    color-mix(in srgb, var(--primary) 4%, transparent) 0%,
+    transparent 70%
+  );
   pointer-events: none;
+  z-index: 0;
+}
+[data-depth="glass"] .section:nth-child(3n+2)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 35%;
+  height: 150px;
+  background: radial-gradient(ellipse at 0% 0%,
+    color-mix(in srgb, var(--accent) 4%, transparent) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="glass"] .section > * {
+  position: relative;
   z-index: 1;
+}
+
+/* ── Frosted overlay on surfaceAlt sections ────────────────────────── */
+[data-depth="glass"] .section:nth-child(3n) {
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
 }
 
 /* ── Gradient CTA band ───────────────────────────────────────────────── */
@@ -245,15 +343,62 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* ── Section rhythm: warm cream sections between dark blocks ──────────── */
-/* Bold wants visible contrast between sections, not subtle alternation */
+/* ── Section rhythm: palette-derived tones between dark blocks ────────── */
+/* Bold uses 3-tone cycling with brand-tinted backgrounds instead of hardcoded cream */
 [data-depth="bold"] .section {
-  background: #FAF7F0;
+  position: relative;
+  overflow: hidden;
 }
-[data-depth="bold"] .section:nth-child(even) {
-  background: #f3efe8;
+[data-depth="bold"] .section:nth-child(3n+1) {
+  background: var(--surfaceAlt);
 }
-/* CTA band keeps its accent color */
+[data-depth="bold"] .section:nth-child(3n+2) {
+  background: var(--surface);
+}
+[data-depth="bold"] .section:nth-child(3n) {
+  background: var(--surfaceAccent);
+}
+
+/* ── Ambient glow at dark-to-light transition ──────────────────────── */
+/* Glow where dark hero/trust meets first light content section */
+[data-depth="bold"] .trust-section + .section::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 15%;
+  width: 70%;
+  height: 120px;
+  background: radial-gradient(ellipse,
+    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="bold"] .section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Glow before CTA/contact section ───────────────────────────────── */
+[data-depth="bold"] .section:last-of-type::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -5%;
+  width: 50%;
+  height: 160px;
+  background: radial-gradient(ellipse,
+    color-mix(in srgb, var(--primary) 8%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* CTA band uses surfaceAccent for a branded feel */
 [data-depth="bold"] .cta-band {
   background: var(--accent);
 }
@@ -279,6 +424,45 @@
 [data-depth="bold"] .service-icon-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+/* ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  SHARED: Gradient Divider Lines                                     ║
+   ║  Replace solid borders with fading gradient lines between sections  ║
+   ╚═══════════════════════════════════════════════════════════════════════╝ */
+
+[data-depth] .section + .section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--borderSubtle) 30%,
+    var(--borderSubtle) 70%,
+    transparent
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Dark section transition glow ──────────────────────────────────── */
+[data-section-mood="dark"]::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 20%;
+  width: 60%;
+  height: 80px;
+  background: radial-gradient(ellipse,
+    color-mix(in srgb, var(--accent) 12%, transparent) 0%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* ╔═══════════════════════════════════════════════════════════════════════╗
