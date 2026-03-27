@@ -15,6 +15,15 @@ const { heroCta, variant: variantProp } = Astro.props;
 const variant = variantProp ?? theme.heroVariant ?? 1;
 const heroVideo = (hero as any)?.heroVideo || '';
 const isVideo = heroVideo && /\.(mp4|webm)$/i.test(heroVideo);
+
+// Hero stats from schema.json (authoritative source for rating/reviews)
+let schema: any = {};
+try { schema = (await import('../data/schema.json')).default; } catch {}
+const aggregateRating = schema?.aggregateRating;
+const ratingValue = aggregateRating?.ratingValue ? String(aggregateRating.ratingValue) : '';
+const reviewCount = aggregateRating?.reviewCount ? String(aggregateRating.reviewCount) : '';
+const foundingYear = parseInt((client as any).foundingYear || '0', 10);
+const hasHeroStats = !!(ratingValue || reviewCount || (foundingYear > 1900));
 ---
 <section class="hero" data-variant={variant} id="hero">
   {variant === 2 && (
@@ -35,30 +44,58 @@ const isVideo = heroVideo && /\.(mp4|webm)$/i.test(heroVideo);
     <div class="hero-content">
       <h1 class="hero-tagline">{hero?.heroTagline || client.name}</h1>
       <p class="hero-subtitle">{hero?.heroSubtitle || ''}</p>
-      <div class="open-badge" id="open-badge">
-        <span class="badge-text">Loading hours...</span>
-      </div>
-      {location?.city && (
-        <a href={location.mapLink || '#'} class="hero-location">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>{location.address ? `${location.address}, ` : ''}{location.city}{location.state ? `, ${location.state}` : ''}{location.zip ? ` ${location.zip}` : ''}</span>
-        </a>
+      {hasHeroStats && (
+        <div class="hero-stats">
+          {ratingValue && (
+            <span class="hero-stat">
+              <span class="hero-stat-star" aria-hidden="true">★</span>
+              <span class="hero-stat-value" data-count-to={ratingValue} data-count-delay="450">0</span>
+            </span>
+          )}
+          {reviewCount && (
+            <>
+              {ratingValue && <span class="hero-stat-sep" aria-hidden="true">&middot;</span>}
+              <span class="hero-stat">
+                <span class="hero-stat-value" data-count-to={reviewCount} data-count-suffix="+" data-count-delay="450">0</span>
+                <span class="hero-stat-label">Reviews</span>
+              </span>
+            </>
+          )}
+          {foundingYear > 1900 && (
+            <>
+              {(ratingValue || reviewCount) && <span class="hero-stat-sep" aria-hidden="true">&middot;</span>}
+              <span class="hero-stat">
+                <span class="hero-stat-label">Since</span>
+                <span class="hero-stat-value">{foundingYear}</span>
+              </span>
+            </>
+          )}
+        </div>
       )}
       <a href={heroCta.href || '#'} class="btn-primary">{heroCta.text || 'Learn More'}</a>
-    </div>
-    {variant !== 2 && (
-      <div class="hero-photo">
-        {hero?.heroImage && (
-          <OptimizedImg
-            src={hero.heroImage}
-            alt={client.name}
-            width={800}
-            height={600}
-            loading="eager"
-            fetchpriority="high"
-            fallback={hero.fallbackImage || ''}
-          />
+      <div class="hero-meta">
+        <div class="open-badge" id="open-badge">
+          <span class="badge-text">Loading hours...</span>
+        </div>
+        {location?.city && (
+          <a href={location.mapLink || '#'} class="hero-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>{location.address ? `${location.address}, ` : ''}{location.city}{location.state ? `, ${location.state}` : ''}{location.zip ? ` ${location.zip}` : ''}</span>
+          </a>
         )}
+      </div>
+    </div>
+    {variant !== 2 && hero?.heroImage && (
+      <div class="hero-photo">
+        <OptimizedImg
+          src={hero.heroImage}
+          alt={client.name}
+          width={800}
+          height={600}
+          loading="eager"
+          fetchpriority="high"
+          fallback={hero.fallbackImage || ''}
+        />
       </div>
     )}
   </div>
