@@ -1,0 +1,85 @@
+---
+// src/components/ScrollMoment.astro
+// Personality-specific "wow" section break between sections.
+// Editorial: image band + pull quote. Glass: stat takeover. Bold: massive statement.
+import testimonials from '../data/testimonials.json';
+import client from '../data/client.json';
+import hero from '../data/hero.json';
+import theme from '../data/theme.json';
+
+let schema: any = {};
+try { schema = (await import('../data/schema.json')).default; } catch {}
+
+const depth = (theme as any).layout?.depth || '';
+const items = testimonials?.items || [];
+const aggregateRating = schema?.aggregateRating;
+
+// Best testimonial: first 5-star, or highest rated
+const bestReview = items.length > 0
+  ? items.reduce((best: any, t: any) => (!best || t.rating > best.rating || (t.rating === best.rating && t.text.length > best.text.length)) ? t : best, null)
+  : null;
+
+// Stats
+const ratingValue = aggregateRating?.ratingValue ? String(aggregateRating.ratingValue) : '';
+const reviewCount = aggregateRating?.reviewCount ? String(aggregateRating.reviewCount) : '';
+const foundingYear = parseInt((client as any).foundingYear || '0', 10);
+const hasStats = !!(ratingValue || reviewCount || foundingYear > 1900);
+
+// Statement text
+const statement = foundingYear > 1900
+  ? `Trusted Since ${foundingYear}`
+  : (hero as any)?.heroTagline || client.name;
+
+// Only render if we have data for the active personality
+const canRender = depth && (
+  (depth === 'editorial' && bestReview) ||
+  (depth === 'glass' && hasStats) ||
+  (depth === 'bold')
+);
+---
+{canRender && (
+  <section class={`scroll-moment scroll-moment--${depth}`}>
+    {depth === 'editorial' && bestReview && (
+      <>
+        {(hero as any)?.heroImage && (
+          <div class="scroll-moment-bg">
+            <img src={(hero as any).heroImage} alt="" loading="lazy" />
+          </div>
+        )}
+        <div class="scroll-moment-overlay">
+          <blockquote class="scroll-moment-quote">{bestReview.text}</blockquote>
+          <cite class="scroll-moment-cite">{bestReview.author}</cite>
+        </div>
+      </>
+    )}
+
+    {depth === 'glass' && hasStats && (
+      <div class="scroll-moment-stats">
+        {ratingValue && (
+          <div class="scroll-moment-stat">
+            <span class="scroll-moment-stat-value" data-count-to={ratingValue}>0</span>
+            <span class="scroll-moment-stat-label">Star Rating</span>
+          </div>
+        )}
+        {reviewCount && (
+          <div class="scroll-moment-stat">
+            <span class="scroll-moment-stat-value" data-count-to={reviewCount} data-count-suffix="+">0</span>
+            <span class="scroll-moment-stat-label">Reviews</span>
+          </div>
+        )}
+        {foundingYear > 1900 && (
+          <div class="scroll-moment-stat">
+            <span class="scroll-moment-stat-value">{foundingYear}</span>
+            <span class="scroll-moment-stat-label">Established</span>
+          </div>
+        )}
+      </div>
+    )}
+
+    {depth === 'bold' && (
+      <div class="scroll-moment-statement">
+        <h2>{statement}</h2>
+      </div>
+    )}
+  </section>
+)}

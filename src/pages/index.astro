@@ -20,6 +20,7 @@ import Footer from '../components/Footer.astro';
 import StickyActionBar from '../components/StickyActionBar.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import Divider from '../components/Divider.astro';
+import ScrollMoment from '../components/ScrollMoment.astro';
 
 import client from '../data/client.json';
 import contact from '../data/contact.json';
@@ -146,6 +147,7 @@ const actionBarLinks = [
             : <Component variant={entry.variant} />
         )}
         {isDark && useEditorialDividers && <Divider to="var(--background)" variant="curve" />}
+        {entry.id === 'reviews' && <ScrollMoment />}
       </>
     );
   })}

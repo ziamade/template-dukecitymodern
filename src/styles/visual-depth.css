@@ -757,3 +757,531 @@
   margin-top: -1px;
   margin-bottom: -1px;
 }
+
+
+/* ╔═══════════════════════════════════════════════════════════════════════╗
+   ║  DEPTH SCROLL STORIES                                              ║
+   ║  Per-personality section layouts, typography, and scroll moments    ║
+   ╚═══════════════════════════════════════════════════════════════════════╝ */
+
+
+/* ── Step 1: Typography Tokens Per Personality ─────────────────────────── */
+
+/* EDITORIAL: generous, readable, magazine typesetting */
+[data-depth="editorial"] .section-heading {
+  margin-bottom: 2.5rem;
+}
+[data-depth="editorial"] .section p,
+[data-depth="editorial"] .about-text-content {
+  max-width: 65ch;
+}
+[data-depth="editorial"] {
+  --line-height-body: 1.7;
+}
+[data-depth="editorial"] p {
+  line-height: var(--line-height-body, 1.7);
+}
+
+/* GLASS: airy, precise, spacious */
+[data-depth="glass"] .section-heading {
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+}
+[data-depth="glass"] .section {
+  --section-gap: clamp(3.5rem, 6vw, 7rem);
+  padding: var(--section-gap) 0;
+}
+
+/* BOLD: dense, impactful, oversized */
+[data-depth="bold"] .section-heading {
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  font-size: var(--font-size-h2);
+}
+
+
+/* ── Step 2: Services Layout Per Personality ────────────────────────────── */
+
+/* EDITORIAL: alternating image+text rows */
+[data-depth="editorial"] .services-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 100%;
+}
+[data-depth="editorial"] .service-card {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+[data-depth="editorial"] .service-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+[data-depth="editorial"] .service-card img {
+  border-radius: var(--card-radius);
+  aspect-ratio: 3/2;
+}
+[data-depth="editorial"] .service-card-body {
+  padding: 1.5rem 0;
+}
+@media (min-width: 768px) {
+  [data-depth="editorial"] .services-grid {
+    gap: 4rem;
+  }
+  [data-depth="editorial"] .service-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 2.5rem;
+  }
+  [data-depth="editorial"] .service-card img {
+    width: 45%;
+    flex-shrink: 0;
+  }
+  [data-depth="editorial"] .service-card-body {
+    flex: 1;
+    padding: 0;
+  }
+  /* Alternate image side */
+  [data-depth="editorial"] .service-card:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+}
+
+/* GLASS: bento grid with featured first card */
+@media (min-width: 768px) {
+  [data-depth="glass"] .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem;
+    max-width: 960px;
+    margin-inline: auto;
+  }
+  [data-depth="glass"] .services-grid .service-card:first-child {
+    grid-row: 1 / 3;
+  }
+  [data-depth="glass"] .services-grid .service-card:first-child img {
+    aspect-ratio: 3/4;
+    height: 100%;
+  }
+}
+
+/* BOLD: full-width stacked with alternating dark/light bands */
+[data-depth="bold"] .services-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 100%;
+}
+[data-depth="bold"] .services-section .section-heading {
+  margin-bottom: 0;
+}
+[data-depth="bold"] .service-card {
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+[data-depth="bold"] .service-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+[data-depth="bold"] .service-card:nth-child(odd) {
+  background: color-mix(in srgb, var(--text) 4%, var(--background));
+}
+[data-depth="bold"] .service-card h3 {
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+[data-depth="bold"] .service-card-body {
+  padding: 1.5rem 1.25rem;
+}
+@media (min-width: 768px) {
+  [data-depth="bold"] .service-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  [data-depth="bold"] .service-card img {
+    width: 40%;
+    flex-shrink: 0;
+    aspect-ratio: 16/9;
+  }
+  [data-depth="bold"] .service-card-body {
+    flex: 1;
+    padding: 2rem 2.5rem;
+  }
+}
+
+
+/* ── Step 3: Reviews Layout Per Personality ─────────────────────────────── */
+
+/* EDITORIAL: single pull quote, no scroll */
+[data-depth="editorial"] .reviews-scroll {
+  animation: none;
+  width: 100%;
+  display: block;
+}
+[data-depth="editorial"] .review-card {
+  display: none;
+}
+[data-depth="editorial"] .review-card:first-child {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+  padding: 2rem 0;
+}
+[data-depth="editorial"] .review-card:first-child .review-text-wrap summary {
+  -webkit-line-clamp: unset;
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  font-style: italic;
+  line-height: 1.6;
+}
+/* Decorative quote marks */
+[data-depth="editorial"] .review-card:first-child::before {
+  content: '\201C';
+  display: block;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--accent);
+  font-family: Georgia, serif;
+  margin-bottom: 0.5rem;
+}
+[data-depth="editorial"] .review-card:first-child .review-stars {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+[data-depth="editorial"] .review-card:first-child .review-footer {
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+/* GLASS: static grid, no scroll */
+[data-depth="glass"] .reviews-scroll {
+  animation: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+/* Hide duplicated cards (aria-hidden ones) */
+[data-depth="glass"] .review-card[aria-hidden="true"] {
+  display: none;
+}
+[data-depth="glass"] .reviews-scroll .review-card {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  [data-depth="glass"] .reviews-scroll {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* Show max 3 reviews */
+  [data-depth="glass"] .review-card:nth-child(n+4):not([aria-hidden="true"]) {
+    display: none;
+  }
+  /* Stagger heights for visual interest */
+  [data-depth="glass"] .review-card:nth-child(2) {
+    margin-top: 1.5rem;
+  }
+}
+
+/* BOLD: single massive quote on dark band */
+[data-depth="bold"] .reviews-section {
+  background: #18181b;
+  color: #f0f0f0;
+  position: relative;
+}
+[data-depth="bold"] .reviews-section .section-heading {
+  color: #f0f0f0;
+}
+[data-depth="bold"] .reviews-scroll {
+  animation: none;
+  width: 100%;
+  display: block;
+}
+[data-depth="bold"] .review-card {
+  display: none;
+}
+[data-depth="bold"] .review-card:first-child {
+  display: block;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+  padding: 1rem 0;
+  color: #f0f0f0;
+}
+[data-depth="bold"] .review-card:first-child .review-text-wrap summary {
+  -webkit-line-clamp: unset;
+  font-size: clamp(1.25rem, 1rem + 1vw, 2rem);
+  color: rgba(255,255,255,0.9);
+  line-height: 1.5;
+  font-weight: 500;
+}
+[data-depth="bold"] .review-card:first-child .review-stars {
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+[data-depth="bold"] .review-card:first-child .review-footer {
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+[data-depth="bold"] .review-card:first-child .review-avatar {
+  background: var(--accent);
+  color: #18181b;
+}
+[data-depth="bold"] .review-card:first-child .review-author {
+  color: rgba(255,255,255,0.7);
+}
+[data-depth="bold"] .reviews-section .reviews-link {
+  color: var(--accent);
+}
+
+
+/* ── Step 5: Process Layout Per Personality ─────────────────────────────── */
+
+/* EDITORIAL: vertical timeline with connecting line */
+[data-depth="editorial"] .process-steps {
+  flex-direction: column;
+  max-width: 600px;
+  position: relative;
+  padding-left: 3rem;
+}
+/* Vertical connecting line */
+[data-depth="editorial"] .process-steps::before {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+[data-depth="editorial"] .process-step {
+  text-align: left;
+  position: relative;
+}
+[data-depth="editorial"] .process-step-number {
+  position: absolute;
+  left: -3rem;
+  top: 0;
+  margin: 0;
+  width: 48px;
+  height: 48px;
+  z-index: 1;
+}
+[data-depth="editorial"] .process-step-desc {
+  margin: 0;
+  max-width: none;
+}
+@media (min-width: 640px) {
+  [data-depth="editorial"] .process-steps {
+    flex-direction: column;
+  }
+  [data-depth="editorial"] .process-step {
+    flex: unset;
+  }
+  [data-depth="editorial"] .process-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* GLASS: frosted glass pills connected by dotted line */
+[data-depth="glass"] .process-step {
+  background: color-mix(in srgb, var(--background) 60%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+[data-depth="glass"] .process-step-number {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+}
+@media (min-width: 640px) {
+  [data-depth="glass"] .process-step:not(:last-child)::after {
+    background: none;
+    border-top: 2px dotted var(--border);
+    height: 0;
+    top: 24px;
+  }
+}
+
+/* BOLD: oversized step numbers */
+[data-depth="bold"] .process-step-number {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: clamp(3rem, 2rem + 3vw, 5rem);
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+[data-depth="bold"] .process-step-title {
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  font-size: 1rem;
+}
+[data-depth="bold"] .process-step-desc {
+  font-size: 0.8rem;
+}
+
+
+/* ── ScrollMoment Styles ───────────────────────────────────────────────── */
+
+.scroll-moment {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* EDITORIAL scroll moment: image band with pull quote */
+.scroll-moment--editorial {
+  min-height: 40vh;
+  background: #18181b;
+  color: #f0f0f0;
+}
+.scroll-moment--editorial .scroll-moment-bg {
+  position: absolute;
+  inset: 0;
+}
+.scroll-moment--editorial .scroll-moment-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+}
+.scroll-moment--editorial .scroll-moment-overlay {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 1.25rem;
+  max-width: 700px;
+}
+.scroll-moment--editorial .scroll-moment-quote {
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.9);
+}
+.scroll-moment--editorial .scroll-moment-quote::before {
+  content: '\201C';
+  display: block;
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--accent);
+  font-family: Georgia, serif;
+  margin-bottom: 0.5rem;
+}
+.scroll-moment--editorial .scroll-moment-cite {
+  display: block;
+  margin-top: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  font-size: var(--font-size-small);
+}
+@media (min-width: 768px) {
+  .scroll-moment--editorial {
+    min-height: 50vh;
+  }
+}
+
+/* GLASS scroll moment: stat takeover */
+.scroll-moment--glass {
+  min-height: 60vh;
+  background: color-mix(in srgb, var(--surface) 80%, var(--background));
+  position: relative;
+}
+.scroll-moment--glass::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 40%, color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 60% at 70% 60%, color-mix(in srgb, var(--primary) 4%, transparent) 0%, transparent 50%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+.scroll-moment--glass .scroll-moment-stats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding: 3rem 1.25rem;
+}
+.scroll-moment--glass .scroll-moment-stat-value {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 2rem + 4vw, 6rem);
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.scroll-moment--glass .scroll-moment-stat-label {
+  font-size: var(--font-size-small);
+  color: var(--textMuted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+}
+@media (min-width: 640px) {
+  .scroll-moment--glass .scroll-moment-stats {
+    flex-direction: row;
+    justify-content: center;
+    gap: 5rem;
+  }
+}
+
+/* BOLD scroll moment: massive statement on dark */
+.scroll-moment--bold {
+  min-height: 50vh;
+  background: #18181b;
+  color: #fff;
+  position: relative;
+}
+.scroll-moment--bold::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 60%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 15%, transparent) 0%, transparent 60%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+.scroll-moment--bold .scroll-moment-statement {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 1.25rem;
+}
+.scroll-moment--bold .scroll-moment-statement h2 {
+  font-size: clamp(2.5rem, 1.5rem + 5vw, 6rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
