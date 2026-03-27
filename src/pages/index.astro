@@ -19,6 +19,7 @@ import HoursDisplay from '../components/HoursDisplay.astro';
 import Footer from '../components/Footer.astro';
 import StickyActionBar from '../components/StickyActionBar.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import Divider from '../components/Divider.astro';
 
 import client from '../data/client.json';
 import contact from '../data/contact.json';
@@ -102,6 +103,12 @@ function actionIcon(name: string): string {
   return (actionIcons[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
 }
 
+// Visual depth: dark section and dividers
+const layout = (theme as any).layout || {};
+const depth = layout.depth || '';
+const darkSection = layout.darkSection || '';
+const useEditorialDividers = depth === 'editorial';
+
 const actionBarLinks = [
   { href: `tel:${contact.phoneForTel || ''}`, icon: actionIcon('phone'), text: 'Call' },
   { href: location.mapLink || '#', icon: actionIcon('navigation'), text: 'Directions' },
@@ -111,12 +118,36 @@ const actionBarLinks = [
 <BaseLayout>
   <StickyHeader navLinks={navLinks} ctaText={ctaText} ctaHref={ctaHref} />
 
-  {sections.map((entry) => {
+  {sections.map((entry, i) => {
     const Component = sectionMap[entry.id];
     if (!Component) return null;
     if (entry.id === 'reviews' && !hasReviews) return null;
-    if (entry.id === 'hero') return <Component heroCta={heroCta} variant={entry.variant} />;
-    return <Component variant={entry.variant} />;
+    const isDark = darkSection && entry.id === darkSection;
+    const nextEntry = sections[i + 1];
+    const nextIsDark = nextEntry && darkSection && nextEntry.id === darkSection;
+
+    // Editorial dividers: before dark sections and after hero
+    const showDividerBefore = useEditorialDividers && isDark;
+    const showDividerAfterHero = useEditorialDividers && entry.id === 'hero' && nextEntry;
+
+    return (
+      <>
+        {showDividerAfterHero && <Divider to="var(--surface)" variant="gentle" />}
+        {showDividerBefore && <Divider to="var(--text)" variant="wave" />}
+        {isDark ? (
+          <div data-section-mood="dark">
+            {entry.id === 'hero'
+              ? <Component heroCta={heroCta} variant={entry.variant} />
+              : <Component variant={entry.variant} />}
+          </div>
+        ) : (
+          entry.id === 'hero'
+            ? <Component heroCta={heroCta} variant={entry.variant} />
+            : <Component variant={entry.variant} />
+        )}
+        {isDark && useEditorialDividers && <Divider to="var(--background)" variant="curve" />}
+      </>
+    );
   })}
 
   <Footer />
