@@ -230,6 +230,198 @@
   background: linear-gradient(135deg, var(--primary), var(--accent));
 }
 
+/* ── Glass hero: aurora + blob + frosted panel + shine + depth ──────── */
+
+/* Aurora: drifting color patches behind hero content */
+[data-depth="glass"] .hero {
+  --aurora-1: color-mix(in srgb, var(--accent) 7%, transparent);
+  --aurora-2: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+[data-depth="glass"] .hero::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 80% 50% at 25% 40%, var(--aurora-1) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 70% at 75% 60%, var(--aurora-2) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 40% at 50% 20%, var(--aurora-1) 0%, transparent 50%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="glass"] .hero::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 50% 80% at 80% 30%, var(--aurora-2) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 30% 70%, var(--aurora-1) 0%, transparent 50%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Morphing glass blob: organic shape that breathes behind content */
+[data-depth="glass"] .hero-grid::before {
+  content: '';
+  position: absolute;
+  width: min(500px, 70vw);
+  height: min(400px, 50vw);
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 8%, transparent);
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  pointer-events: none;
+  z-index: 0;
+}
+[data-depth="glass"] .hero-grid {
+  position: relative;
+}
+
+/* Frosted glass panel with luminous edge glow */
+[data-depth="glass"] .hero-content {
+  background: color-mix(in srgb, var(--background) 65%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--border) 25%, transparent);
+  border-radius: 1rem;
+  padding: 2rem;
+  z-index: 2;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 5%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 8%, transparent),
+    0 4px 24px rgba(0,0,0,0.06);
+}
+
+/* Luminous edge glow: rotating highlight around panel border */
+[data-depth="glass"] .hero-content::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 30%, transparent) 8%,
+    transparent 16%,
+    transparent 50%,
+    color-mix(in srgb, var(--primary) 20%, transparent) 58%,
+    transparent 66%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Glass shine sweep across hero image on load */
+[data-depth="glass"] .hero-photo {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.08);
+}
+[data-depth="glass"] .hero-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.2) 45%,
+    rgba(255,255,255,0.05) 50%,
+    transparent 55%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Layered depth planes: stereoscopic scale on hero text elements */
+[data-depth="glass"] .hero-tagline {
+  transform: scale(1.02);
+  transform-origin: left center;
+}
+[data-depth="glass"] .hero-subtitle {
+  opacity: 0.8;
+  transform: scale(0.98);
+  transform-origin: left center;
+}
+[data-depth="glass"] .hero-stats {
+  opacity: 0.75;
+  transform: scale(0.96);
+  transform-origin: left center;
+}
+
+/* Glass-specific: softer underline */
+[data-depth="glass"] .hero-tagline::after {
+  height: 2px;
+}
+
+/* Glass-specific: stats as frosted pills */
+[data-depth="glass"] .hero-stat {
+  background: color-mix(in srgb, var(--background) 50%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, var(--border) 20%, transparent);
+  border-radius: 2rem;
+  padding: 0.2rem 0.65rem;
+}
+[data-depth="glass"] .hero-stat-sep {
+  display: none;
+}
+
+/* Animate aurora + blob when motion is allowed */
+@media (prefers-reduced-motion: no-preference) {
+  [data-depth="glass"] .hero::before {
+    animation: auroraDrift 20s ease-in-out infinite alternate;
+  }
+  [data-depth="glass"] .hero::after {
+    animation: auroraDrift 25s ease-in-out infinite alternate-reverse;
+  }
+  [data-depth="glass"] .hero-grid::before {
+    animation: morphBlob 18s ease-in-out infinite;
+  }
+  [data-depth="glass"] .hero-content::before {
+    animation: glowSweep 8s linear infinite;
+  }
+  [data-depth="glass"] .hero-photo::after {
+    opacity: 0;
+    animation: shineSweep 1.2s ease-in-out 0.8s forwards;
+  }
+
+  @keyframes auroraDrift {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0.7; }
+    33%  { transform: translate(-30px, 20px) scale(1.05); opacity: 0.9; }
+    66%  { transform: translate(20px, -15px) scale(0.95); opacity: 0.6; }
+    100% { transform: translate(-10px, 25px) scale(1.02); opacity: 0.8; }
+  }
+
+  @keyframes morphBlob {
+    0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    25%      { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    50%      { border-radius: 50% 60% 30% 40% / 40% 70% 60% 30%; }
+    75%      { border-radius: 40% 30% 60% 50% / 60% 40% 30% 70%; }
+  }
+
+  @keyframes glowSweep {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes shineSweep {
+    0%   { opacity: 0; transform: translateX(-100%); }
+    40%  { opacity: 1; }
+    100% { opacity: 0; transform: translateX(100%); }
+  }
+}
+
 
 /* ╔═══════════════════════════════════════════════════════════════════════╗
    ║  BOLD — high-contrast, confident, direct                            ║
