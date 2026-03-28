@@ -1,19 +1,33 @@
 {
-  "sectionOrder": ["hero", "trust", "services", "projects", "process", "reviews", "faq", "contact", "about"],
-  "heroVariant": 1,
-  "accentStyle": "border",
+  "sections": [
+    { "id": "hero", "variant": "overlay" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "cards" },
+    { "id": "reviews", "variant": "scroll" },
+    { "id": "faq" },
+    { "id": "about" },
+    { "id": "hours" },
+    { "id": "contact" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "reviews", "faq", "about", "hours", "contact"],
+  "accentStyle": "tint",
   "faviconShape": "squircle",
-  "industry": "Contractor / Trades",
+  "industry": "Window Tinting",
   "layout": {
-    "heroStyle": "split",
-    "atmosphereLevel": "minimal",
+    "heroStyle": "overlay",
+    "atmosphereLevel": "rich",
     "motionIntensity": "standard",
-    "cardStyle": "elevated",
     "headerStyle": "glass",
+    "cardStyle": "elevated",
+    "cardRadius": "sharp",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "sharp",
+    "sectionPattern": "gradient",
     "headerPosition": "hidden-on-scroll",
     "buttonVariant": "solid",
-    "dividerStyle": "fade",
-    "depth": "editorial",
-    "darkSection": "reviews"
-  }
+    "dividerStyle": "glow"
+  },
+  "marqueeItems": ["Automotive Tinting", "Commercial Film", "Residential Window Film", "Mobile Service", "Stockton, CA", "Licensed & Insured"]
 }

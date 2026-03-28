@@ -6,7 +6,7 @@ import Hero from '../components/Hero.astro';
 import ServiceCards from '../components/ServiceCards.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
 import ProjectGallery from '../components/ProjectGallery.astro';
-import TrustBadges from '../components/TrustBadges.astro';
+import TrustBar from '../components/TrustBar.astro';
 import TrustStats from '../components/TrustStats.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import MenuSection from '../components/MenuSection.astro';
@@ -20,6 +20,10 @@ import Footer from '../components/Footer.astro';
 import StickyActionBar from '../components/StickyActionBar.astro';
 import Divider from '../components/Divider.astro';
 import ScrollMoment from '../components/ScrollMoment.astro';
+import FloatingCTA from '../components/FloatingCTA.astro';
+import Marquee from '../components/Marquee.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import Differentiator from '../components/Differentiator.astro';
 
 import client from '../data/client.json';
 import contact from '../data/contact.json';
@@ -37,7 +41,7 @@ const hasReviews = testimonials?.items?.length > 0;
 
 // Resolve trust component from theme variant
 const trustVariant = (theme as any).sections?.find((s: any) => s.id === 'trust')?.variant;
-const TrustComponent = trustVariant === 'stats' ? TrustStats : TrustBadges;
+const TrustComponent = trustVariant === 'stats' ? TrustStats : TrustBar;
 
 // Section component map
 const sectionMap: Record<string, any> = {
@@ -53,6 +57,9 @@ const sectionMap: Record<string, any> = {
   contact: isRestaurant ? OrderVisit : QuoteForm,
   about: AboutMap,
   hours: HoursDisplay,
+  beforeAfter: BeforeAfter,
+  differentiator: Differentiator,
+  marquee: Marquee,
 };
 
 // Use theme.json sectionOrder or fall back to defaults
@@ -85,6 +92,9 @@ const sectionLabels: Record<string, string> = {
   contact: isRestaurant ? 'Order' : 'Contact',
   about: 'About',
   hours: 'Hours',
+  beforeAfter: '',    // not in nav
+  differentiator: '', // not in nav
+  marquee: '',        // not in nav
 };
 
 const navLinks = sections
@@ -152,5 +162,6 @@ const actionBarLinks = [
   })}
 
   <Footer />
+  <FloatingCTA />
   <StickyActionBar links={actionBarLinks} />
 </BaseLayout>

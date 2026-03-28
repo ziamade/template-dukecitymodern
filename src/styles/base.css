@@ -52,13 +52,20 @@ a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 .section { padding: var(--section-gap) 0; }
-.section:nth-child(even) { background: var(--surface); }
-.section + .section { border-top: 1px solid var(--border); }
-/* Depth personalities provide their own visual flow between sections */
-[data-depth] .section + .section { border-top: none; }
-/* 3-tone section cycling for depth personalities */
-[data-depth] .section:nth-child(3n+2) { background: var(--surface); }
-[data-depth] .section:nth-child(3n)   { background: var(--surfaceAlt); }
+/* 3-tone section cycling: bg → surface → surfaceAlt → bg → ...
+   White-mix ensures visible contrast even when bg/surface are close.
+   On dark palettes (bg ~10% lightness) this creates ~15/20% lightness steps. */
+.section:nth-child(3n+2) {
+  background: color-mix(in oklch, var(--bg) 85%, white);
+}
+.section:nth-child(3n) {
+  background: color-mix(in oklch, var(--bg) 80%, white);
+}
+/* Accent-tinted divider lines between sections */
+.section + .section {
+  border-top: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--accent) 6%, transparent);
+}
 .container { max-width: var(--content-width); margin: 0 auto; padding: 0 1.25rem; }
 
 .section-heading {

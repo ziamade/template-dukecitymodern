@@ -1,8 +1,13 @@
 ---
 // src/components/FAQ.astro
+// v4 upgrade: DCD Luxury pattern with numbered items, glass background,
+// plus-to-X rotation, glow border on open, indented answers,
+// FAQPage JSON-LD structured data, GSAP reveal-up per item.
 import faq from '../data/faq.json';
 
 const items = faq?.items || [];
+
+// FAQ JSON-LD structured data
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -19,14 +24,170 @@ const faqSchema = {
 {items.length > 0 && (
   <section class="faq-section section" id="faq">
     <div class="container">
-      <h2 class="section-heading">Frequently Asked Questions</h2>
-      {items.map((item: any, i: number) => (
-        <details class="faq-item" open={i === 0}>
-          <summary class="faq-question">{item.question}</summary>
-          <p class="faq-answer">{item.answer}</p>
-        </details>
-      ))}
+      <div class="section-heading reveal-up">
+        <span class="section-eyebrow">FAQ</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-list">
+        {items.map((item: any, i: number) => (
+          <details class="faq-item reveal-up" open={i === 0}>
+            <summary class="faq-question">
+              <span class="faq-number">{String(i + 1).padStart(2, '0')}</span>
+              <span class="faq-question-text">{item.question}</span>
+              <span class="faq-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <line x1="8" y1="2" x2="8" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="faq-answer">
+              <p>{item.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
     </div>
-    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </section>
 )}
+
+<style>
+  /* ── FAQ Section ───────────────────────────────────────────────── */
+
+  .faq-section {
+    background: var(--surface);
+  }
+
+  /* ── FAQ list container ──────────────────────────────────────────── */
+
+  .faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap, 1rem);
+  }
+
+  /* ── FAQ item: glass card ────────────────────────────────────────── */
+
+  .faq-item {
+    background: color-mix(in oklch, var(--surface) 100%, white 5%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border));
+    border-radius: var(--card-radius, var(--radius, 12px));
+    overflow: hidden;
+    transition: border-color var(--duration-normal, 0.4s) ease,
+                box-shadow var(--duration-normal, 0.4s) ease;
+  }
+
+  .faq-item[open] {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--borderSubtle, var(--border)));
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 8%, transparent),
+                0 0 40px color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+
+  /* ── Question / summary ──────────────────────────────────────────── */
+
+  .faq-question {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--gap, 1rem);
+    padding: var(--gap-md, 1.5rem);
+    min-height: var(--touch-min, 44px);
+    list-style: none;
+    user-select: none;
+    transition: background var(--duration-fast, 0.2s) ease;
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question:hover {
+    background: var(--surface-glass-hover, rgba(255, 255, 255, 0.06));
+  }
+
+  .faq-question:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    border-radius: var(--card-radius, var(--radius, 12px));
+  }
+
+  /* ── Number indicator ────────────────────────────────────────────── */
+
+  .faq-number {
+    font-family: var(--font-mono, monospace);
+    font-size: var(--mono-size, 0.8125rem);
+    font-weight: 600;
+    color: var(--accent);
+    flex-shrink: 0;
+    min-width: 2ch;
+    letter-spacing: var(--tracking-wide, 0.08em);
+  }
+
+  /* ── Question text ───────────────────────────────────────────────── */
+
+  .faq-question-text {
+    flex: 1;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--body-size, 1rem);
+    line-height: var(--line-height-heading, 1.2);
+    color: var(--text);
+  }
+
+  /* ── Plus icon that rotates to X ─────────────────────────────────── */
+
+  .faq-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+    transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo);
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ── Answer ──────────────────────────────────────────────────────── */
+
+  .faq-answer {
+    padding: 0 var(--gap-md, 1.5rem) var(--gap-md, 1.5rem);
+    /* Indent past the number column: number-width + gap */
+    padding-left: calc(var(--gap-md, 1.5rem) + 2ch + var(--gap, 1rem));
+  }
+
+  .faq-answer p {
+    color: var(--textMuted, var(--text));
+    line-height: var(--line-height-relaxed, 1.75);
+    font-size: var(--small-size, 0.875rem);
+    max-width: 60ch;
+  }
+
+  /* ── Mobile adjustments ──────────────────────────────────────────── */
+
+  @media (max-width: 639px) {
+    .faq-question {
+      padding: var(--gap, 1rem);
+      gap: 0.75rem;
+    }
+
+    .faq-answer {
+      padding: 0 var(--gap, 1rem) var(--gap, 1rem);
+      padding-left: calc(var(--gap, 1rem) + 2ch + 0.75rem);
+    }
+  }
+</style>

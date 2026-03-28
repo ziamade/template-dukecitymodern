@@ -1,15 +1,20 @@
 ---
 // src/components/Reviews.astro
+// v4 upgrade: glass cards, accent left border, expandable details, avatar
+// initial circle, source icon, infinite auto-scroll with hover-pause,
+// review count from testimonials.reviewCount (NEVER items.length).
 import testimonials from '../data/testimonials.json';
 import client from '../data/client.json';
 
 interface Props { variant?: string | number; }
 
-// Always use scroll variant — stacked/featured removed per feedback
+// Always use scroll variant
 const variant = 'scroll';
 
-// Sort by rating desc so depth personalities that show only the first review get the best one
-const items = [...(testimonials?.items || [])].sort((a: any, b: any) => (b.rating || 0) - (a.rating || 0));
+// Sort by rating desc so best review shows first
+const items = [...(testimonials?.items || [])].sort(
+  (a: any, b: any) => (b.rating || 0) - (a.rating || 0)
+);
 
 // Real review count from Google, NOT items.length
 const reviewCount = (testimonials as any)?.reviewCount
@@ -19,80 +24,363 @@ const reviewCount = (testimonials as any)?.reviewCount
 const averageRating = (testimonials as any)?.averageRating || null;
 
 // Build the "See all reviews" link
-let allReviewsUrl = client.socials?.google || '';
-const googleLinks = await import('../data/google-links.json').catch(() => null);
-if (googleLinks?.default?.allReviews) allReviewsUrl = googleLinks.default.allReviews;
+let allReviewsUrl = (client as any).socials?.google || '';
+let googleLinks: any = {};
+try { googleLinks = (await import('../data/google-links.json')).default; } catch {}
+if (googleLinks?.allReviews) allReviewsUrl = googleLinks.allReviews;
 
 // Load source icons
-const sourceIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });
+const sourceIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', {
+  query: '?raw', import: 'default', eager: true
+});
 function sourceIcon(name: string): string {
   return (sourceIcons[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
 }
 
-// Build heading with real count
-const headingParts: string[] = ['What Our Customers Say'];
-if (averageRating && reviewCount) {
-  headingParts[0] = `${averageRating} Stars from ${reviewCount}+ Reviews`;
-} else if (reviewCount) {
-  headingParts[0] = `${reviewCount}+ Customer Reviews`;
+// Star rendering helper
+function stars(count: number): string {
+  return Array.from({ length: count }, () => '\u2605').join('');
 }
 ---
 {items.length > 0 && (
   <section class="reviews-section section" id="reviews">
     <div class="container">
-      <h2 class="section-heading">{headingParts[0]}</h2>
+      <div class="section-heading reveal-up">
+        <span class="section-eyebrow">Testimonials</span>
+        <h2 class="section-title">What Our Customers Say</h2>
+        {(reviewCount || averageRating) && (
+          <p class="section-subtitle reviews-meta">
+            {averageRating && <span class="reviews-rating">{averageRating} <span class="reviews-meta-stars">{stars(Math.round(Number(averageRating)))}</span></span>}
+            {reviewCount && (
+              <span class="reviews-count">
+                {allReviewsUrl
+                  ? <a href={allReviewsUrl} target="_blank" rel="noopener">{reviewCount}+ Google Reviews</a>
+                  : <span>{reviewCount}+ Google Reviews</span>
+                }
+              </span>
+            )}
+          </p>
+        )}
+      </div>
 
-      <div class="reviews-scroll" style={`--review-count: ${items.length}`}>
-        {items.map((t: any) => (
-          <a
-            class:list={["review-card", { "review-card--linked": t.url || allReviewsUrl }]}
-            href={t.url || allReviewsUrl || undefined}
-            target={t.url || allReviewsUrl ? "_blank" : undefined}
-            rel={t.url || allReviewsUrl ? "noopener" : undefined}
-          >
-            <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
-            <details class="review-text-wrap">
-              <summary class="review-text">{t.text}</summary>
-              <p>{t.text}</p>
-            </details>
-            <div class="review-footer">
-              <span class="review-avatar">{t.initials}</span>
-              <span class="review-author">{t.author}</span>
-              <span class="review-badge">
-                <span class="review-badge-icon" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
-              </span>
-            </div>
-          </a>
-        ))}
-        {items.map((t: any) => (
-          <a
-            class:list={["review-card", { "review-card--linked": t.url || allReviewsUrl }]}
-            href={t.url || allReviewsUrl || undefined}
-            target={t.url || allReviewsUrl ? "_blank" : undefined}
-            rel={t.url || allReviewsUrl ? "noopener" : undefined}
-            aria-hidden="true"
-          >
-            <div class="review-stars">{Array.from({ length: t.rating }, () => '\u2605').join('')}</div>
-            <details class="review-text-wrap">
-              <summary class="review-text">{t.text}</summary>
-              <p>{t.text}</p>
-            </details>
-            <div class="review-footer">
-              <span class="review-avatar">{t.initials}</span>
-              <span class="review-author">{t.author}</span>
-              <span class="review-badge">
-                <span class="review-badge-icon" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
-              </span>
-            </div>
-          </a>
-        ))}
+      <div class="reviews-track" style={`--review-count: ${items.length}`}>
+        <div class="reviews-scroll">
+          {/* Original set */}
+          {items.map((t: any) => (
+            <a
+              class:list={['review-card', { 'review-card--linked': t.url || allReviewsUrl }]}
+              href={t.url || allReviewsUrl || undefined}
+              target={t.url || allReviewsUrl ? '_blank' : undefined}
+              rel={t.url || allReviewsUrl ? 'noopener' : undefined}
+            >
+              <div class="review-accent-border" />
+              <div class="review-stars">{stars(t.rating)}</div>
+              <details class="review-text-wrap">
+                <summary class="review-text">{t.text}</summary>
+                <p class="review-text-full">{t.text}</p>
+              </details>
+              <div class="review-footer">
+                <span class="review-avatar">{t.initials}</span>
+                <div class="review-author-info">
+                  <span class="review-author">{t.author}</span>
+                  {t.role && <span class="review-role">{t.role}</span>}
+                </div>
+                <span class="review-badge">
+                  <span class="review-badge-icon" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+                </span>
+              </div>
+            </a>
+          ))}
+          {/* Duplicate set for infinite scroll illusion */}
+          {items.map((t: any) => (
+            <a
+              class:list={['review-card', { 'review-card--linked': t.url || allReviewsUrl }]}
+              href={t.url || allReviewsUrl || undefined}
+              target={t.url || allReviewsUrl ? '_blank' : undefined}
+              rel={t.url || allReviewsUrl ? 'noopener' : undefined}
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <div class="review-accent-border" />
+              <div class="review-stars">{stars(t.rating)}</div>
+              <details class="review-text-wrap">
+                <summary class="review-text">{t.text}</summary>
+                <p class="review-text-full">{t.text}</p>
+              </details>
+              <div class="review-footer">
+                <span class="review-avatar">{t.initials}</span>
+                <div class="review-author-info">
+                  <span class="review-author">{t.author}</span>
+                  {t.role && <span class="review-role">{t.role}</span>}
+                </div>
+                <span class="review-badge">
+                  <span class="review-badge-icon" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
 
       {allReviewsUrl && (
-        <a href={allReviewsUrl} class="reviews-link" target="_blank" rel="noopener">
+        <a href={allReviewsUrl} class="reviews-link reveal-up" target="_blank" rel="noopener">
           See all {reviewCount ? `${reviewCount}+` : ''} reviews on Google &rarr;
         </a>
       )}
     </div>
   </section>
 )}
+
+<style>
+  /* ── Reviews Section ───────────────────────────────────────────── */
+
+  .reviews-section {
+    background: var(--background);
+    overflow: hidden;
+  }
+
+  /* ── Review count metadata ─────────────────────────────────────── */
+
+  .reviews-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap, 1rem);
+    flex-wrap: wrap;
+  }
+
+  .reviews-rating {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--lead-size, 1.125rem);
+    color: var(--text);
+  }
+
+  .reviews-meta-stars {
+    color: #f5a623;
+    letter-spacing: 1px;
+  }
+
+  .reviews-count {
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+  }
+
+  .reviews-count a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .reviews-count a:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Scroll track ──────────────────────────────────────────────── */
+
+  .reviews-track {
+    margin-top: var(--gap-lg, 2rem);
+  }
+
+  .reviews-scroll {
+    display: flex;
+    gap: var(--gap-md, 1.5rem);
+    width: max-content;
+    animation: scroll-reviews calc(var(--review-count, 5) * 6s) linear infinite;
+  }
+
+  .reviews-scroll:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes scroll-reviews {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── Review card: glass + accent border ─────────────────────────── */
+
+  .review-card {
+    position: relative;
+    background: color-mix(in oklch, var(--surface) 100%, white 6%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in srgb, var(--accent) 15%, var(--border));
+    border-radius: var(--card-radius, var(--radius, 12px));
+    padding: var(--gap-md, 1.5rem);
+    padding-left: calc(var(--gap-md, 1.5rem) + 3px);
+    width: 320px;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    overflow: hidden;
+    box-shadow: var(--shadow-glass);
+    transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo),
+                box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo),
+                border-color var(--duration-normal, 0.4s) ease;
+  }
+
+  .review-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--borderSubtle, var(--border)));
+    text-decoration: none;
+  }
+
+  .review-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 768px) {
+    .review-card {
+      width: 380px;
+    }
+  }
+
+  /* ── Accent left border ──────────────────────────────────────────── */
+
+  .review-accent-border {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── Stars ──────────────────────────────────────────────────────── */
+
+  .review-stars {
+    color: #f5a623;
+    font-size: 1.125rem;
+    margin-bottom: var(--gap-sm, 0.5rem);
+    letter-spacing: 2px;
+  }
+
+  /* ── Review text with expandable details ─────────────────────────── */
+
+  .review-text-wrap {
+    margin-bottom: 0.75rem;
+  }
+
+  .review-text-wrap summary {
+    cursor: pointer;
+    list-style: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: var(--line-height-body, 1.6);
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+  }
+
+  .review-text-wrap summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .review-text-wrap[open] summary {
+    display: none;
+  }
+
+  .review-text-full {
+    line-height: var(--line-height-body, 1.6);
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+  }
+
+  /* ── Review footer: avatar + author + source ─────────────────────── */
+
+  .review-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .review-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--small-size, 0.875rem);
+    font-family: var(--font-heading);
+    flex-shrink: 0;
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .review-author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+
+  .review-author {
+    font-weight: 600;
+    font-size: var(--small-size, 0.875rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .review-role {
+    font-size: var(--caption-size, 0.75rem);
+    color: var(--textMuted, var(--text));
+  }
+
+  .review-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .review-badge-icon {
+    display: flex;
+    align-items: center;
+    color: var(--textMuted, var(--text));
+    opacity: 0.6;
+  }
+
+  .review-badge-icon :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+
+  .review-card--linked {
+    cursor: pointer;
+  }
+
+  /* ── See all reviews link ──────────────────────────────────────── */
+
+  .reviews-link {
+    display: block;
+    text-align: center;
+    margin-top: var(--gap-lg, 2rem);
+    font-weight: 600;
+    font-size: var(--small-size, 0.875rem);
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--duration-fast, 0.2s) ease;
+  }
+
+  .reviews-link:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Reduced motion ──────────────────────────────────────────────── */
+
+  @media (prefers-reduced-motion: reduce) {
+    .reviews-scroll {
+      animation: none;
+    }
+  }
+</style>
