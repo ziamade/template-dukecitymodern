@@ -122,37 +122,28 @@ content:
             required: false
             description: "Closing time, or leave blank if closed. Example: 6:00 PM"
 
-  # ── Brand Colors ───────────────────────────────────────────────────────────
+  # ── Brand & Colors ─────────────────────────────────────────────────────────
   - name: brand
-    label: Brand Colors
+    label: Brand & Colors
     type: file
     path: src/data/brand.json
     format: json
     fields:
-      - name: light
-        label: Light Mode
+      - name: palette
+        label: Colors
         type: object
         fields:
-          - { name: primary, label: Primary, type: string, description: "Main brand color. Hex value e.g. #8B2500" }
-          - { name: background, label: Background, type: string, description: "Page background. e.g. #FDF6EC" }
-          - { name: surface, label: Surface, type: string, description: "Card and section backgrounds. e.g. #FFFFFF" }
-          - { name: text, label: Text, type: string, description: "Main text color. e.g. #1a1a1a" }
-          - { name: textMuted, label: Muted Text, type: string, description: "Secondary text. e.g. #666666" }
-          - { name: accent, label: Accent, type: string, description: "Buttons, links, highlights. e.g. #C84B31" }
-          - { name: border, label: Border, type: string, description: "Dividers and borders. e.g. #E8DFD0" }
-      - name: dark
-        label: Dark Mode
-        type: object
-        fields:
-          - { name: primary, label: Primary, type: string, description: "Main brand color (dark mode). e.g. #D4724E" }
-          - { name: background, label: Background, type: string, description: "Page background. e.g. #121212" }
-          - { name: surface, label: Surface, type: string, description: "Card and section backgrounds. e.g. #1e1e1e" }
-          - { name: text, label: Text, type: string, description: "Main text color. e.g. #e8e8e8" }
-          - { name: textMuted, label: Muted Text, type: string, description: "Secondary text. e.g. #999999" }
-          - { name: accent, label: Accent, type: string, description: "Buttons, links, highlights. e.g. #E07850" }
-          - { name: border, label: Border, type: string, description: "Dividers and borders. e.g. #333333" }
-      - { name: nameFont, label: Name Font, type: string, description: "Google Font for business name only." }
-      - { name: headingFont, label: Heading Font, type: string, description: "Google Font for headings (H1-H3)." }
+          - { name: bg, label: Background, type: string, description: "Page background color. Hex value like #0D1B2A or #FAFAF5" }
+          - { name: surface, label: Surface, type: string, description: "Card and section backgrounds. Slightly different from background." }
+          - { name: surfaceAlt, label: Surface Alt, type: string, description: "Alternating section background for visual rhythm." }
+          - { name: text, label: Text, type: string, description: "Main text color. Example: #1a1a1a (dark bg) or #e8e8e8 (light bg)" }
+          - { name: textMuted, label: Muted Text, type: string, description: "Secondary text like descriptions and labels." }
+          - { name: accent, label: Accent, type: string, description: "Buttons, links, and highlights. Your brand color." }
+          - { name: accentDim, label: Accent Dim, type: string, description: "Subtle accent for badges and hover states. Usually accent at 60% opacity." }
+          - { name: accentGlow, label: Accent Glow, type: string, description: "Glow effect color. Usually accent at 20% opacity." }
+          - { name: border, label: Border, type: string, description: "Dividers and borders between sections." }
+      - { name: nameFont, label: Name Font, type: string, description: "Google Font for your business name display." }
+      - { name: headingFont, label: Heading Font, type: string, description: "Google Font for section headings." }
       - { name: bodyFont, label: Body Font, type: string, description: "Google Font for body text." }
 
   # ── Hero ───────────────────────────────────────────────────────────────────
@@ -193,6 +184,59 @@ content:
           - { name: rating, label: Rating, type: number, default: 5 }
           - { name: source, label: Source, type: string, default: "Google" }
           - { name: url, label: Review URL, type: string, required: false }
+
+  # ── About Section ─────────────────────────────────────────────────────────
+  - name: about
+    label: About Section
+    type: file
+    path: src/data/about.json
+    format: json
+    fields:
+      - name: heading
+        label: Section Heading
+        type: string
+        description: "Heading for the About section. Example: About Us"
+      - name: text
+        label: About Text
+        type: text
+        description: "Tell your story. What makes your business special? Keep it personal and real."
+
+  # ── FAQ ──────────────────────────────────────────────────────────────────
+  - name: faq
+    label: FAQ
+    type: file
+    path: src/data/faq.json
+    format: json
+    fields:
+      - name: items
+        label: Questions
+        type: list
+        fields:
+          - { name: question, label: Question, type: string }
+          - { name: answer, label: Answer, type: text }
+
+  # ── Photo Gallery ────────────────────────────────────────────────────────
+  - name: gallery
+    label: Photo Gallery
+    type: file
+    path: src/data/gallery.json
+    format: json
+    fields:
+      - name: images
+        label: Photos
+        type: list
+        fields:
+          - name: url
+            label: Image
+            type: image
+          - name: alt
+            label: Description
+            type: string
+            description: "Brief description of the photo for accessibility."
+          - name: fallbackUrl
+            label: Fallback URL
+            type: string
+            required: false
 
   # ── Menu (Restaurants) ────────────────────────────────────────────────────
   - name: menu
