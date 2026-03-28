@@ -40,6 +40,15 @@ const hoursJson = JSON.stringify(hours);
 const hasGallery = gallery?.images?.length > 0;
 const hasProjects = (projects as any)?.projects?.length > 0;
 
+// Alert banner date gating — hide if outside startDate/endDate window
+const alertVisible = (() => {
+  if (!alert?.enabled || !alert?.text) return false;
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  if ((alert as any).startDate && today < (alert as any).startDate) return false;
+  if ((alert as any).endDate && today > (alert as any).endDate) return false;
+  return true;
+})();
+
 // Preload hero image for LCP optimization
 const heroImage = (hero as any)?.heroImage;
 const heroResolved = heroImage ? resolveImage(heroImage) : null;
@@ -96,7 +105,7 @@ const depth = layout.depth || '';
     <div class="noise-overlay" aria-hidden="true"></div>
   )}
 
-  {alert && alert.enabled && alert.text && (
+  {alertVisible && (
     <div class="alert-banner">{alert.text}</div>
   )}
 
