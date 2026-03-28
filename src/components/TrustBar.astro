@@ -37,8 +37,9 @@ const hasItems = items.length > 0;
   .trustbar-section {
     padding: var(--gap-lg, 2rem) 0;
     border-top: 1px solid var(--borderSubtle, var(--border));
-    border-bottom: 1px solid var(--borderSubtle, var(--border));
-    background: var(--surface);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 15%, var(--border));
+    border-top: 1px solid color-mix(in srgb, var(--accent) 15%, var(--border));
+    background: color-mix(in oklch, var(--surface) 100%, white 4%);
   }
 
   /* ── Trust bar container ────────────────────────────────────────── */
