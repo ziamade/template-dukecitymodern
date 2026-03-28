@@ -13,6 +13,8 @@ import hero from '../data/hero.json';
 import { generateThemeCSS, generateLayoutCSS } from '../lib/brand';
 import { buildFontFaceCSS } from '../lib/fonts';
 import { resolveImage } from '../lib/images';
+import { isAlertVisible } from '../lib/alert';
+import type { AlertData } from '../lib/alert';
 import type { Brand, Theme } from '../lib/types';
 // v4 CSS architecture
 import '../styles/tokens.css';
@@ -41,13 +43,7 @@ const hasGallery = gallery?.images?.length > 0;
 const hasProjects = (projects as any)?.projects?.length > 0;
 
 // Alert banner date gating — hide if outside startDate/endDate window
-const alertVisible = (() => {
-  if (!alert?.enabled || !alert?.text) return false;
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  if ((alert as any).startDate && today < (alert as any).startDate) return false;
-  if ((alert as any).endDate && today > (alert as any).endDate) return false;
-  return true;
-})();
+const alertVisible = isAlertVisible(alert as AlertData);
 
 // Preload hero image for LCP optimization
 const heroImage = (hero as any)?.heroImage;
