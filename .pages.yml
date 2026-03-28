@@ -105,7 +105,10 @@ content:
     fields:
       - name: days
         label: Business Hours
-        type: list
+        type: object
+        list:
+          collapsible:
+            summary: "{{day}}: {{open}} - {{close}}"
         fields:
           - name: day
             label: Day
@@ -175,7 +178,10 @@ content:
     fields:
       - name: items
         label: Reviews
-        type: list
+        type: object
+        list:
+          collapsible:
+            summary: "{{author}} ({{rating}} stars)"
         fields:
           - { name: text, label: Review Text, type: text }
           - { name: author, label: Author Name, type: string }
@@ -210,7 +216,10 @@ content:
     fields:
       - name: items
         label: Questions
-        type: list
+        type: object
+        list:
+          collapsible:
+            summary: "{{question}}"
         fields:
           - { name: question, label: Question, type: string }
           - { name: answer, label: Answer, type: text }
@@ -224,7 +233,10 @@ content:
     fields:
       - name: images
         label: Photos
-        type: list
+        type: object
+        list:
+          collapsible:
+            summary: "{{alt}}"
         fields:
           - name: url
             label: Image
@@ -247,7 +259,10 @@ content:
     fields:
       - name: categories
         label: Categories
-        type: list
+        type: object
+        list:
+          collapsible:
+            summary: "{{name}}"
         fields:
           - name: name
             label: Category Name
@@ -255,7 +270,10 @@ content:
             description: "Group heading like 'Breakfast' or 'Chile & Enchiladas'. Aim for 5-7 categories."
           - name: items
             label: Items
-            type: list
+            type: object
+            list:
+              collapsible:
+                summary: "{{name}} — {{price}}"
             fields:
               - name: name
                 label: Item Name
@@ -288,7 +306,10 @@ content:
     fields:
       - name: items
         label: Stats
-        type: list
+        type: object
+        list:
+          collapsible:
+            summary: "{{number}} — {{label}}"
         fields:
           - { name: number, label: "Number/Value", type: string }
           - { name: label, label: Label, type: string }
@@ -302,7 +323,10 @@ content:
     fields:
       - name: projects
         label: Projects
-        type: list
+        type: object
+        list:
+          collapsible:
+            summary: "{{title}}"
         fields:
           - name: title
             label: Project Title
