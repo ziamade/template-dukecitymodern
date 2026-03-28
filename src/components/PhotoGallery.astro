@@ -111,11 +111,12 @@ const hasGallery = images.length > 0;
     border-radius: var(--radius-lg, 20px);
     aspect-ratio: 3 / 2;
     cursor: pointer;
-    border: none;
+    border: 1px solid color-mix(in srgb, var(--accent) 10%, var(--border));
     padding: 0;
     background: var(--surface);
     display: block;
     width: 100%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 
   .gallery-item :global(picture) {

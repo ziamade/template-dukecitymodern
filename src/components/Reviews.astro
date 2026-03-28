@@ -202,10 +202,10 @@ function stars(count: number): string {
 
   .review-card {
     position: relative;
-    background: var(--surface-glass, rgba(255, 255, 255, 0.03));
+    background: color-mix(in oklch, var(--surface) 100%, white 6%);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--borderSubtle, var(--border));
+    border: 1px solid color-mix(in srgb, var(--accent) 15%, var(--border));
     border-radius: var(--card-radius, var(--radius, 12px));
     padding: var(--gap-md, 1.5rem);
     padding-left: calc(var(--gap-md, 1.5rem) + 3px);
