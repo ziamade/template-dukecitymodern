@@ -1,17 +1,24 @@
 {
   "palette": {
-    "bg": "#faf7ef",
-    "surface": "#f6f5f3",
-    "surfaceAlt": "#f0f0eb",
-    "text": "#1c1a17",
-    "textMuted": "#676664",
-    "accent": "#8c5d1d",
-    "accentDim": "rgba(140, 93, 29, 0.6)",
-    "accentGlow": "rgba(140, 93, 29, 0.2)",
-    "border": "#e2e0dc",
-    "borderSubtle": "#f2f0ee"
+    "bg": "#0D1B2A",
+    "surface": "#152238",
+    "surfaceAlt": "#1A2940",
+    "text": "#E8ECF0",
+    "textMuted": "#8E99A4",
+    "accent": "#00E5FF",
+    "accentDim": "rgba(0, 229, 255, 0.6)",
+    "accentGlow": "rgba(0, 229, 255, 0.2)",
+    "border": "#1E3048",
+    "borderSubtle": "#162030"
   },
-  "nameFont": "Oswald",
-  "headingFont": "Roboto Slab",
-  "bodyFont": "DM Sans"
+  "nameFont": "Russo One",
+  "headingFont": "Teko",
+  "bodyFont": "Hanken Grotesk",
+  "nameTreatment": {
+    "parts": [
+      { "text": "Pete's", "font": "name", "color": "accent" },
+      { "text": " Mobile Window Tinting", "font": "body", "color": "textMuted" }
+    ],
+    "layout": "inline"
+  }
 }
