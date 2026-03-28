@@ -1,0 +1,32 @@
+{
+  "version": "4.0.0",
+  "description": "Template capability manifest — agent skills read this to validate their output stays within what the template can render.",
+  "capabilities": {
+    "heroStyles": ["split", "overlay", "video", "minimal"],
+    "atmosphereLevels": ["none", "minimal", "rich", "cinematic"],
+    "motionIntensities": ["none", "subtle", "standard", "dramatic"],
+    "cardStyles": ["bordered", "shadow", "flat", "elevated", "luxury"],
+    "buttonVariants": ["solid", "ghost", "tactile"],
+    "dividerStyles": ["line", "glow", "fade", "none"],
+    "cardRadii": ["sharp", "soft", "round"],
+    "sectionGaps": ["tight", "normal", "spacious"],
+    "buttonStyles": ["rounded", "pill", "square"],
+    "headerStyles": ["solid", "glass", "transparent"],
+    "headerPositions": ["sticky", "static", "hidden-on-scroll"],
+    "typographyScales": ["compact", "standard", "editorial", "display"],
+    "imageStyles": ["rounded", "sharp", "masked"],
+    "sectionPatterns": ["none", "alternating", "gradient", "wave"],
+    "accentStyles": ["border", "underline", "tint"],
+    "sectionIds": [
+      "hero", "trust", "services", "projects", "beforeAfter",
+      "process", "gallery", "menu", "reviews", "faq",
+      "contact", "about", "hours", "marquee", "differentiator"
+    ],
+    "maxSections": 15,
+    "maxServices": 12,
+    "maxGalleryImages": 20,
+    "maxMarqueeItems": 10,
+    "paletteFields": ["bg", "surface", "surfaceAlt", "text", "textMuted", "accent", "accentDim", "accentGlow", "border"],
+    "fontSlots": ["nameFont", "headingFont", "bodyFont", "monoFont"]
+  }
+}
