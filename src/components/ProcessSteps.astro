@@ -1,28 +1,247 @@
 ---
 // src/components/ProcessSteps.astro
-import client from '../data/client.json';
+// v4 upgrade: large watermark step numbers, accent connecting line,
+// hover lift on cards, .stagger-parent for entrance animation,
+// responsive 4-col > 2-col > 1-col grid.
 
+// Default process steps (used when no process.json or client.processSteps)
 const defaultSteps = [
-  { number: '1', title: 'Call for a Free Quote', desc: 'Tell us about your project and we will give you an honest estimate.' },
-  { number: '2', title: 'We Assess Your Project', desc: 'We visit your site, take measurements, and finalize the plan.' },
-  { number: '3', title: 'Work Completed on Time', desc: 'We do the work right the first time and clean up when we are done.' },
+  { number: '01', title: 'Get in Touch', description: 'Call, text, or fill out our form.' },
+  { number: '02', title: 'Free Estimate', description: 'We assess your needs and provide a quote.' },
+  { number: '03', title: 'Get It Done', description: 'Our team handles everything professionally.' },
+  { number: '04', title: 'Enjoy the Results', description: 'Quality work, guaranteed satisfaction.' },
 ];
 
-const steps = (client as any).processSteps || defaultSteps;
+// Normalize step data: ensure 2-digit number format
+const steps = defaultSteps.map((step: any, idx: number) => ({
+  number: step.number ? String(step.number).padStart(2, '0') : String(idx + 1).padStart(2, '0'),
+  title: step.title,
+  description: step.description || step.desc || '',
+}));
 ---
 {steps.length > 0 && (
   <section class="process-section section" id="process">
     <div class="container">
-      <h2 class="section-heading">How It Works</h2>
-      <div class="process-steps">
-        {steps.map((step: any, i: number) => (
-          <div class="process-step">
-            <div class="process-step-number">{step.number || i + 1}</div>
-            <h3 class="process-step-title">{step.title}</h3>
-            <p class="process-step-desc">{step.desc}</p>
+      <div class="section-heading reveal-up">
+        <span class="section-eyebrow">Our Process</span>
+        <h2 class="section-title">How It Works</h2>
+      </div>
+
+      <div class="process-grid stagger-parent">
+        {steps.map((step: any, idx: number) => (
+          <div class="process-step reveal-up">
+            <div class="process-step-card">
+              <span class="process-step-watermark" aria-hidden="true">{step.number}</span>
+              <span class="process-step-number">{step.number}</span>
+              <h3 class="process-step-title">{step.title}</h3>
+              <p class="process-step-desc">{step.description}</p>
+            </div>
+            {idx < steps.length - 1 && (
+              <div class="process-connector" aria-hidden="true">
+                <div class="process-connector-line" />
+              </div>
+            )}
           </div>
         ))}
       </div>
     </div>
   </section>
 )}
+
+<style>
+  /* ── Process Section ───────────────────────────────────────────── */
+
+  .process-section {
+    background: var(--surface);
+  }
+
+  /* ── Process grid ──────────────────────────────────────────────── */
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 640px) {
+    .process-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .process-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ── Step wrapper (card + connector) ────────────────────────────── */
+
+  .process-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* ── Step card ─────────────────────────────────────────────────── */
+
+  .process-step-card {
+    position: relative;
+    text-align: center;
+    padding: var(--gap-xl, 3rem) var(--gap-md, 1.5rem) var(--gap-lg, 2rem);
+    overflow: hidden;
+    border-radius: var(--card-radius, var(--radius, 12px));
+    background: transparent;
+    transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo),
+                background-color var(--duration-normal, 0.4s) ease,
+                box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo);
+    width: 100%;
+  }
+
+  .process-step-card:hover {
+    transform: translateY(-4px);
+    background: var(--surface-glass, rgba(255, 255, 255, 0.03));
+    box-shadow: var(--shadow-card);
+  }
+
+  /* ── Watermark number (large, low-opacity background) ───────────── */
+
+  .process-step-watermark {
+    position: absolute;
+    top: -0.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-heading);
+    font-size: clamp(5rem, 4rem + 4vw, 8rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: var(--tracking-tight, -0.02em);
+  }
+
+  /* ── Small step number ─────────────────────────────────────────── */
+
+  .process-step-number {
+    display: inline-block;
+    font-family: var(--font-mono, monospace);
+    font-size: var(--mono-size, 0.8125rem);
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: var(--tracking-wide, 0.08em);
+    margin-bottom: var(--gap-sm, 0.5rem);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Step title ──────────────────────────────────────────────────── */
+
+  .process-step-title {
+    font-family: var(--font-heading);
+    font-size: var(--subhead-size, 1.25rem);
+    font-weight: 700;
+    line-height: var(--line-height-heading, 1.2);
+    color: var(--text);
+    margin-bottom: var(--gap-sm, 0.5rem);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Step description ────────────────────────────────────────────── */
+
+  .process-step-desc {
+    color: var(--textMuted, var(--text));
+    font-size: var(--small-size, 0.875rem);
+    line-height: var(--line-height-body, 1.6);
+    max-width: 280px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Connecting line ───────────────────────────────────────────── */
+
+  .process-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--gap-sm, 0.5rem) 0;
+  }
+
+  .process-connector-line {
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(
+      to bottom,
+      var(--accent),
+      color-mix(in srgb, var(--accent) 20%, transparent)
+    );
+    border-radius: 1px;
+  }
+
+  /* ── Desktop: horizontal connectors ──────────────────────────────── */
+
+  @media (min-width: 1024px) {
+    .process-step {
+      flex-direction: row;
+    }
+
+    .process-connector {
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0;
+      z-index: 2;
+    }
+
+    .process-connector-line {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(
+        to right,
+        var(--accent),
+        color-mix(in srgb, var(--accent) 20%, transparent)
+      );
+    }
+  }
+
+  /* ── Tablet (2-col): connectors between rows ─────────────────────── */
+
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .process-step {
+      flex-direction: column;
+    }
+
+    /* Hide connector on odd items (rightmost in 2-col) to avoid confusion */
+    .process-step:nth-child(2n) .process-connector {
+      display: none;
+    }
+
+    /* Show vertical connector only on left-column items */
+    .process-connector-line {
+      height: 24px;
+    }
+  }
+
+  /* ── Mobile: vertical flow ───────────────────────────────────────── */
+
+  @media (max-width: 639px) {
+    .process-step-card {
+      padding: var(--gap-lg, 2rem) var(--gap, 1rem) var(--gap-md, 1.5rem);
+    }
+
+    .process-step-watermark {
+      font-size: 4.5rem;
+    }
+
+    .process-connector-line {
+      height: 24px;
+    }
+  }
+</style>

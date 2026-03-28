@@ -1,0 +1,287 @@
+---
+// src/components/Differentiator.astro
+// PW Tint side-by-side comparison panels ("Us" vs "Them")
+// Panels slide in from opposite sides, "or" divider on desktop
+// Renders nothing if no differentiator data exists
+import client from '../data/client.json';
+
+// Use import.meta.glob to avoid build errors when file doesn't exist
+const diffFiles = import.meta.glob('../data/differentiator.json', { eager: true });
+const diffData: any = (Object.values(diffFiles)[0] as any)?.default ?? null;
+
+// If no data file, render nothing (template below is wrapped in diffData check)
+
+const businessName = (client as any).name || 'Us';
+
+// Expected data shape:
+// {
+//   heading?: string,
+//   us: { title?: string, features: string[], image?: string, accent?: boolean },
+//   them: { title?: string, features: string[], image?: string }
+// }
+const heading = diffData?.heading || 'Why Choose Us';
+const usPanel = diffData?.us || { features: [] };
+const themPanel = diffData?.them || { features: [] };
+
+// Needs data file AND at least one feature on each side to render
+const hasContent = diffData && usPanel.features?.length > 0 && themPanel.features?.length > 0;
+---
+
+{hasContent && (
+  <section class="diff-section section" id="differentiator">
+    <div class="container">
+      <h2 class="section-heading">{heading}</h2>
+
+      <div class="diff-panels">
+        <!-- "Them" panel (left) -->
+        <div class="diff-panel diff-panel--them reveal-left">
+          {themPanel.image && (
+            <div class="diff-panel-bg" style={`background-image: url('${themPanel.image}')`}></div>
+          )}
+          <div class="diff-panel-content">
+            <h3 class="diff-panel-title">{themPanel.title || 'Other Guys'}</h3>
+            <ul class="diff-list diff-list--them">
+              {themPanel.features.map((feat: string) => (
+                <li class="diff-item diff-item--them">
+                  <svg class="diff-icon diff-icon--them" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                  <span>{feat}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <!-- "OR" divider -->
+        <div class="diff-divider" aria-hidden="true">
+          <span class="diff-divider-text">or</span>
+        </div>
+
+        <!-- "Us" panel (right) -->
+        <div class="diff-panel diff-panel--us reveal-right">
+          {usPanel.image && (
+            <div class="diff-panel-bg" style={`background-image: url('${usPanel.image}')`}></div>
+          )}
+          <div class="diff-panel-content">
+            <h3 class="diff-panel-title">{usPanel.title || businessName}</h3>
+            <ul class="diff-list diff-list--us">
+              {usPanel.features.map((feat: string) => (
+                <li class="diff-item diff-item--us">
+                  <svg class="diff-icon diff-icon--us" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>{feat}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  /* ── Section ────────────────────────────────────────────────────── */
+  .diff-section {
+    padding: var(--section-pad, 4rem) 0;
+  }
+
+  /* ── Panels container ───────────────────────────────────────────── */
+  .diff-panels {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-lg, 2rem);
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  @media (min-width: 768px) {
+    .diff-panels {
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+  }
+
+  /* ── Individual panel ───────────────────────────────────────────── */
+  .diff-panel {
+    position: relative;
+    border-radius: var(--radius-lg, 20px);
+    overflow: hidden;
+    padding: 2rem;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .diff-panel-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.12;
+    z-index: 0;
+  }
+
+  .diff-panel-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── "Them" panel styling ───────────────────────────────────────── */
+  .diff-panel--them {
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .diff-panel--them .diff-panel-title {
+    color: var(--textMuted);
+  }
+
+  /* ── "Us" panel styling ─────────────────────────────────────────── */
+  .diff-panel--us {
+    background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+    box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  .diff-panel--us .diff-panel-title {
+    color: var(--accent);
+  }
+
+  @media (min-width: 768px) {
+    .diff-panel--them {
+      border-radius: var(--radius-lg, 20px) 0 0 var(--radius-lg, 20px);
+    }
+
+    .diff-panel--us {
+      border-radius: 0 var(--radius-lg, 20px) var(--radius-lg, 20px) 0;
+    }
+  }
+
+  /* ── Panel title ────────────────────────────────────────────────── */
+  .diff-panel-title {
+    font-family: var(--font-heading);
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin: 0 0 1.25rem;
+    line-height: 1.2;
+  }
+
+  /* ── Feature list ───────────────────────────────────────────────── */
+  .diff-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .diff-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .diff-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  .diff-icon--them {
+    color: #dc2626;
+    opacity: 0.7;
+  }
+
+  .diff-icon--us {
+    color: var(--accent);
+  }
+
+  /* "Them" features slightly muted */
+  .diff-item--them span {
+    color: var(--textMuted);
+  }
+
+  /* ── "OR" divider ───────────────────────────────────────────────── */
+  .diff-divider {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .diff-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      position: relative;
+      width: 0;
+    }
+
+    .diff-divider-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg, var(--background));
+      border: 2px solid var(--border);
+      font-family: var(--font-heading);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--textMuted);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      position: relative;
+      z-index: 3;
+    }
+  }
+
+  /* ── Mobile stacked divider ─────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .diff-divider {
+      display: flex;
+      justify-content: center;
+      margin: -0.75rem 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .diff-divider-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg, var(--background));
+      border: 2px solid var(--border);
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--textMuted);
+    }
+
+    .diff-panel {
+      padding: 1.5rem;
+    }
+
+    .diff-panel--them,
+    .diff-panel--us {
+      border-radius: var(--radius-lg, 20px);
+    }
+  }
+</style>

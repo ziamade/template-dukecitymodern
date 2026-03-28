@@ -1,36 +1,54 @@
 ---
 // src/components/ServiceCards.astro
+// v4 upgrade: data-tilt cards, gradient overlay on hover, mobile carousel,
+// GSAP reveal-up + stagger-parent, 3 variants (cards/icon-grid/compact).
 import OptimizedImg from './OptimizedImg.astro';
+
 interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'cards');
 
+// Load services from content collection markdown files
 const serviceFiles = import.meta.glob('../content/services/*.md', { eager: true });
-const services = Object.values(serviceFiles)
+let services = Object.values(serviceFiles)
   .map((mod: any) => mod.frontmatter)
   .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
+// Fallback: try loading from data/services.json if no markdown files found
+if (services.length === 0) {
+  const svcFiles = import.meta.glob('../data/services.json', { eager: true });
+  const svcData = Object.values(svcFiles)[0] as any;
+  if (svcData?.default) services = svcData.default.items || svcData.default || [];
+  else if (svcData) services = (svcData as any).items || [];
+}
+
 const MAX_FEATURED = 6;
-const featured = services.filter((s: any) => s.beforeImage).slice(0, MAX_FEATURED);
+const featured = services.filter((s: any) => s.beforeImage || s.image).slice(0, MAX_FEATURED);
 const secondary = services.filter((s: any) => !featured.includes(s));
 ---
 {services.length > 0 && (
   <section class="services-section section" data-variant={variant} id="services">
     <div class="container">
-      <h2 class="section-heading">Our Services</h2>
+      <div class="section-heading reveal-up">
+        <span class="section-eyebrow">What We Do</span>
+        <h2 class="section-title">Our Services</h2>
+      </div>
 
       {variant === 'cards' && (
         <>
-          <div class="services-grid">
+          <div class="services-grid stagger-parent">
             {featured.map((svc: any) => (
-              <a href="#contact" class="service-card">
-                <OptimizedImg
-                  src={svc.beforeImage}
-                  alt={svc.title}
-                  width={600}
-                  height={400}
-                  fallback={svc.fallbackImage || ''}
-                />
+              <a href="#contact" class="service-card reveal-up" data-tilt="4">
+                <div class="service-card-media">
+                  <OptimizedImg
+                    src={svc.beforeImage || svc.image}
+                    alt={svc.title}
+                    width={600}
+                    height={375}
+                    fallback={svc.fallbackImage || ''}
+                  />
+                  <div class="service-card-overlay" />
+                </div>
                 <div class="service-card-body">
                   <h3>{svc.title}</h3>
                   <p>{svc.description}</p>
@@ -42,10 +60,10 @@ const secondary = services.filter((s: any) => !featured.includes(s));
             ))}
           </div>
           {secondary.length > 0 && (
-            <ul class="services-list">
+            <ul class="services-list stagger-parent">
               {secondary.map((svc: any) => (
                 <li>
-                  <a href="#contact" class="services-list-item">
+                  <a href="#contact" class="services-list-item reveal-up">
                     <span class="services-list-name">{svc.title}</span>
                     {svc.description && <span class="services-list-desc">{svc.description}</span>}
                   </a>
@@ -57,12 +75,12 @@ const secondary = services.filter((s: any) => !featured.includes(s));
       )}
 
       {variant === 'icon-grid' && (
-        <div class="services-icon-grid">
+        <div class="services-icon-grid stagger-parent">
           {services.map((svc: any) => (
-            <a href="#contact" class="service-icon-card">
-              {svc.beforeImage && (
+            <a href="#contact" class="service-icon-card reveal-up" data-tilt="4">
+              {(svc.beforeImage || svc.image) && (
                 <OptimizedImg
-                  src={svc.beforeImage}
+                  src={svc.beforeImage || svc.image}
                   alt={svc.title}
                   width={120}
                   height={120}
@@ -77,9 +95,9 @@ const secondary = services.filter((s: any) => !featured.includes(s));
       )}
 
       {variant === 'compact' && (
-        <div class="services-compact">
+        <div class="services-compact stagger-parent">
           {services.map((svc: any) => (
-            <a href="#contact" class="service-compact-item">
+            <a href="#contact" class="service-compact-item reveal-up">
               <span class="service-compact-name">{svc.title}</span>
               {svc.description && <span class="service-compact-desc">{svc.description}</span>}
             </a>
@@ -89,3 +107,304 @@ const secondary = services.filter((s: any) => !featured.includes(s));
     </div>
   </section>
 )}
+
+<style>
+  /* ── Services Section ──────────────────────────────────────────── */
+
+  .services-section {
+    background: var(--background);
+  }
+
+  /* ── Cards variant: grid ────────────────────────────────────────── */
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-md, 1.5rem);
+  }
+
+  @media (min-width: 768px) {
+    .services-grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      justify-items: center;
+      max-width: 1100px;
+      margin-inline: auto;
+    }
+  }
+
+  /* Mobile: horizontal carousel */
+  @media (max-width: 767px) {
+    .services-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: var(--gap, 1rem);
+      padding-bottom: var(--gap-sm, 0.5rem);
+    }
+    .services-grid::-webkit-scrollbar {
+      display: none;
+    }
+    .services-grid .service-card {
+      flex: 0 0 85vw;
+      max-width: 340px;
+      scroll-snap-align: center;
+    }
+  }
+
+  /* ── Card styling ────────────────────────────────────────────────── */
+
+  .service-card {
+    background: var(--surface);
+    border-radius: var(--card-radius, var(--radius, 12px));
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    border: 1px solid var(--borderSubtle, var(--border));
+    box-shadow: var(--shadow-card);
+    transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo),
+                box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo),
+                border-color var(--duration-normal, 0.4s) ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--borderSubtle, var(--border)));
+    text-decoration: none;
+  }
+
+  .service-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Card media with gradient overlay ────────────────────────────── */
+
+  .service-card-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+  }
+
+  .service-card-media :global(img),
+  .service-card-media :global(picture img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    transition: transform var(--duration-slow, 0.8s) var(--ease-out-expo);
+  }
+
+  .service-card:hover .service-card-media :global(img),
+  .service-card:hover .service-card-media :global(picture img) {
+    transform: scale(1.05);
+  }
+
+  .service-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--accent) 30%, rgba(0, 0, 0, 0.5)) 0%,
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-normal, 0.4s) ease;
+    pointer-events: none;
+  }
+
+  .service-card:hover .service-card-overlay {
+    opacity: 1;
+  }
+
+  /* ── Card body ───────────────────────────────────────────────────── */
+
+  .service-card-body {
+    padding: var(--gap-md, 1.5rem);
+  }
+
+  .service-card h3 {
+    font-family: var(--font-heading);
+    font-size: var(--subhead-size, 1.25rem);
+    font-weight: 700;
+    margin-bottom: var(--gap-sm, 0.5rem);
+    color: var(--text);
+    line-height: var(--line-height-heading, 1.2);
+  }
+
+  .service-card p {
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+    line-height: var(--line-height-body, 1.6);
+  }
+
+  .service-card-price {
+    display: inline-block;
+    margin-top: var(--gap-sm, 0.5rem);
+    font-weight: 600;
+    color: var(--accent);
+    font-size: var(--small-size, 0.875rem);
+    font-family: var(--font-heading);
+  }
+
+  /* ── Secondary services list ─────────────────────────────────────── */
+
+  .services-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: var(--gap-lg, 2rem);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 640px) {
+    .services-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .services-list li {
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (min-width: 640px) {
+    .services-list li:nth-child(odd) {
+      border-right: 1px solid var(--border);
+    }
+  }
+
+  .services-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 1rem 1.25rem;
+    min-height: var(--touch-min, 44px);
+    text-decoration: none;
+    color: inherit;
+    transition: background var(--transition-fast, 150ms ease),
+                padding-left var(--duration-fast, 0.2s) ease;
+  }
+
+  .services-list-item:hover {
+    background: var(--surface);
+    text-decoration: none;
+    padding-left: 1.75rem;
+  }
+
+  .services-list-name {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .services-list-desc {
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+    line-height: 1.4;
+  }
+
+  /* ── Variant: icon-grid ──────────────────────────────────────────── */
+
+  .services-icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--gap-md, 1.5rem);
+    max-width: 1000px;
+    margin-inline: auto;
+  }
+
+  .service-icon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--gap-lg, 2rem) var(--gap, 1rem);
+    background: var(--surface);
+    border: 1px solid var(--borderSubtle, var(--border));
+    border-radius: var(--card-radius, var(--radius, 12px));
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo),
+                box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo),
+                border-color var(--duration-normal, 0.4s) ease;
+  }
+
+  .service-icon-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--borderSubtle, var(--border)));
+    text-decoration: none;
+  }
+
+  .service-icon-card :global(img),
+  .service-icon-card :global(picture img) {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 0.75rem;
+    border-radius: var(--card-radius, var(--radius, 12px));
+  }
+
+  .service-icon-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: var(--gap-xs, 0.25rem);
+  }
+
+  .service-icon-card p {
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+    line-height: 1.5;
+  }
+
+  /* ── Variant: compact ────────────────────────────────────────────── */
+
+  .services-compact {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  @media (min-width: 640px) {
+    .services-compact {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--gap-lg, 2rem);
+    }
+  }
+
+  .service-compact-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs, 0.25rem);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: background-color var(--transition-fast, 150ms ease),
+                padding-left var(--duration-fast, 0.2s) ease;
+  }
+
+  .service-compact-item:first-child {
+    border-top: 1px solid var(--border);
+  }
+
+  .service-compact-item:hover {
+    background: var(--surface);
+    text-decoration: none;
+    padding-left: 0.75rem;
+  }
+
+  .service-compact-name {
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .service-compact-desc {
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+  }
+</style>

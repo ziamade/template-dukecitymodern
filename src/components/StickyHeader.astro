@@ -1,5 +1,6 @@
 ---
 // src/components/StickyHeader.astro
+// v4 rewrite: glass header with scroll hide/show, mobile overlay nav
 import client from '../data/client.json';
 import OptimizedImg from './OptimizedImg.astro';
 import BrandName from './BrandName.astro';
@@ -11,16 +12,16 @@ interface Props {
 }
 
 const { navLinks, ctaText, ctaHref } = Astro.props;
-const logoUrl = client.logoUrl || '';
+const logoUrl = (client as any).logoUrl || '';
 ---
 <header class="site-header" id="site-header">
-  <div class="container">
-    <a href="#" class="site-brand-link">
+  <div class="header-inner">
+    <a href="#" class="header-brand" aria-label={client.name}>
       {logoUrl && (
         <OptimizedImg
           src={logoUrl}
           alt={client.name}
-          class="site-logo"
+          class="header-logo"
           width={200}
           height={48}
           loading="eager"
@@ -28,20 +29,416 @@ const logoUrl = client.logoUrl || '';
       )}
       <BrandName size="header" />
     </a>
-    <nav class="nav-links" aria-label="Main navigation">
+
+    <nav class="header-nav" aria-label="Main navigation">
       {navLinks.map(link => (
-        <a href={link.href}>{link.text}</a>
+        <a href={link.href} class="header-nav-link" data-magnetic>{link.text}</a>
       ))}
-      <a href={ctaHref} class="nav-cta">{ctaText}</a>
     </nav>
-    <button class="hamburger-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menu">
-      <span></span><span></span><span></span>
+
+    <a href={ctaHref} class="btn btn--primary btn--sm header-cta">{ctaText}</a>
+
+    <button
+      class="header-hamburger"
+      id="header-hamburger"
+      aria-expanded="false"
+      aria-controls="mobile-nav-overlay"
+      aria-label="Open menu"
+    >
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
     </button>
   </div>
-  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
-    {navLinks.map(link => (
-      <a href={link.href}>{link.text}</a>
-    ))}
-    <a href={ctaHref} class="nav-cta">{ctaText}</a>
-  </nav>
+
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" aria-label="Mobile navigation" role="dialog" aria-modal="true">
+    <nav class="mobile-nav-inner">
+      {navLinks.map(link => (
+        <a href={link.href} class="mobile-nav-link">{link.text}</a>
+      ))}
+      <a href={ctaHref} class="btn btn--primary mobile-nav-cta">{ctaText}</a>
+    </nav>
+  </div>
 </header>
+
+<style>
+  /* ── Header shell ─────────────────────────────────────────────── */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: transparent;
+    transition:
+      background var(--duration-fast, 0.2s) ease,
+      box-shadow var(--duration-fast, 0.2s) ease,
+      transform 0.3s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .site-header.header-scrolled {
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+    box-shadow: var(--shadow-glass, 0 4px 24px rgba(0, 0, 0, 0.06));
+  }
+
+  .site-header.header-hidden {
+    transform: translateY(-100%);
+  }
+
+  /* ── Inner container ──────────────────────────────────────────── */
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--content-width, min(1400px, 92vw));
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    height: 60px;
+  }
+
+  @media (min-width: 768px) {
+    .header-inner {
+      height: 68px;
+    }
+  }
+
+  /* ── Brand (logo + name) ──────────────────────────────────────── */
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .header-brand:hover {
+    text-decoration: none;
+  }
+
+  .header-logo {
+    height: 40px;
+    width: auto;
+    max-width: 160px;
+    object-fit: contain;
+    border-radius: var(--radius-xs, 4px);
+  }
+
+  @media (min-width: 768px) {
+    .header-logo {
+      height: 48px;
+      max-width: 200px;
+    }
+  }
+
+  /* ── Desktop navigation ───────────────────────────────────────── */
+  .header-nav {
+    display: none;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .header-nav {
+      display: flex;
+    }
+  }
+
+  .header-nav-link {
+    position: relative;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--small-size, 0.875rem);
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: var(--tracking-wide, 0.08em);
+    text-transform: uppercase;
+    padding: 0.25rem 0;
+    transition: color var(--duration-fast, 0.2s) ease;
+  }
+
+  .header-nav-link:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* Underline animation: width 0 to 100% */
+  .header-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: width 0.3s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .header-nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* ── CTA button ───────────────────────────────────────────────── */
+  .header-cta {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .header-cta {
+      display: inline-flex;
+      flex-shrink: 0;
+    }
+  }
+
+  /* ── Hamburger button ─────────────────────────────────────────── */
+  .header-hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: var(--touch-min, 44px);
+    height: var(--touch-min, 44px);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1002;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (min-width: 768px) {
+    .header-hamburger {
+      display: none;
+    }
+  }
+
+  .hamburger-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition:
+      transform 0.3s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+      opacity 0.2s ease;
+    transform-origin: center;
+  }
+
+  /* X animation when open */
+  .site-header.nav-open .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .site-header.nav-open .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .site-header.nav-open .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ── Mobile overlay nav ───────────────────────────────────────── */
+  .mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg, var(--background)) 95%, transparent);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.4s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+      visibility 0.4s;
+  }
+
+  .site-header.nav-open .mobile-nav-overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-nav-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .mobile-nav-link {
+    color: var(--text);
+    font-family: var(--font-heading);
+    font-size: var(--title-size, clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem));
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: var(--tracking-tight, -0.02em);
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+      color var(--duration-fast, 0.2s) ease;
+  }
+
+  .mobile-nav-link:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* Stagger links in on open */
+  .site-header.nav-open .mobile-nav-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .site-header.nav-open .mobile-nav-link:nth-child(1) { transition-delay: 0.05s; }
+  .site-header.nav-open .mobile-nav-link:nth-child(2) { transition-delay: 0.1s; }
+  .site-header.nav-open .mobile-nav-link:nth-child(3) { transition-delay: 0.15s; }
+  .site-header.nav-open .mobile-nav-link:nth-child(4) { transition-delay: 0.2s; }
+  .site-header.nav-open .mobile-nav-link:nth-child(5) { transition-delay: 0.25s; }
+  .site-header.nav-open .mobile-nav-link:nth-child(6) { transition-delay: 0.3s; }
+
+  .mobile-nav-cta {
+    margin-top: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.4s ease 0.35s,
+      transform 0.4s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)) 0.35s;
+  }
+
+  .site-header.nav-open .mobile-nav-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Dark mode logo treatment ─────────────────────────────────── */
+  :global([data-theme="dark"]) .header-logo {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 3px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme])) .header-logo {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 3px;
+      border-radius: 6px;
+    }
+  }
+
+  /* ── Reduced motion ───────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+
+    .mobile-nav-overlay {
+      transition: none;
+    }
+
+    .mobile-nav-link,
+    .mobile-nav-cta {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .header-nav-link::after {
+      transition: none;
+    }
+
+    .hamburger-line {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Scroll behavior: glass background after 50px, hide on scroll down / show on scroll up after 300px
+  document.addEventListener('DOMContentLoaded', () => {
+    const header = document.getElementById('site-header');
+    if (!header) return;
+
+    let lastScrollY = 0;
+    let ticking = false;
+    const SCROLL_THRESHOLD = 50;
+    const HIDE_THRESHOLD = 300;
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+
+        // Glass background after threshold
+        header.classList.toggle('header-scrolled', y > SCROLL_THRESHOLD);
+
+        // Hide on scroll down / show on scroll up (only after HIDE_THRESHOLD)
+        if (y > HIDE_THRESHOLD) {
+          const scrollingDown = y > lastScrollY;
+          // Only hide if not nav-open
+          if (!header.classList.contains('nav-open')) {
+            header.classList.toggle('header-hidden', scrollingDown);
+          }
+        } else {
+          header.classList.remove('header-hidden');
+        }
+
+        lastScrollY = y;
+        ticking = false;
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Hamburger toggle
+    const hamburger = document.getElementById('header-hamburger');
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+        hamburger.setAttribute('aria-expanded', String(!isOpen));
+        hamburger.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
+        header.classList.toggle('nav-open', !isOpen);
+        // Always show header when nav is open
+        header.classList.remove('header-hidden');
+        // Prevent body scroll when overlay is open
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+      });
+    }
+
+    // Close mobile nav on link click
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-nav-cta');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        header.classList.remove('nav-open');
+        if (hamburger) {
+          hamburger.setAttribute('aria-expanded', 'false');
+          hamburger.setAttribute('aria-label', 'Open menu');
+        }
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && header.classList.contains('nav-open')) {
+        header.classList.remove('nav-open');
+        if (hamburger) {
+          hamburger.setAttribute('aria-expanded', 'false');
+          hamburger.setAttribute('aria-label', 'Open menu');
+        }
+        document.body.style.overflow = '';
+      }
+    });
+  });
+</script>
