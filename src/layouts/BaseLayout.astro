@@ -14,8 +14,14 @@ import { generateThemeCSS, generateLayoutCSS } from '../lib/brand';
 import { buildFontFaceCSS } from '../lib/fonts';
 import { resolveImage } from '../lib/images';
 import type { Brand, Theme } from '../lib/types';
+// v4 CSS architecture
+import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/layout.css';
+import '../styles/components.css';
+import '../styles/atmosphere.css';
+import '../styles/animations.css';
+// Section-specific CSS (kept until Phase 4 component rewrites)
 import '../styles/brand-name.css';
 import '../styles/hero.css';
 import '../styles/faq.css';
@@ -26,12 +32,12 @@ import '../styles/services.css';
 import '../styles/form.css';
 import '../styles/about.css';
 import '../styles/footer.css';
-import '../styles/accents.css';
-import '../styles/tokens.css';
 import '../styles/hours.css';
 import '../styles/projects.css';
 import '../styles/trust.css';
 import '../styles/trust-stats.css';
+// Legacy CSS (remove in Phase 4 when components are rewritten)
+import '../styles/accents.css';
 import '../styles/bg-presets.css';
 import '../styles/visual-depth.css';
 import { ClientRouter } from "astro:transitions";
@@ -99,6 +105,10 @@ const depth = layout.depth || '';
   data-bg-preset={bgPreset}
   data-depth={depth || undefined}
 >
+  {atmosphereLevel !== 'none' && (
+    <div class="noise-overlay" aria-hidden="true"></div>
+  )}
+
   {alert && alert.enabled && alert.text && (
     <div class="alert-banner">{alert.text}</div>
   )}
@@ -109,9 +119,8 @@ const depth = layout.depth || '';
     <script type="application/ld+json" set:html={schemaJson}></script>
   )}
   <script type="application/json" id="hours-data" set:html={hoursJson}></script>
+  <script src="../scripts/animation-controller.ts"></script>
   <script is:inline src="/scripts/header-scroll.js"></script>
-  <script is:inline src="/scripts/stagger.js"></script>
-  <script is:inline src="/scripts/stat-counters.js"></script>
   <script is:inline src="/scripts/open-now.js"></script>
   <script is:inline src="/scripts/menu-scroll.js"></script>
   {hasGallery && (

@@ -1,0 +1,278 @@
+/* ===================================================================
+   atmosphere.css — Premium visual effects layer
+   ===================================================================
+   Driven by data-atmosphere attribute on <body>.
+   Replaces visual-depth.css and bg-presets.css with a unified system.
+
+   Levels:
+     none      — clean, zero effects
+     minimal   — subtle grain texture
+     rich      — grain + glow orbs
+     cinematic — animated grain, pulsing orbs, glass card treatment
+   ================================================================= */
+
+
+/* ── Noise grain overlay ─────────────────────────────────────────── */
+/* SVG feTurbulence texture rendered once, tiled as background.
+   Applied via a fixed overlay that sits behind interactive content. */
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E") repeat;
+  background-size: 182px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity var(--duration-slow, 0.8s) ease;
+}
+
+/* Ensure page content sits above the noise layer */
+.noise-overlay ~ * {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ── Atmosphere: none ────────────────────────────────────────────── */
+
+[data-atmosphere="none"] .noise-overlay {
+  display: none;
+}
+[data-atmosphere="none"] .glow-orb {
+  display: none;
+}
+
+
+/* ── Atmosphere: minimal ─────────────────────────────────────────── */
+
+[data-atmosphere="minimal"] .noise-overlay {
+  opacity: 0.02;
+}
+
+
+/* ── Atmosphere: rich ────────────────────────────────────────────── */
+
+[data-atmosphere="rich"] .noise-overlay {
+  opacity: 0.035;
+}
+
+[data-atmosphere="rich"] .glow-orb {
+  display: block;
+  opacity: 0.6;
+}
+
+
+/* ── Atmosphere: cinematic ───────────────────────────────────────── */
+
+[data-atmosphere="cinematic"] .noise-overlay {
+  opacity: 0.04;
+  animation: grain-shift 8s steps(10) infinite;
+}
+
+[data-atmosphere="cinematic"] .glow-orb {
+  display: block;
+  opacity: 0.8;
+}
+
+[data-atmosphere="cinematic"] .glow-orb--pulse {
+  animation: glow-pulse 6s ease-in-out infinite;
+}
+
+/* Cinematic-level glass card treatment on all content cards */
+[data-atmosphere="cinematic"] .service-card,
+[data-atmosphere="cinematic"] .service-icon-card,
+[data-atmosphere="cinematic"] .review-card {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+}
+
+
+/* ===================================================================
+   Glassmorphism utilities
+   ================================================================= */
+
+.glass {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+  box-shadow: var(--shadow-glass);
+}
+
+.glass--strong {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+  box-shadow:
+    var(--shadow-glass),
+    0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.glass--subtle {
+  background: color-mix(in srgb, var(--surface) 50%, transparent);
+  backdrop-filter: blur(6px) saturate(1.1);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  border: 1px solid color-mix(in srgb, var(--border) 20%, transparent);
+}
+
+
+/* ===================================================================
+   Glow orbs
+   ===================================================================
+   Decorative ambient light blobs. Position them in section layouts,
+   hero backgrounds, or any overflow:hidden container. */
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  display: none; /* shown by atmosphere level */
+  will-change: opacity, transform;
+}
+
+/* Color variants — use brand palette */
+.glow-orb--accent {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  width: 500px;
+  height: 500px;
+}
+
+.glow-orb--highlight {
+  background: color-mix(in srgb, var(--accentGlow, var(--accent)) 12%, transparent);
+  width: 400px;
+  height: 400px;
+}
+
+.glow-orb--subtle {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  width: 600px;
+  height: 600px;
+}
+
+.glow-orb--pulse {
+  background: color-mix(in srgb, var(--accentGlow, var(--accent)) 10%, transparent);
+  width: 450px;
+  height: 450px;
+}
+
+/* Size modifiers */
+.glow-orb--sm { width: 250px; height: 250px; filter: blur(80px); }
+.glow-orb--lg { width: 700px; height: 700px; filter: blur(160px); }
+
+/* Position helpers */
+.glow-orb--top-right { top: -200px; right: -150px; }
+.glow-orb--bottom-left { bottom: -200px; left: -150px; }
+.glow-orb--center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+
+/* ===================================================================
+   Divider styles
+   ===================================================================
+   Applied between sections or as standalone decorative elements.
+   Driven by data-divider attribute. These are also available as
+   utility classes for manual placement. */
+
+.divider-glow {
+  height: 1px;
+  border: none;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--accent) 40%, transparent) 30%,
+    var(--accent) 50%,
+    color-mix(in srgb, var(--accent) 40%, transparent) 70%,
+    transparent
+  );
+}
+
+.divider-fade {
+  height: 1px;
+  border: none;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--borderSubtle, var(--border)) 20%,
+    var(--borderSubtle, var(--border)) 80%,
+    transparent
+  );
+}
+
+.divider-line {
+  height: 1px;
+  border: none;
+  background: var(--border);
+}
+
+
+/* ===================================================================
+   Keyframes
+   ================================================================= */
+
+/* Grain position jitter — creates film-like texture movement */
+@keyframes grain-shift {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-2%, -3%); }
+  20%  { transform: translate(3%, 1%); }
+  30%  { transform: translate(-1%, 4%); }
+  40%  { transform: translate(4%, -2%); }
+  50%  { transform: translate(-3%, 2%); }
+  60%  { transform: translate(1%, -4%); }
+  70%  { transform: translate(-4%, 3%); }
+  80%  { transform: translate(2%, -1%); }
+  90%  { transform: translate(-2%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Glow orb breathing — slow opacity + scale cycle */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+
+/* ===================================================================
+   Reduced motion
+   ================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .noise-overlay {
+    animation: none;
+  }
+  .glow-orb,
+  .glow-orb--pulse {
+    animation: none;
+  }
+}
+
+
+/* ===================================================================
+   Dark mode grain intensity boost
+   ===================================================================
+   Grain is more visible on light backgrounds, so we increase opacity
+   in dark contexts to maintain the same perceptual intensity. */
+
+[data-theme="dark"] .noise-overlay {
+  opacity: calc(var(--grain-opacity, 0) * 1.6);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .noise-overlay {
+    opacity: calc(var(--grain-opacity, 0) * 1.6);
+  }
+}
+
+/* Track grain opacity per level for the dark-mode multiplier */
+[data-atmosphere="minimal"] { --grain-opacity: 0.02; }
+[data-atmosphere="rich"]    { --grain-opacity: 0.035; }
+[data-atmosphere="cinematic"] { --grain-opacity: 0.04; }

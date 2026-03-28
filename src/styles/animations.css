@@ -1,0 +1,271 @@
+/* ===================================================================
+   animations.css — Animation class definitions
+   ===================================================================
+   Defines CSS states that GSAP targets. No JavaScript in this file.
+
+   Pattern:
+   1. Elements have .reveal-* classes → visible by default (no-JS safe)
+   2. When GSAP initializes, it adds .gsap-ready to <html>
+   3. .gsap-ready scopes hide elements so GSAP can animate them in
+   4. prefers-reduced-motion disables everything
+
+   This replaces the scroll-driven animation-timeline approach and
+   the inline stagger system from base.css.
+   ================================================================= */
+
+
+/* ===================================================================
+   Reveal classes — visible by default (progressive enhancement)
+   ================================================================= */
+
+.reveal-up,
+.reveal-left,
+.reveal-right,
+.reveal-scale,
+.reveal-fade {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+
+/* ===================================================================
+   GSAP-ready states — hidden until GSAP animates them
+   ===================================================================
+   These only apply when GSAP has loaded and added .gsap-ready to
+   the document. Without JS, content remains fully visible. */
+
+.gsap-ready .reveal-up {
+  opacity: 0;
+  transform: translateY(60px);
+  will-change: opacity, transform;
+}
+
+.gsap-ready .reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  will-change: opacity, transform;
+}
+
+.gsap-ready .reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  will-change: opacity, transform;
+}
+
+.gsap-ready .reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  will-change: opacity, transform;
+}
+
+.gsap-ready .reveal-fade {
+  opacity: 0;
+  will-change: opacity;
+}
+
+
+/* ===================================================================
+   Stagger children
+   ===================================================================
+   Parent has .stagger-parent. GSAP staggers its direct children.
+   Each child inherits a reveal-up-like hidden state. */
+
+.gsap-ready .stagger-parent > * {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+
+/* ===================================================================
+   Split text
+   ===================================================================
+   For GSAP SplitText integration. Characters/words get these classes. */
+
+.gsap-ready .split-chars .char {
+  opacity: 0;
+  transform: translateY(100%);
+  will-change: opacity, transform;
+}
+
+.gsap-ready .split-words .word {
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: opacity, transform;
+}
+
+
+/* ===================================================================
+   Parallax markers
+   ===================================================================
+   Elements with .parallax get will-change hints for GSAP ScrollTrigger
+   parallax. The actual transform is applied by JS. */
+
+.gsap-ready .parallax {
+  will-change: transform;
+}
+
+
+/* ===================================================================
+   Marquee / infinite scroll
+   ===================================================================
+   Pure CSS marquee with hover-pause. The container holds duplicated
+   content so the loop is seamless. */
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Speed variants */
+.marquee--slow   { animation-duration: 50s; }
+.marquee--fast   { animation-duration: 18s; }
+
+/* Reverse direction */
+.marquee--reverse {
+  animation-direction: reverse;
+}
+
+/* Edge fade masks for smooth disappearing edges */
+.marquee-container {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+
+/* ===================================================================
+   Counter / number animation
+   ===================================================================
+   Tabular nums prevent layout shift as digits animate up. */
+
+.counter {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+
+/* ===================================================================
+   Clip reveal
+   ===================================================================
+   For hero entrance and section reveals that use clip-path. */
+
+.gsap-ready .clip-reveal {
+  clip-path: inset(100% 0 0 0);
+  will-change: clip-path;
+}
+
+.gsap-ready .clip-reveal-left {
+  clip-path: inset(0 100% 0 0);
+  will-change: clip-path;
+}
+
+.gsap-ready .clip-reveal-right {
+  clip-path: inset(0 0 0 100%);
+  will-change: clip-path;
+}
+
+
+/* ===================================================================
+   Magnetic hover
+   ===================================================================
+   Elements with .magnetic get a subtle transform on hover.
+   GSAP applies the actual mouse-follow transform; this just sets
+   the transition for the spring-back. */
+
+.magnetic {
+  transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo);
+}
+
+
+/* ===================================================================
+   Scroll progress indicator
+   ================================================================= */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 9999;
+  will-change: transform;
+}
+
+
+/* ===================================================================
+   Reduced motion — disable ALL animations
+   ===================================================================
+   When the user prefers reduced motion, everything is immediately
+   visible with no transforms or animations. */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Kill all reveals */
+  .gsap-ready .reveal-up,
+  .gsap-ready .reveal-left,
+  .gsap-ready .reveal-right,
+  .gsap-ready .reveal-scale,
+  .gsap-ready .reveal-fade,
+  .gsap-ready .stagger-parent > *,
+  .gsap-ready .split-chars .char,
+  .gsap-ready .split-words .word,
+  .gsap-ready .clip-reveal,
+  .gsap-ready .clip-reveal-left,
+  .gsap-ready .clip-reveal-right {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    will-change: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Kill marquee */
+  .marquee {
+    animation: none;
+  }
+
+  /* Kill scroll progress */
+  .scroll-progress {
+    display: none;
+  }
+
+  /* Kill parallax hints */
+  .parallax {
+    will-change: auto !important;
+  }
+
+  /* Kill magnetic hover */
+  .magnetic {
+    transition: none;
+  }
+}
