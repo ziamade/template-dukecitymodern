@@ -7,17 +7,20 @@ export interface Client {
   socials: { facebook: string; instagram: string; google: string; yelp: string };
   domain: string;
   logoUrl?: string;
+  orderUrl?: string;
+  serviceArea?: string;
+  insured?: boolean;
 }
 
 export interface ColorPalette {
-  primary: string;
-  background: string;
+  bg: string;
   surface: string;
-  surfaceAlt?: string;
-  surfaceAccent?: string;
+  surfaceAlt: string;
   text: string;
   textMuted: string;
   accent: string;
+  accentDim: string;
+  accentGlow: string;
   border: string;
   borderSubtle?: string;
 }
@@ -34,11 +37,11 @@ export interface NameTreatment {
 }
 
 export interface Brand {
-  light: ColorPalette;
-  dark: ColorPalette;
+  palette: ColorPalette;
   nameFont: string;
   headingFont: string;
   bodyFont: string;
+  monoFont?: string;
   nameTreatment?: NameTreatment;
 }
 
@@ -82,21 +85,32 @@ export interface LayoutTokens {
   sectionGap?: 'tight' | 'normal' | 'spacious';
   buttonStyle?: 'rounded' | 'pill' | 'square';
   headerStyle?: 'solid' | 'glass' | 'transparent';
-  cardStyle?: 'bordered' | 'shadow' | 'flat' | 'elevated';
-  typographyScale?: 'compact' | 'standard' | 'editorial';
+  cardStyle?: 'bordered' | 'shadow' | 'flat' | 'elevated' | 'luxury';
+  typographyScale?: 'compact' | 'standard' | 'editorial' | 'display';
   imageStyle?: 'rounded' | 'sharp' | 'masked';
   sectionPattern?: 'none' | 'alternating' | 'gradient' | 'wave';
   headerPosition?: 'sticky' | 'static' | 'hidden-on-scroll';
+  motionIntensity?: 'none' | 'subtle' | 'standard' | 'dramatic';
+  atmosphereLevel?: 'none' | 'minimal' | 'rich' | 'cinematic';
+  heroStyle?: 'split' | 'overlay' | 'video' | 'minimal';
+  buttonVariant?: 'solid' | 'ghost' | 'tactile';
+  dividerStyle?: 'line' | 'glow' | 'fade' | 'none';
+}
+
+export interface SectionEntry {
+  id: string;
+  variant?: string | number;
 }
 
 export interface Theme {
-  sectionOrder: string[];
-  heroVariant: number;
-  accentStyle: string;
-  faviconShape: string;
+  sectionOrder?: string[];
+  heroVariant?: number;
+  accentStyle?: string;
+  faviconShape?: string;
   industry: string;
-  defaultMode: 'light' | 'dark';
+  sections?: SectionEntry[];
   layout?: LayoutTokens;
+  marqueeItems?: string[];
 }
 
 export interface Alert {
@@ -109,6 +123,8 @@ export interface Hero {
   heroTagline: string;
   heroSubtitle: string;
   fallbackImage?: string;
+  videoUrl?: string;
+  videoPoster?: string;
 }
 
 export interface Testimonial {
@@ -123,6 +139,7 @@ export interface Testimonial {
 
 export interface Testimonials {
   items: Testimonial[];
+  reviewCount?: number;
 }
 
 export interface FaqItem {

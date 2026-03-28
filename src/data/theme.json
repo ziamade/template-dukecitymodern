@@ -4,8 +4,15 @@
   "accentStyle": "border",
   "faviconShape": "squircle",
   "industry": "Contractor / Trades",
-  "defaultMode": "light",
   "layout": {
+    "heroStyle": "split",
+    "atmosphereLevel": "minimal",
+    "motionIntensity": "standard",
+    "cardStyle": "elevated",
+    "headerStyle": "glass",
+    "headerPosition": "hidden-on-scroll",
+    "buttonVariant": "solid",
+    "dividerStyle": "fade",
     "depth": "editorial",
     "darkSection": "reviews"
   }

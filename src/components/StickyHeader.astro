@@ -1,7 +1,6 @@
 ---
 // src/components/StickyHeader.astro
 import client from '../data/client.json';
-import ThemeToggle from './ThemeToggle.astro';
 import OptimizedImg from './OptimizedImg.astro';
 import BrandName from './BrandName.astro';
 
@@ -35,7 +34,6 @@ const logoUrl = client.logoUrl || '';
       ))}
       <a href={ctaHref} class="nav-cta">{ctaText}</a>
     </nav>
-    <ThemeToggle />
     <button class="hamburger-btn" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
