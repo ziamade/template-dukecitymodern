@@ -1,34 +1,56 @@
 ---
-// src/components/QuoteForm.astro
 import client from '../data/client.json';
 import contact from '../data/contact.json';
 import { formatPhone } from '../lib/utils';
+
+const slug = (client as any).slug || '';
+const CONTACT_API = 'https://ziamade.com/api/contact';
 ---
-<section class="form-section section" id="quote-form">
+
+<section class="form-section section" id="contact">
   <div class="container">
-    <h2 class="section-heading">Get Your Free Quote</h2>
-    <form class="quote-form" action="https://api.web3forms.com/submit" method="POST">
-      <input type="hidden" name="access_key" value="">
-      <input type="hidden" name="subject" value={`Quote request from ${client.name} website`}>
-      <input type="hidden" name="from_name" value={client.name}>
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required>
+    <h2 class="section-heading">Get In Touch</h2>
+    <form class="quote-form" id="contact-form" novalidate>
+      <input type="hidden" name="siteSlug" value={slug} />
+      <!-- Honeypot for bots -->
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
       </div>
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <label for="contact-name">Name</label>
+        <input type="text" id="contact-name" name="name" required autocomplete="name" />
       </div>
       <div class="form-group">
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" name="phone">
+        <label for="contact-email">Email</label>
+        <input type="email" id="contact-email" name="email" required autocomplete="email" />
       </div>
       <div class="form-group">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" required></textarea>
+        <label for="contact-phone">Phone</label>
+        <input type="tel" id="contact-phone" name="phone" autocomplete="tel" />
       </div>
-      <button type="submit" class="form-submit">Send Quote Request</button>
+      <div class="form-group">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="4"></textarea>
+      </div>
+      <div class="form-error" id="form-error" role="alert"></div>
+      <button type="submit" class="form-submit" id="form-submit">
+        <span class="submit-text">Send Message</span>
+        <span class="submit-loading" hidden>Sending...</span>
+      </button>
+      <p class="form-privacy">Your info is sent directly to {client.name}.</p>
     </form>
+
+    <div class="form-success" id="form-success" hidden>
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+          <path d="M22 4L12 14.01l-3-3"/>
+        </svg>
+      </div>
+      <p class="success-heading">Message sent!</p>
+      <p class="success-detail">{client.name} will get back to you soon.</p>
+    </div>
+
     <noscript>
       <p>
         {contact.phoneForTel && (
@@ -38,3 +60,66 @@ import { formatPhone } from '../lib/utils';
     </noscript>
   </div>
 </section>
+
+<script define:vars={{ CONTACT_API, slug }}>
+  const form = document.getElementById('contact-form');
+  const errorEl = document.getElementById('form-error');
+  const successEl = document.getElementById('form-success');
+  const submitBtn = document.getElementById('form-submit');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.textContent = '';
+      errorEl.hidden = true;
+
+      // Honeypot check
+      const honeypot = form.querySelector('input[name="website"]');
+      if (honeypot && honeypot.value) return;
+
+      const submitText = submitBtn.querySelector('.submit-text');
+      const submitLoading = submitBtn.querySelector('.submit-loading');
+      submitBtn.disabled = true;
+      submitText.hidden = true;
+      submitLoading.hidden = false;
+
+      const data = {
+        siteSlug: slug,
+        name: form.querySelector('[name="name"]').value.trim(),
+        email: form.querySelector('[name="email"]').value.trim(),
+        phone: form.querySelector('[name="phone"]').value.trim() || undefined,
+        message: form.querySelector('[name="message"]').value.trim() || undefined,
+      };
+
+      if (!data.name) { showError('Please enter your name.'); return; }
+      if (!data.email || !data.email.includes('@')) { showError('Please enter a valid email.'); return; }
+
+      try {
+        const res = await fetch(CONTACT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+
+        if (res.ok && result.success) {
+          form.hidden = true;
+          successEl.hidden = false;
+        } else {
+          showError(result.error || 'Something went wrong. Please try again.');
+        }
+      } catch {
+        showError('Unable to send. Please try calling us instead.');
+      }
+
+      function showError(msg) {
+        errorEl.textContent = msg;
+        errorEl.hidden = false;
+        submitBtn.disabled = false;
+        submitText.hidden = false;
+        submitLoading.hidden = true;
+      }
+    });
+  }
+</script>

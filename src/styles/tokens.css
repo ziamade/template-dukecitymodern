@@ -1,18 +1,200 @@
-/* ===== Layout Token Variants =====
-   Applied via data attributes on <body> and CSS custom properties from generateLayoutCSS().
-   Tokens: headerStyle, cardStyle, sectionPattern, headerPosition, imageStyle, typographyScale
-   Value tokens (cardRadius, sectionGap, buttonStyle, imageStyle, typographyScale)
-   are handled by --card-radius, --section-gap, --btn-radius, --img-radius, --font-size-* */
+/* ===================================================================
+   tokens.css — Design system custom properties
+   ===================================================================
+   Color values (--bg, --surface, --accent, etc.) are injected at build
+   time by generateThemeCSS() from brand.json. Layout value tokens
+   (--card-radius, --section-gap, --btn-radius, --img-radius,
+   --font-size-*) are injected by generateLayoutCSS().
 
-/* ── Image radius token ────────────────────────────────────────────── */
-.service-card img,
-.gallery-image img,
-.project-card img,
-.hero-image img {
-  border-radius: var(--img-radius, 0);
+   This file defines structural tokens that those injected values
+   reference, plus the full motion, shadow, and spacing vocabulary.
+   ================================================================= */
+
+
+/* ── Surfaces ────────────────────────────────────────────────────── */
+/* Glass surfaces are always white-based; brand.ts injects these as
+   --surface-glass and --surface-glass-hover but we redeclare here as
+   fallbacks in case a build path skips paletteToCSS(). */
+
+:root {
+  --surface-glass: rgba(255, 255, 255, 0.03);
+  --surface-glass-hover: rgba(255, 255, 255, 0.06);
+  --surface-glass-active: rgba(255, 255, 255, 0.09);
+
+  /* Tonal fallbacks — overridden by brand.json when present */
+  --surfaceAlt: var(--surface);
+  --surfaceAccent: var(--surface);
+  --borderSubtle: var(--border);
 }
 
-/* ── Header Style ──────────────────────────────────────────────────── */
+
+/* ── Typography ──────────────────────────────────────────────────── */
+/* Fluid type scale. generateLayoutCSS() may override --font-size-base,
+   --font-size-h1, --font-size-h2 via typographyScale token. */
+
+:root {
+  --mono-size: 0.8125rem;
+  --caption-size: 0.75rem;
+  --small-size: 0.875rem;
+  --body-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --lead-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --subhead-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem);
+  --title-size: clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem);
+  --display-size: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  --hero-size: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
+  --mega-size: clamp(3.5rem, 2rem + 7vw, 9rem);
+
+  /* Base sizes used by existing components (aliased from scale) */
+  --font-size-base: var(--body-size);
+  --font-size-h1: var(--display-size);
+  --font-size-h2: var(--title-size);
+  --font-size-small: var(--small-size);
+  --font-size-mono: var(--mono-size);
+
+  /* Line heights */
+  --line-height-tight: 1.1;
+  --line-height-heading: 1.2;
+  --line-height-body: 1.6;
+  --line-height-relaxed: 1.75;
+
+  /* Tracking */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+  --tracking-caps: 0.15em;
+}
+
+
+/* ── Spacing ─────────────────────────────────────────────────────── */
+
+:root {
+  --section-pad: clamp(5rem, 3rem + 5vw, 10rem);
+  --section-gap: clamp(3rem, 5vw, 6rem);
+  --content-width: min(1400px, 92vw);
+  --content-narrow: min(900px, 88vw);
+  --content-reading: min(680px, 88vw);
+
+  --gap-xs: 0.25rem;
+  --gap-sm: 0.5rem;
+  --gap: 1rem;
+  --gap-md: 1.5rem;
+  --gap-lg: 2rem;
+  --gap-xl: 3rem;
+  --gap-2xl: 4rem;
+}
+
+
+/* ── Radius ──────────────────────────────────────────────────────── */
+/* Base radius tiers. --card-radius is the runtime token that
+   components consume; it defaults to --radius and can be overridden
+   by generateLayoutCSS() or data-attribute selectors below. */
+
+:root {
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  --card-radius: var(--radius);
+  --btn-radius: var(--radius-sm);
+  --img-radius: var(--radius-sm);
+}
+
+
+/* ── Motion ──────────────────────────────────────────────────────── */
+
+:root {
+  /* Named easings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Durations */
+  --duration-fast: 0.2s;
+  --duration-normal: 0.4s;
+  --duration-slow: 0.8s;
+  --duration-glacial: 1.4s;
+
+  /* Shorthand transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+}
+
+
+/* ── Shadows ─────────────────────────────────────────────────────── */
+
+:root {
+  --shadow-card:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    0 16px 32px rgba(0, 0, 0, 0.05);
+
+  --shadow-card-hover:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 16px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.08);
+
+  --shadow-glow:
+    0 0 20px color-mix(in srgb, var(--accentGlow, var(--accent)) 25%, transparent),
+    0 0 60px color-mix(in srgb, var(--accentGlow, var(--accent)) 10%, transparent);
+
+  --shadow-glass:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 24px rgba(0, 0, 0, 0.06);
+
+  --shadow-elevated:
+    0 4px 16px rgba(0, 0, 0, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.08);
+
+  --shadow-tactile:
+    0 6px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ── Touch target ────────────────────────────────────────────────── */
+
+:root {
+  --touch-min: 44px;
+}
+
+
+/* ===================================================================
+   Data-attribute overrides
+   Applied via body attributes from theme.json → BaseLayout.astro.
+   These give layout-strategist control over the design language
+   without touching component CSS.
+   ================================================================= */
+
+
+/* ── Card radius ─────────────────────────────────────────────────── */
+/* generateLayoutCSS() handles this via --card-radius injection, but
+   we keep data-attr selectors as fallback for direct body overrides. */
+
+[data-card-radius="sharp"] { --card-radius: 0; --btn-radius: 0; }
+[data-card-radius="soft"]  { --card-radius: 0.5rem; --btn-radius: 0.375rem; }
+[data-card-radius="round"] { --card-radius: 0.75rem; --btn-radius: 0.5rem; }
+
+
+/* ── Section gap ─────────────────────────────────────────────────── */
+
+[data-section-gap="tight"]    { --section-gap: clamp(2rem, 3vw, 4rem); }
+[data-section-gap="normal"]   { --section-gap: clamp(3rem, 5vw, 6rem); }
+[data-section-gap="spacious"] { --section-gap: clamp(4rem, 7vw, 8rem); }
+
+
+/* ── Button style ────────────────────────────────────────────────── */
+
+[data-btn-style="rounded"] { --btn-radius: 0.5rem; }
+[data-btn-style="pill"]    { --btn-radius: 2rem; }
+[data-btn-style="square"]  { --btn-radius: 0; }
+
+
+/* ── Header style ────────────────────────────────────────────────── */
 
 [data-header-style="solid"] .site-header {
   background: var(--surface);
@@ -38,7 +220,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* ── Card Style ────────────────────────────────────────────────────── */
+
+/* ── Card style ──────────────────────────────────────────────────── */
 
 [data-card-style="bordered"] .service-card,
 [data-card-style="bordered"] .review-card,
@@ -52,7 +235,7 @@
 [data-card-style="shadow"] .review-card,
 [data-card-style="shadow"] .service-icon-card {
   border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-card);
 }
 
 [data-card-style="flat"] .service-card,
@@ -67,24 +250,44 @@
 [data-card-style="elevated"] .review-card,
 [data-card-style="elevated"] .service-icon-card {
   border: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-elevated);
   transform: translateY(0);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform var(--duration-fast), box-shadow var(--duration-fast);
 }
 [data-card-style="elevated"] .service-card:hover,
 [data-card-style="elevated"] .review-card:hover,
 [data-card-style="elevated"] .service-icon-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--shadow-card-hover);
 }
 
-/* ── Section Pattern ───────────────────────────────────────────────── */
+[data-card-style="luxury"] .service-card,
+[data-card-style="luxury"] .review-card,
+[data-card-style="luxury"] .service-icon-card {
+  background: var(--surface);
+  border: 1px solid var(--borderSubtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-normal) var(--ease-out-expo),
+              box-shadow var(--duration-normal) var(--ease-out-expo),
+              border-color var(--duration-normal);
+}
+[data-card-style="luxury"] .service-card:hover,
+[data-card-style="luxury"] .review-card:hover,
+[data-card-style="luxury"] .service-icon-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--borderSubtle));
+}
+
+
+/* ── Section pattern ─────────────────────────────────────────────── */
 
 [data-section-pattern="none"] .section:nth-child(even) {
   background: var(--background);
 }
 
-/* alternating is the default in base.css — no override needed */
+/* alternating is the default in base.css */
 
 [data-section-pattern="gradient"] .section:nth-child(even) {
   background: linear-gradient(180deg, var(--surface) 0%, var(--background) 100%);
@@ -107,8 +310,10 @@
   clip-path: ellipse(55% 100% at 50% 0%);
   z-index: 1;
 }
+[data-section-pattern="wave"] .section:last-of-type::after {
+  display: none;
+}
 
-/* ── Angle divider variant ─────────────────────────────────────────── */
 [data-section-pattern="angle"] .section {
   position: relative;
 }
@@ -129,29 +334,9 @@
 [data-section-pattern="angle"] .section:last-of-type::after {
   display: none;
 }
-/* Don't add wave after the last section */
-[data-section-pattern="wave"] .section:last-of-type::after {
-  display: none;
-}
 
-/* ── Motion Personalities ─────────────────────────────────────────── */
-[data-motion="crisp"] {
-  --stagger-delay: 60ms;
-  --reveal-duration: 400ms;
-  --reveal-ease: ease-out;
-}
-[data-motion="smooth"] {
-  --stagger-delay: 100ms;
-  --reveal-duration: 600ms;
-  --reveal-ease: ease;
-}
-[data-motion="relaxed"] {
-  --stagger-delay: 150ms;
-  --reveal-duration: 800ms;
-  --reveal-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-}
 
-/* ── Header Position ───────────────────────────────────────────────── */
+/* ── Header position ─────────────────────────────────────────────── */
 
 [data-header-position="static"] {
   padding-top: 0;
@@ -161,15 +346,101 @@
 }
 
 [data-header-position="hidden-on-scroll"] .site-header {
-  transition: transform 0.3s ease, background var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform 0.3s ease,
+              background var(--transition-fast),
+              box-shadow var(--transition-fast);
 }
 [data-header-position="hidden-on-scroll"] .site-header.header-hidden {
   transform: translateY(-100%);
 }
 
-/* sticky is the default fixed behavior — no override needed */
+/* sticky is the default fixed behavior */
 
-/* ── Depth: Bold Typography Boost ──────────────────────────────────── */
+
+/* ── Motion intensity ────────────────────────────────────────────── */
+
+[data-motion="none"] {
+  --stagger-delay: 0ms;
+  --reveal-duration: 0ms;
+  --reveal-ease: linear;
+}
+[data-motion="subtle"] {
+  --stagger-delay: 40ms;
+  --reveal-duration: 300ms;
+  --reveal-ease: ease-out;
+}
+[data-motion="standard"],
+[data-motion="smooth"] {
+  --stagger-delay: 80ms;
+  --reveal-duration: 500ms;
+  --reveal-ease: ease;
+}
+[data-motion="dramatic"],
+[data-motion="relaxed"] {
+  --stagger-delay: 120ms;
+  --reveal-duration: 700ms;
+  --reveal-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+/* Legacy aliases */
+[data-motion="crisp"] {
+  --stagger-delay: 60ms;
+  --reveal-duration: 400ms;
+  --reveal-ease: ease-out;
+}
+
+
+/* ── Divider style ───────────────────────────────────────────────── */
+/* Divider components select their treatment via [data-divider] */
+
+[data-divider="none"] .section + .section {
+  border-top: none;
+}
+
+[data-divider="line"] .section + .section {
+  border-top: 1px solid var(--border);
+}
+
+[data-divider="fade"] .section + .section {
+  border-top: none;
+  border-image: linear-gradient(
+    to right,
+    transparent,
+    var(--borderSubtle) 20%,
+    var(--borderSubtle) 80%,
+    transparent
+  ) 1;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+[data-divider="glow"] .section + .section {
+  border-top: none;
+  border-image: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--accent) 40%, transparent) 30%,
+    var(--accent) 50%,
+    color-mix(in srgb, var(--accent) 40%, transparent) 70%,
+    transparent
+  ) 1;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+
+/* ── Image radius token ──────────────────────────────────────────── */
+
+.service-card img,
+.gallery-image img,
+.project-card img,
+.hero-image img {
+  border-radius: var(--img-radius, 0);
+}
+
+
+/* ── Depth: Bold Typography Boost ────────────────────────────────── */
+/* Legacy data-depth overrides kept for backward compat */
+
 [data-depth="bold"] {
   --font-size-h1: clamp(2.75rem, 1.75rem + 5vw, 5rem);
   --font-size-h2: clamp(2rem, 1.5rem + 2vw, 3rem);

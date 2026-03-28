@@ -2,47 +2,56 @@
 import type { Brand, ColorPalette } from './types';
 
 /**
- * Generate CSS custom properties from a color palette.
- * Used in BaseLayout to inject :root and [data-theme="dark"] styles.
+ * Generate CSS custom properties from a single color palette.
+ * v4: Single palette, no light/dark toggle.
  */
 export function paletteToCSS(palette: ColorPalette): string {
-  return Object.entries(palette)
-    .map(([key, value]) => `  --${key}: ${value};`)
-    .join('\n');
+  const vars: string[] = [];
+
+  // Core palette
+  vars.push(`  --bg: ${palette.bg};`);
+  vars.push(`  --background: ${palette.bg};`); // alias for backward compat
+  vars.push(`  --surface: ${palette.surface};`);
+  vars.push(`  --surfaceAlt: ${palette.surfaceAlt};`);
+  vars.push(`  --text: ${palette.text};`);
+  vars.push(`  --textMuted: ${palette.textMuted};`);
+  vars.push(`  --accent: ${palette.accent};`);
+  vars.push(`  --accentDim: ${palette.accentDim};`);
+  vars.push(`  --accentGlow: ${palette.accentGlow};`);
+  vars.push(`  --border: ${palette.border};`);
+
+  // Optional
+  if (palette.borderSubtle) {
+    vars.push(`  --borderSubtle: ${palette.borderSubtle};`);
+  } else {
+    vars.push(`  --borderSubtle: ${palette.border};`);
+  }
+
+  // Derived glass surfaces (theme-agnostic)
+  vars.push(`  --surface-glass: rgba(255, 255, 255, 0.03);`);
+  vars.push(`  --surface-glass-hover: rgba(255, 255, 255, 0.06);`);
+
+  return vars.join('\n');
 }
 
 /**
- * Generate the full CSS block for both light and dark palettes,
- * plus font custom properties.
+ * Generate the full CSS block for the site's single palette + fonts.
+ * v4: No light/dark modes, no data-theme, no @media prefers-color-scheme.
  */
-export function generateThemeCSS(brand: Brand, defaultMode: 'light' | 'dark'): string {
-  const lightPalette = paletteToCSS(brand.light);
-  const darkPalette = paletteToCSS(brand.dark);
-
-  // Default mode palette goes in :root
-  // Alternate mode goes in [data-theme] and @media query
-  const defaultPalette = defaultMode === 'dark' ? darkPalette : lightPalette;
-  const alternatePalette = defaultMode === 'dark' ? lightPalette : darkPalette;
-  const alternateTheme = defaultMode === 'dark' ? 'light' : 'dark';
+export function generateThemeCSS(brand: Brand): string {
+  const paletteCSS = paletteToCSS(brand.palette);
+  const monoFont = brand.monoFont
+    ? `'${brand.monoFont}', 'JetBrains Mono', monospace`
+    : `'JetBrains Mono', 'SF Mono', monospace`;
 
   return `
 :root {
-${defaultPalette}
+${paletteCSS}
   --font-name: '${brand.nameFont}', var(--font-heading), sans-serif;
   --font-heading: '${brand.headingFont}', sans-serif;
   --font-body: '${brand.bodyFont}', system-ui, sans-serif;
-}
-
-@media (prefers-color-scheme: ${alternateTheme}) {
-  :root:not([data-theme]) {
-${alternatePalette}
-  }
-}
-
-[data-theme="${alternateTheme}"] {
-${alternatePalette}
-}
-`.trim();
+  --font-mono: ${monoFont};
+}`.trim();
 }
 
 /**
@@ -82,6 +91,11 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
       base: 'clamp(1.05rem, 1rem + 0.3vw, 1.25rem)',
       h1: 'clamp(2.25rem, 1.75rem + 3vw, 4rem)',
       h2: 'clamp(1.75rem, 1.5rem + 1.5vw, 2.75rem)',
+    },
+    display: {
+      base: 'clamp(1rem, 0.95rem + 0.3vw, 1.125rem)',
+      h1: 'clamp(2.5rem, 2rem + 4vw, 5rem)',
+      h2: 'clamp(2rem, 1.5rem + 2vw, 3.5rem)',
     },
   };
 

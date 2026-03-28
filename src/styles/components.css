@@ -1,0 +1,465 @@
+/* ===================================================================
+   components.css — Reusable component styles
+   ===================================================================
+   Buttons, cards, badges, section headings, and other shared
+   patterns used across multiple sections and pages. */
+
+
+/* ===================================================================
+   Buttons
+   ===================================================================
+   Base .btn class with variant modifiers. All buttons meet the 44px
+   minimum touch target. Font uses the display/heading family for
+   premium feel. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2.5rem;
+  font-family: var(--font-heading);
+  font-size: var(--small-size, 0.875rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide, 0.08em);
+  text-decoration: none;
+  border: none;
+  border-radius: var(--btn-radius, var(--radius-sm, 6px));
+  cursor: pointer;
+  min-height: var(--touch-min, 44px);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform var(--duration-fast, 0.2s) var(--ease-out-expo),
+              box-shadow var(--duration-fast, 0.2s) var(--ease-out-expo),
+              background-color var(--duration-fast, 0.2s) ease,
+              color var(--duration-fast, 0.2s) ease,
+              border-color var(--duration-fast, 0.2s) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* ── Primary button ──────────────────────────────────────────────── */
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--bg, var(--background));
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 20px color-mix(in srgb, var(--accent) 30%, transparent),
+    var(--shadow-glow);
+}
+
+.btn--primary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+
+/* ── Ghost button ────────────────────────────────────────────────── */
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--borderSubtle, var(--border));
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+.btn--ghost:active {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+
+/* ── Tactile button ──────────────────────────────────────────────── */
+/* Raised 3D button with a physical "press" feel. */
+
+.btn--tactile {
+  background: var(--accent);
+  color: var(--bg, var(--background));
+  box-shadow:
+    0 6px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(0);
+}
+
+.btn--tactile:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.btn--tactile:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ── Data-attribute variant override ─────────────────────────────── */
+/* When buttonVariant is "tactile" in theme.json, all primary buttons
+   get the tactile treatment automatically. */
+
+[data-btn-variant="tactile"] .btn--primary {
+  box-shadow:
+    0 6px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(0);
+}
+[data-btn-variant="tactile"] .btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 12px 28px rgba(0, 0, 0, 0.18);
+}
+[data-btn-variant="tactile"] .btn--primary:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+[data-btn-variant="ghost"] .btn--primary {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  box-shadow: none;
+}
+[data-btn-variant="ghost"] .btn--primary:hover {
+  background: var(--accent);
+  color: var(--bg, var(--background));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+
+/* ── Button sizes ────────────────────────────────────────────────── */
+
+.btn--sm {
+  padding: 0.625rem 1.5rem;
+  font-size: var(--caption-size, 0.75rem);
+  min-height: 36px;
+}
+
+.btn--lg {
+  padding: 1.25rem 3rem;
+  font-size: 1rem;
+}
+
+
+/* ── Legacy btn-primary alias ────────────────────────────────────── */
+/* Backward compat with existing components that use .btn-primary */
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  background: var(--accent);
+  color: var(--bg, var(--background));
+  border-radius: var(--btn-radius, var(--card-radius, 12px));
+  font-weight: 600;
+  text-decoration: none;
+  min-height: var(--touch-min, 44px);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 25%, transparent);
+  text-decoration: none;
+}
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+
+/* Tactile override for legacy class too */
+[data-btn-variant="tactile"] .btn-primary {
+  box-shadow:
+    0 6px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+}
+[data-btn-variant="tactile"] .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 12px 28px rgba(0, 0, 0, 0.18);
+}
+[data-btn-variant="tactile"] .btn-primary:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 color-mix(in srgb, var(--accent) 70%, black),
+    0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ===================================================================
+   Card — Luxury treatment
+   ===================================================================
+   Premium card with gradient border reveal on hover using
+   mask-composite for the border effect. */
+
+.card-luxury {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--borderSubtle, var(--border));
+  border-radius: var(--radius-lg, 20px);
+  padding: var(--gap-lg, 2rem);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo),
+              box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo);
+  overflow: hidden;
+}
+
+.card-luxury:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Gradient border reveal on hover via ::before pseudo */
+.card-luxury::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 50%, transparent),
+    color-mix(in srgb, var(--accentGlow, var(--accent)) 30%, transparent),
+    transparent 60%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--duration-normal, 0.4s) ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-luxury:hover::before {
+  opacity: 1;
+}
+
+
+/* ===================================================================
+   Section headings
+   ===================================================================
+   Consistent section heading pattern with optional eyebrow. */
+
+.section-heading {
+  text-align: center;
+  margin-bottom: var(--gap-lg, 2rem);
+}
+
+.section-eyebrow {
+  display: block;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--mono-size, 0.8125rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps, 0.15em);
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: 700;
+  line-height: var(--line-height-heading, 1.2);
+  letter-spacing: var(--letter-spacing-heading, 0);
+  color: var(--text);
+  margin: 0;
+}
+
+.section-subtitle {
+  font-size: var(--lead-size, 1.125rem);
+  color: var(--textMuted, var(--text));
+  line-height: var(--line-height-body, 1.6);
+  max-width: var(--content-narrow, 900px);
+  margin: 0.75rem auto 0;
+}
+
+/* Heading alignment variants via data-attribute */
+.section[data-heading="left"] .section-heading {
+  text-align: left;
+}
+.section[data-heading="left"] .section-subtitle {
+  margin-left: 0;
+}
+
+.section[data-heading="eyebrow"] .section-heading {
+  text-align: center;
+}
+
+
+/* ===================================================================
+   Badge
+   ===================================================================
+   Small inline label for categories, status, features. */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: var(--caption-size, 0.75rem);
+  font-weight: 600;
+  line-height: 1.4;
+  border-radius: var(--radius-full, 9999px);
+  white-space: nowrap;
+}
+
+/* Default: accent outline */
+.badge--default {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Solid accent fill */
+.badge--accent {
+  background: var(--accent);
+  color: var(--bg, var(--background));
+  border: 1px solid var(--accent);
+}
+
+/* Muted surface */
+.badge--muted {
+  background: var(--surface);
+  color: var(--textMuted, var(--text));
+  border: 1px solid var(--borderSubtle, var(--border));
+}
+
+/* Success (green) */
+.badge--success {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+
+
+/* ===================================================================
+   Tag (inline keyword chip)
+   ================================================================= */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.625rem;
+  font-size: var(--caption-size, 0.75rem);
+  font-weight: 500;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--surface-glass);
+  color: var(--textMuted, var(--text));
+  border: 1px solid var(--borderSubtle, var(--border));
+  transition: background var(--duration-fast, 0.2s) ease,
+              border-color var(--duration-fast, 0.2s) ease;
+}
+
+.tag:hover {
+  background: var(--surface-glass-hover);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--borderSubtle, var(--border)));
+}
+
+
+/* ===================================================================
+   Stat number
+   ===================================================================
+   Large numerical display for trust stats, counters, hero stats. */
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: var(--display-size, 2.5rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: var(--small-size, 0.875rem);
+  color: var(--textMuted, var(--text));
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide, 0.08em);
+}
+
+
+/* ===================================================================
+   Accent style variants (data-accent on body)
+   ===================================================================
+   Global accent treatment applied across sections. */
+
+[data-accent="border"] .review-card {
+  border-left: 3px solid var(--accent);
+}
+[data-accent="border"] .faq-item {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+}
+[data-accent="border"] .about-section {
+  border-left: 3px solid var(--accent);
+}
+
+[data-accent="underline"] .section-heading {
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.3em;
+}
+
+[data-accent="tint"] .review-card {
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+}
+[data-accent="tint"] .faq-item[open] {
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  padding: 0 1rem;
+}
+
+
+/* ===================================================================
+   Responsive
+   ================================================================= */
+
+@media (max-width: 640px) {
+  .btn {
+    padding: 0.875rem 1.75rem;
+    font-size: var(--caption-size, 0.75rem);
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn--sm {
+    width: auto;
+  }
+
+  .section-heading {
+    margin-bottom: var(--gap, 1rem);
+  }
+}

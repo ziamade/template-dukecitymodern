@@ -14,8 +14,14 @@ import { generateThemeCSS, generateLayoutCSS } from '../lib/brand';
 import { buildFontFaceCSS } from '../lib/fonts';
 import { resolveImage } from '../lib/images';
 import type { Brand, Theme } from '../lib/types';
+// v4 CSS architecture
+import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/layout.css';
+import '../styles/components.css';
+import '../styles/atmosphere.css';
+import '../styles/animations.css';
+// Section-specific CSS (kept until Phase 4 component rewrites)
 import '../styles/brand-name.css';
 import '../styles/hero.css';
 import '../styles/faq.css';
@@ -26,20 +32,19 @@ import '../styles/services.css';
 import '../styles/form.css';
 import '../styles/about.css';
 import '../styles/footer.css';
-import '../styles/accents.css';
-import '../styles/tokens.css';
-import '../styles/theme-toggle.css';
 import '../styles/hours.css';
 import '../styles/projects.css';
 import '../styles/trust.css';
 import '../styles/trust-stats.css';
+// Legacy CSS (remove in Phase 4 when components are rewritten)
+import '../styles/accents.css';
 import '../styles/bg-presets.css';
 import '../styles/visual-depth.css';
 import { ClientRouter } from "astro:transitions";
 
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
-const themeCSS = generateThemeCSS(typedBrand, typedTheme.defaultMode || 'light');
+const themeCSS = generateThemeCSS(typedBrand);
 const layout = (theme as any).layout || {};
 const layoutCSS = generateLayoutCSS(layout);
 const fontFaceCSS = buildFontFaceCSS(typedBrand);
@@ -53,16 +58,21 @@ const heroImage = (hero as any)?.heroImage;
 const heroResolved = heroImage ? resolveImage(heroImage) : null;
 
 // Structural layout tokens → data attributes on body
-const headerStyle = layout.headerStyle || 'solid';
+const headerStyle = layout.headerStyle || 'glass';
 const cardStyle = layout.cardStyle || 'shadow';
 const sectionPattern = layout.sectionPattern || 'alternating';
 const headerPosition = layout.headerPosition || 'hidden-on-scroll';
-const motionStyle = layout.motionStyle || 'smooth';
+const motionIntensity = layout.motionIntensity || 'standard';
+const atmosphereLevel = layout.atmosphereLevel || 'minimal';
+const heroStyle = layout.heroStyle || 'split';
+const dividerStyle = layout.dividerStyle || 'fade';
+const buttonVariant = layout.buttonVariant || 'solid';
+// Legacy tokens (kept for existing CSS until Phase 2 overhaul)
 const bgPreset = layout.backgroundPreset || 'clean';
 const depth = layout.depth || '';
 ---
 <!DOCTYPE html>
-<html lang="en" data-theme={typedTheme.defaultMode || 'light'}>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,22 +97,17 @@ const depth = layout.depth || '';
   data-card-style={cardStyle}
   data-section-pattern={sectionPattern}
   data-header-position={headerPosition}
-  data-motion={motionStyle}
+  data-motion={motionIntensity}
+  data-atmosphere={atmosphereLevel}
+  data-hero-style={heroStyle}
+  data-divider={dividerStyle}
+  data-btn-variant={buttonVariant}
   data-bg-preset={bgPreset}
   data-depth={depth || undefined}
 >
-  <script is:inline>
-    // Apply saved theme preference before paint (prevents flash)
-    (function() {
-      var saved = localStorage.getItem('theme');
-      if (saved) document.documentElement.setAttribute('data-theme', saved);
-    })();
-    // Persist dark mode across View Transitions
-    document.addEventListener('astro:before-swap', function(e) {
-      var saved = localStorage.getItem('theme');
-      if (saved) e.newDocument.documentElement.setAttribute('data-theme', saved);
-    });
-  </script>
+  {atmosphereLevel !== 'none' && (
+    <div class="noise-overlay" aria-hidden="true"></div>
+  )}
 
   {alert && alert.enabled && alert.text && (
     <div class="alert-banner">{alert.text}</div>
@@ -114,11 +119,9 @@ const depth = layout.depth || '';
     <script type="application/ld+json" set:html={schemaJson}></script>
   )}
   <script type="application/json" id="hours-data" set:html={hoursJson}></script>
+  <script src="../scripts/animation-controller.ts"></script>
   <script is:inline src="/scripts/header-scroll.js"></script>
-  <script is:inline src="/scripts/stagger.js"></script>
-  <script is:inline src="/scripts/stat-counters.js"></script>
   <script is:inline src="/scripts/open-now.js"></script>
-  <script is:inline src="/scripts/theme-toggle.js"></script>
   <script is:inline src="/scripts/menu-scroll.js"></script>
   {hasGallery && (
     <>
