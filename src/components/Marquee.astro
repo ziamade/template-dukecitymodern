@@ -1,0 +1,123 @@
+---
+// src/components/Marquee.astro
+// CSS infinite scroll strip for branding, service highlights, taglines
+import theme from '../data/theme.json';
+
+const marqueeItems: string[] = (theme as any)?.marqueeItems || [];
+const hasItems = marqueeItems.length > 0;
+---
+{hasItems && (
+  <div class="marquee-strip">
+    <div class="marquee-container">
+      <div class="marquee">
+        {/* First set */}
+        {marqueeItems.map((item: string) => (
+          <span class="marquee-item">
+            <span class="marquee-separator" aria-hidden="true">&bull;</span>
+            <span class="marquee-text">{item}</span>
+          </span>
+        ))}
+        {/* Duplicate for seamless loop */}
+        {marqueeItems.map((item: string) => (
+          <span class="marquee-item" aria-hidden="true">
+            <span class="marquee-separator">&bull;</span>
+            <span class="marquee-text">{item}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  /* ===================================================================
+     Marquee Strip — CSS infinite scroll
+     =================================================================== */
+  .marquee-strip {
+    position: relative;
+    overflow: hidden;
+    padding: 0.875rem 0;
+    background: var(--surface);
+    border-top: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+    /* Edge fade masks */
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 6%,
+      black 94%,
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 6%,
+      black 94%,
+      transparent
+    );
+  }
+
+  /* ── Scrolling container ────────────────────────────────────── */
+  .marquee-container {
+    overflow: hidden;
+  }
+
+  .marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 35s linear infinite;
+  }
+
+  .marquee:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ── Items ──────────────────────────────────────────────────── */
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0 1.25rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .marquee-text {
+    font-family: var(--font-heading);
+    font-size: var(--small-size, 0.875rem);
+    font-weight: 600;
+    color: var(--textMuted, var(--text));
+    letter-spacing: var(--tracking-wide, 0.08em);
+    text-transform: uppercase;
+    transition: color var(--duration-fast, 0.2s) ease;
+  }
+
+  .marquee-item:hover .marquee-text {
+    color: var(--accent);
+  }
+
+  /* ── Decorative separator ───────────────────────────────────── */
+  .marquee-separator {
+    color: var(--accent);
+    font-size: 0.75rem;
+    opacity: 0.5;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  /* ── Reduced motion ─────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      animation: none;
+    }
+  }
+</style>

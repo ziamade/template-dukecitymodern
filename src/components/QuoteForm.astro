@@ -1,61 +1,181 @@
 ---
-import client from '../data/client.json';
+// src/components/QuoteForm.astro
+// Two-column contact form: info sidebar + glass card form
+// PW Tint pattern with Web3Forms action and honeypot spam prevention
 import contact from '../data/contact.json';
+import location from '../data/location.json';
+import hours from '../data/hours.json';
+import client from '../data/client.json';
 import { formatPhone } from '../lib/utils';
 
 const slug = (client as any).slug || '';
 const CONTACT_API = 'https://ziamade.com/api/contact';
+
+const phoneForTel = (contact as any).phoneForTel || '';
+const email = (contact as any).email || '';
+const address = (location as any).address || '';
+const city = (location as any).city || '';
+const state = (location as any).state || '';
+const zip = (location as any).zip || '';
+const fullAddress = [address, city, state, zip].filter(Boolean).join(', ');
+
+const industry = ((client as any).industry || '').toLowerCase();
+const isRestaurant = industry.includes('restaurant') || industry.includes('food') || industry.includes('dining');
+
+// Summarize hours for the sidebar
+const hoursData = (hours as any)?.days || [];
+function summarizeHours(): string {
+  if (!hoursData.length) return '';
+  const openDays = hoursData.filter((d: any) => d.open);
+  if (!openDays.length) return '';
+  const first = openDays[0];
+  const last = openDays[openDays.length - 1];
+  if (openDays.length === 7) return `Daily ${first.open} - ${first.close}`;
+  return `${first.day.slice(0, 3)} - ${last.day.slice(0, 3)} ${first.open} - ${first.close}`;
+}
+const hoursSummary = summarizeHours();
+
+// Load services for dropdown (non-restaurant only)
+let serviceNames: string[] = [];
+if (!isRestaurant) {
+  try {
+    const serviceFiles = import.meta.glob('../content/services/*.md', { eager: true });
+    serviceNames = Object.values(serviceFiles)
+      .map((mod: any) => mod.frontmatter?.title)
+      .filter(Boolean)
+      .sort();
+  } catch {}
+}
 ---
 
 <section class="form-section section" id="contact">
   <div class="container">
     <h2 class="section-heading">Get In Touch</h2>
-    <form class="quote-form" id="contact-form" novalidate>
-      <input type="hidden" name="siteSlug" value={slug} />
-      <!-- Honeypot for bots -->
-      <div style="position:absolute;left:-9999px" aria-hidden="true">
-        <input type="text" name="website" tabindex="-1" autocomplete="off" />
-      </div>
-      <div class="form-group">
-        <label for="contact-name">Name</label>
-        <input type="text" id="contact-name" name="name" required autocomplete="name" />
-      </div>
-      <div class="form-group">
-        <label for="contact-email">Email</label>
-        <input type="email" id="contact-email" name="email" required autocomplete="email" />
-      </div>
-      <div class="form-group">
-        <label for="contact-phone">Phone</label>
-        <input type="tel" id="contact-phone" name="phone" autocomplete="tel" />
-      </div>
-      <div class="form-group">
-        <label for="contact-message">Message</label>
-        <textarea id="contact-message" name="message" rows="4"></textarea>
-      </div>
-      <div class="form-error" id="form-error" role="alert"></div>
-      <button type="submit" class="form-submit" id="form-submit">
-        <span class="submit-text">Send Message</span>
-        <span class="submit-loading" hidden>Sending...</span>
-      </button>
-      <p class="form-privacy">Your info is sent directly to {client.name}.</p>
-    </form>
+    <div class="form-layout">
 
-    <div class="form-success" id="form-success" hidden>
-      <div class="success-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-          <path d="M22 4L12 14.01l-3-3"/>
-        </svg>
+      <!-- Info sidebar -->
+      <div class="form-info reveal-left">
+        <h3 class="form-info__title">Let's talk about your project</h3>
+        <p class="form-info__desc">Reach out and we'll get back to you as soon as possible.</p>
+
+        <ul class="form-info__list">
+          {phoneForTel && (
+            <li class="form-info__item">
+              <svg class="form-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+              </svg>
+              <a href={`tel:${phoneForTel}`}>{formatPhone(phoneForTel)}</a>
+            </li>
+          )}
+          {email && (
+            <li class="form-info__item">
+              <svg class="form-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <a href={`mailto:${email}`}>{email}</a>
+            </li>
+          )}
+          {fullAddress && (
+            <li class="form-info__item">
+              <svg class="form-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>{fullAddress}</span>
+            </li>
+          )}
+          {hoursSummary && (
+            <li class="form-info__item">
+              <svg class="form-info__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span>{hoursSummary}</span>
+            </li>
+          )}
+        </ul>
       </div>
-      <p class="success-heading">Message sent!</p>
-      <p class="success-detail">{client.name} will get back to you soon.</p>
+
+      <!-- Contact form (glass card) -->
+      <div class="form-card glass reveal-right">
+        <form class="quote-form" id="contact-form" novalidate>
+          <input type="hidden" name="siteSlug" value={slug} />
+          <!-- Honeypot for bots -->
+          <div style="position:absolute;left:-9999px" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-name">Name</label>
+              <input type="text" id="contact-name" name="name" required autocomplete="name" placeholder="Your name" />
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" name="email" required autocomplete="email" placeholder="you@email.com" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact-phone">Phone</label>
+              <input type="tel" id="contact-phone" name="phone" autocomplete="tel" placeholder="(505) 555-1234" />
+            </div>
+            {!isRestaurant && serviceNames.length > 0 && (
+              <div class="form-group">
+                <label for="contact-service">Service</label>
+                <select id="contact-service" name="service">
+                  <option value="">Select a service</option>
+                  {serviceNames.map((name) => (
+                    <option value={name}>{name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div class="form-group">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" rows="5" placeholder="Tell us about your project..."></textarea>
+          </div>
+
+          <div class="form-error" id="form-error" role="alert"></div>
+
+          <button type="submit" class="btn btn--primary form-submit" id="form-submit">
+            <span class="submit-text">Send Message</span>
+            <span class="submit-loading" hidden>
+              <svg class="submit-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                <path d="M12 2a10 10 0 019.95 9" stroke-linecap="round"/>
+              </svg>
+              Sending...
+            </span>
+          </button>
+
+          <p class="form-privacy">Your info is sent directly to {client.name}. We never share it.</p>
+        </form>
+
+        <div class="form-success" id="form-success" hidden>
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <path d="M22 4L12 14.01l-3-3"/>
+            </svg>
+          </div>
+          <p class="success-heading">Message sent!</p>
+          <p class="success-detail">{client.name} will get back to you soon.</p>
+        </div>
+      </div>
     </div>
 
     <noscript>
-      <p>
-        {contact.phoneForTel && (
-          <>Call us directly: <a href={`tel:${contact.phoneForTel}`}>{formatPhone(contact.phoneForTel)}</a></>
-        )}
+      <p class="noscript-fallback">
+        {phoneForTel ? (
+          <>Call us directly: <a href={`tel:${phoneForTel}`}>{formatPhone(phoneForTel)}</a></>
+        ) : email ? (
+          <>Email us: <a href={`mailto:${email}`}>{email}</a></>
+        ) : null}
       </p>
     </noscript>
   </div>
@@ -88,6 +208,7 @@ const CONTACT_API = 'https://ziamade.com/api/contact';
         name: form.querySelector('[name="name"]').value.trim(),
         email: form.querySelector('[name="email"]').value.trim(),
         phone: form.querySelector('[name="phone"]').value.trim() || undefined,
+        service: form.querySelector('[name="service"]')?.value || undefined,
         message: form.querySelector('[name="message"]').value.trim() || undefined,
       };
 
@@ -100,9 +221,7 @@ const CONTACT_API = 'https://ziamade.com/api/contact';
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
-
         const result = await res.json();
-
         if (res.ok && result.success) {
           form.hidden = true;
           successEl.hidden = false;
@@ -123,3 +242,275 @@ const CONTACT_API = 'https://ziamade.com/api/contact';
     });
   }
 </script>
+
+<style>
+  /* ── Two-column form layout ─────────────────────────────────────── */
+  .form-section {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--bg, var(--background)) 100%);
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .form-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-lg, 2rem);
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .form-layout {
+      grid-template-columns: 5fr 7fr;
+      gap: 3rem;
+    }
+  }
+
+  /* ── Info sidebar ───────────────────────────────────────────────── */
+  .form-info {
+    padding: var(--gap-lg, 2rem) 0;
+  }
+
+  .form-info__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 0 0 0.75rem;
+  }
+
+  .form-info__desc {
+    font-size: 1rem;
+    color: var(--textMuted);
+    line-height: 1.6;
+    margin: 0 0 2rem;
+  }
+
+  .form-info__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-info__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .form-info__item a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color var(--duration, 0.3s) ease;
+  }
+
+  .form-info__item a:hover {
+    color: var(--accent);
+  }
+
+  .form-info__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--accent);
+    margin-top: 0.125rem;
+  }
+
+  /* ── Glass card form ────────────────────────────────────────────── */
+  .form-card {
+    border-radius: var(--radius-lg, 20px);
+    padding: var(--gap-lg, 2rem);
+    position: relative;
+  }
+
+  .quote-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 480px) {
+    .form-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--textMuted);
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 12px);
+    background: color-mix(in srgb, var(--text) 3%, var(--surface));
+    color: var(--text);
+    font-size: 1rem;
+    font-family: var(--font-body);
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--textMuted);
+    opacity: 0.5;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+
+  .form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+
+  /* ── Submit button ──────────────────────────────────────────────── */
+  .form-submit {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .submit-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .submit-spinner {
+    width: 18px;
+    height: 18px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .form-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ── Error / success ────────────────────────────────────────────── */
+  .form-error {
+    color: #dc2626;
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius, 12px);
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+  }
+
+  .form-error:empty,
+  .form-error[hidden] {
+    display: none;
+  }
+
+  .form-privacy {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--textMuted);
+    opacity: 0.7;
+    margin: 0.5rem 0 0;
+  }
+
+  .form-success {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+
+  .success-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1rem;
+    color: #16a34a;
+  }
+
+  .success-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .success-heading {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 0.5rem;
+  }
+
+  .success-detail {
+    color: var(--textMuted);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .noscript-fallback {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .noscript-fallback a {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ── Responsive ─────────────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .form-info {
+      padding: 0;
+      text-align: center;
+    }
+
+    .form-info__item {
+      justify-content: center;
+    }
+
+    .form-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
