@@ -21,25 +21,12 @@ import '../styles/layout.css';
 import '../styles/components.css';
 import '../styles/atmosphere.css';
 import '../styles/animations.css';
-// Section-specific CSS (kept until Phase 4 component rewrites)
+// Section CSS now scoped inside each component's <style> tag.
+// Only brand-name.css and menu.css kept (shared by multiple components / unchanged).
 import '../styles/brand-name.css';
-import '../styles/hero.css';
-import '../styles/faq.css';
-import '../styles/reviews.css';
-import '../styles/gallery.css';
 import '../styles/menu.css';
-import '../styles/services.css';
-import '../styles/form.css';
-import '../styles/about.css';
-import '../styles/footer.css';
-import '../styles/hours.css';
-import '../styles/projects.css';
-import '../styles/trust.css';
-import '../styles/trust-stats.css';
-// Legacy CSS (remove in Phase 4 when components are rewritten)
-import '../styles/accents.css';
-import '../styles/bg-presets.css';
-import '../styles/visual-depth.css';
+// Legacy CSS removed in Phase 4 — v4 atmosphere.css replaces visual-depth.css,
+// accent styles moved to components.css, bg-presets replaced by atmosphere system.
 import { ClientRouter } from "astro:transitions";
 
 const typedBrand = brand as unknown as Brand;
