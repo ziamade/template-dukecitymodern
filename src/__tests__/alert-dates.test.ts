@@ -1,26 +1,11 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
+import { isAlertVisible } from '../lib/alert';
 
 /**
- * Tests the alert banner date-gating logic from BaseLayout.astro.
+ * Tests the alert banner date-gating logic extracted to src/lib/alert.ts.
  * The logic: if startDate is set and in the future, hide.
  * If endDate is set and in the past, hide. No dates = show (backwards compat).
  */
-
-interface AlertData {
-  enabled: boolean;
-  text: string;
-  startDate?: string;
-  endDate?: string;
-}
-
-/** Mirrors the alertVisible logic in BaseLayout.astro */
-function isAlertVisible(alert: AlertData, now: Date): boolean {
-  if (!alert?.enabled || !alert?.text) return false;
-  const today = now.toISOString().slice(0, 10); // YYYY-MM-DD
-  if (alert.startDate && today < alert.startDate) return false;
-  if (alert.endDate && today > alert.endDate) return false;
-  return true;
-}
 
 describe('alert banner date gating', () => {
   it('shows alert when enabled with text and no dates', () => {
