@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "label": "Google Reviews",
+      "value": "456",
+      "icon": "star"
+    },
+    {
+      "label": "Years in Business",
+      "value": "19",
+      "icon": "calendar"
+    },
+    {
+      "label": "BBB Rating",
+      "value": "A+",
+      "icon": "shield"
+    },
+    {
+      "label": "Projects Completed",
+      "value": "1500+",
+      "icon": "check"
+    }
+  ]
+}

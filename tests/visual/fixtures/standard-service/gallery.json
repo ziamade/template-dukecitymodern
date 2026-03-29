@@ -1,0 +1,10 @@
+{
+  "images": [
+    { "url": "/assets/images/hero.jpg", "alt": "Kitchen renovation completed" },
+    { "url": "/assets/images/hero-v2.jpg", "alt": "Bathroom tile work" },
+    { "url": "/assets/images/hero-v3.jpg", "alt": "Custom cabinet installation" },
+    { "url": "/assets/images/service-grid.png", "alt": "Window replacement project" },
+    { "url": "/assets/images/service-grid-v2.png", "alt": "Deck construction" },
+    { "url": "/assets/images/service-0.png", "alt": "Flooring installation" }
+  ]
+}

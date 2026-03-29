@@ -1,0 +1,30 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "minimal" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "cards" },
+    { "id": "contact" },
+    { "id": "about" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "contact", "about"],
+  "accentStyle": "tint",
+  "faviconShape": "squircle",
+  "industry": "General Services",
+  "layout": {
+    "heroStyle": "minimal",
+    "atmosphereLevel": "none",
+    "motionIntensity": "subtle",
+    "headerStyle": "solid",
+    "cardStyle": "bordered",
+    "cardRadius": "soft",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "sharp",
+    "sectionPattern": "alternating",
+    "headerPosition": "sticky",
+    "buttonVariant": "solid",
+    "dividerStyle": "line"
+  },
+  "marqueeItems": []
+}

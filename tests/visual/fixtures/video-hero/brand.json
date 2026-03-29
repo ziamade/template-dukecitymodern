@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "bg": "#0F0A1A",
+    "surface": "#1A1230",
+    "surfaceAlt": "#201838",
+    "text": "#E5E0F0",
+    "textMuted": "#9088A8",
+    "accent": "#8B5CF6",
+    "accentDim": "rgba(139, 92, 246, 0.6)",
+    "accentGlow": "rgba(139, 92, 246, 0.2)",
+    "border": "#2A1E48",
+    "borderSubtle": "#1E1538"
+  },
+  "nameFont": "Clash Display",
+  "headingFont": "Sora",
+  "bodyFont": "Sora",
+  "nameTreatment": {
+    "parts": [
+      { "text": "Apex", "font": "name", "color": "accent" },
+      { "text": " Digital", "font": "body", "color": "text" }
+    ],
+    "layout": "inline"
+  }
+}

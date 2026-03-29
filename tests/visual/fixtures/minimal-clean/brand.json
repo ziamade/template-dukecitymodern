@@ -1,0 +1,23 @@
+{
+  "palette": {
+    "bg": "#1a1a2e",
+    "surface": "#16213e",
+    "surfaceAlt": "#1a2744",
+    "text": "#e0e0e0",
+    "textMuted": "#8a8a9a",
+    "accent": "#0f3460",
+    "accentDim": "rgba(15, 52, 96, 0.6)",
+    "accentGlow": "rgba(15, 52, 96, 0.2)",
+    "border": "#1e2d4a",
+    "borderSubtle": "#192438"
+  },
+  "nameFont": "Space Grotesk",
+  "headingFont": "Space Grotesk",
+  "bodyFont": "Space Grotesk",
+  "nameTreatment": {
+    "parts": [
+      { "text": "Clean Cut", "font": "name", "color": "text" }
+    ],
+    "layout": "inline"
+  }
+}

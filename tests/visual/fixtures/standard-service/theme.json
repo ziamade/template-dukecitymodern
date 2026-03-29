@@ -1,0 +1,35 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "split" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "cards" },
+    { "id": "projects" },
+    { "id": "process" },
+    { "id": "gallery", "variant": "masonry" },
+    { "id": "reviews" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" },
+    { "id": "hours" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "projects", "process", "gallery", "reviews", "faq", "contact", "about", "hours"],
+  "accentStyle": "tint",
+  "industry": "Home Improvement",
+  "layout": {
+    "heroStyle": "split",
+    "atmosphereLevel": "minimal",
+    "motionIntensity": "standard",
+    "headerStyle": "glass",
+    "cardStyle": "shadow",
+    "cardRadius": "soft",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "rounded",
+    "sectionPattern": "alternating",
+    "headerPosition": "hidden-on-scroll",
+    "buttonVariant": "solid",
+    "dividerStyle": "fade"
+  },
+  "marqueeItems": ["Licensed & Insured", "Serving Albuquerque", "Free Estimates", "5-Star Rated"]
+}

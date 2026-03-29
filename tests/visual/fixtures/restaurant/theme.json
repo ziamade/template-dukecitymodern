@@ -1,0 +1,32 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "overlay" },
+    { "id": "menu" },
+    { "id": "gallery", "variant": "scroll" },
+    { "id": "reviews" },
+    { "id": "hours" },
+    { "id": "faq" },
+    { "id": "about" },
+    { "id": "contact" }
+  ],
+  "sectionOrder": ["hero", "menu", "gallery", "reviews", "hours", "faq", "about", "contact"],
+  "accentStyle": "tint",
+  "industry": "Mexican Restaurant",
+  "layout": {
+    "heroStyle": "overlay",
+    "atmosphereLevel": "rich",
+    "motionIntensity": "subtle",
+    "headerStyle": "glass",
+    "cardStyle": "bordered",
+    "cardRadius": "soft",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "rounded",
+    "sectionPattern": "alternating",
+    "headerPosition": "sticky",
+    "buttonVariant": "solid",
+    "dividerStyle": "fade"
+  },
+  "marqueeItems": ["Family Recipes Since 1998", "Delivery Available", "Dine-In or Takeout", "Authentic New Mexican"]
+}

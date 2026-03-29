@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "label": "Google Reviews",
+      "value": "89",
+      "icon": "star"
+    },
+    {
+      "label": "Years in Business",
+      "value": "11",
+      "icon": "calendar"
+    },
+    {
+      "label": "Licensed & Insured",
+      "value": "Yes",
+      "icon": "shield"
+    },
+    {
+      "label": "Same-Day Service",
+      "value": "Available",
+      "icon": "check"
+    }
+  ]
+}

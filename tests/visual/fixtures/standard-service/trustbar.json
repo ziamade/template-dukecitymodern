@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "number": "4.8", "label": "Star Rating" },
+    { "number": "127", "label": "Happy Customers" },
+    { "number": "14", "label": "Years in Business" },
+    { "number": "100%", "label": "Satisfaction Guarantee" }
+  ]
+}

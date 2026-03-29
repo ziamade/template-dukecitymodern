@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "bg": "#18181B",
+    "surface": "#27272A",
+    "surfaceAlt": "#303036",
+    "text": "#FAFAFA",
+    "textMuted": "#A1A1AA",
+    "accent": "#F59E0B",
+    "accentDim": "rgba(245, 158, 11, 0.6)",
+    "accentGlow": "rgba(245, 158, 11, 0.15)",
+    "border": "#3F3F46",
+    "borderSubtle": "#27272A"
+  },
+  "nameFont": "Inter",
+  "headingFont": "Inter",
+  "bodyFont": "Inter",
+  "nameTreatment": {
+    "parts": [
+      { "text": "O'Brien", "font": "name", "color": "accent" },
+      { "text": " & Sons", "font": "body", "color": "textMuted" }
+    ],
+    "layout": "inline"
+  }
+}

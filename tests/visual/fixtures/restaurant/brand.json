@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "bg": "#1C1008",
+    "surface": "#2A1A0E",
+    "surfaceAlt": "#332014",
+    "text": "#F5EDE0",
+    "textMuted": "#B8A690",
+    "accent": "#E8A838",
+    "accentDim": "rgba(232, 168, 56, 0.6)",
+    "accentGlow": "rgba(232, 168, 56, 0.2)",
+    "border": "#3A2818",
+    "borderSubtle": "#2E1E10"
+  },
+  "nameFont": "Playfair Display",
+  "headingFont": "Lora",
+  "bodyFont": "Source Sans 3",
+  "nameTreatment": {
+    "parts": [
+      { "text": "Casa", "font": "name", "color": "accent" },
+      { "text": " del Sol", "font": "name", "color": "text" }
+    ],
+    "layout": "inline"
+  }
+}

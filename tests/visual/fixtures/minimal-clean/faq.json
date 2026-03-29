@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "question": "What cleaning services do you offer?", "answer": "We provide residential deep cleaning, office cleaning, and move-in/move-out cleaning throughout the Albuquerque metro." },
+    { "question": "Do you bring your own supplies?", "answer": "Yes. We bring all equipment and eco-friendly cleaning products. No need to provide anything." },
+    { "question": "How do I schedule a cleaning?", "answer": "Call or fill out the contact form. We offer same-day availability for most standard cleanings." }
+  ]
+}

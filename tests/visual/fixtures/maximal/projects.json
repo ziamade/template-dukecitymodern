@@ -1,0 +1,32 @@
+{
+  "projects": [
+    {
+      "title": "Complete Roof Replacement",
+      "description": "Tear-off and full reroof with architectural shingles, Northeast Heights",
+      "before": "/assets/images/hero.jpg",
+      "after": "/assets/images/hero-v2.jpg",
+      "service": "Roofing"
+    },
+    {
+      "title": "Kitchen Remodel",
+      "description": "Full kitchen gut and rebuild with new plumbing, electrical, and custom cabinets",
+      "before": "/assets/images/service-0.png",
+      "after": "/assets/images/service-1.png",
+      "service": "General Renovation"
+    },
+    {
+      "title": "Concrete Driveway Pour",
+      "description": "Remove cracked asphalt and pour stamped concrete driveway, South Valley",
+      "before": "/assets/images/service-grid.png",
+      "after": "/assets/images/service-grid-v2.png",
+      "service": "Concrete"
+    },
+    {
+      "title": "Exterior House Painting",
+      "description": "Full exterior scrape, prime, and two-coat paint on a two-story stucco home",
+      "before": "/assets/images/hero-v3.jpg",
+      "after": "/assets/images/hero.jpg",
+      "service": "Painting"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "question": "How does the design process work?",
+      "answer": "We start with a consultation to understand your style, budget, and timeline. From there we create a concept board, present options, and handle sourcing, ordering, and installation."
+    },
+    {
+      "question": "Do you work with existing furniture?",
+      "answer": "Absolutely. We love blending new pieces with what you already own. Sometimes a great room starts with one piece you already love."
+    },
+    {
+      "question": "What is your service area?",
+      "answer": "We take projects in Albuquerque, Santa Fe, Corrales, and the surrounding area. For larger projects, we will travel throughout New Mexico."
+    },
+    {
+      "question": "How long does a typical project take?",
+      "answer": "A single room refresh takes two to four weeks. A full home redesign typically runs eight to twelve weeks depending on scope and furniture lead times."
+    }
+  ]
+}
