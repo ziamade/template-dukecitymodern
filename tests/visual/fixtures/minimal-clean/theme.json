@@ -1,0 +1,30 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "minimal" },
+    { "id": "trust", "variant": "stats" },
+    { "id": "services", "variant": "compact" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "faq", "contact", "about"],
+  "accentStyle": "underline",
+  "industry": "Cleaning",
+  "layout": {
+    "heroStyle": "minimal",
+    "atmosphereLevel": "none",
+    "motionIntensity": "none",
+    "headerStyle": "solid",
+    "cardStyle": "flat",
+    "cardRadius": "sharp",
+    "sectionGap": "tight",
+    "buttonStyle": "square",
+    "typographyScale": "compact",
+    "imageStyle": "sharp",
+    "sectionPattern": "none",
+    "headerPosition": "sticky",
+    "buttonVariant": "solid",
+    "dividerStyle": "none"
+  },
+  "marqueeItems": []
+}

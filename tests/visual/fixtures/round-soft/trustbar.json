@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "label": "Google Reviews",
+      "value": "67",
+      "icon": "star"
+    },
+    {
+      "label": "Years in Business",
+      "value": "8",
+      "icon": "calendar"
+    },
+    {
+      "label": "Projects Completed",
+      "value": "200+",
+      "icon": "check"
+    },
+    {
+      "label": "Satisfaction Rate",
+      "value": "99%",
+      "icon": "shield"
+    }
+  ]
+}

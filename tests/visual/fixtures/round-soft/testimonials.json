@@ -1,0 +1,51 @@
+{
+  "items": [
+    {
+      "text": "Aria transformed our living room from a cluttered mess into something out of a magazine. She listened to what we wanted and delivered something even better. The furniture selection was perfect for our budget.",
+      "author": "Nicole Padilla",
+      "initials": "NP",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000001/reviews"
+    },
+    {
+      "text": "Hired Aria for our office redesign. The space feels more open and professional without being cold. Clients comment on it every time they visit.",
+      "author": "Jason Herrera",
+      "initials": "JH",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000002/reviews"
+    },
+    {
+      "text": "She helped us pick colors, furniture, and window treatments for our new build. Everything arrived on time and the install went smoothly. Really happy with how it all came together.",
+      "author": "Cynthia Apodaca",
+      "initials": "CA",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Yelp",
+      "url": "https://yelp.com/biz/aria-interiors?hrid=review3"
+    },
+    {
+      "text": "Good eye for color and texture. Our master bedroom feels like a boutique hotel now. The only reason for four stars is the project took a bit longer than the original timeline.",
+      "author": "Marcus Jaramillo",
+      "initials": "MJ",
+      "role": "Verified Customer",
+      "rating": 4,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000004/reviews"
+    },
+    {
+      "text": "Aria redesigned our guest casita and it is now the most popular room in the house. Every visitor asks who did the design. Worth every penny.",
+      "author": "Laura Benavidez",
+      "initials": "LB",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000005/reviews"
+    }
+  ],
+  "reviewCount": 67,
+  "averageRating": 4.9
+}

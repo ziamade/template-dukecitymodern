@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "bg": "#0D1B2A",
+    "surface": "#152238",
+    "surfaceAlt": "#1A2940",
+    "text": "#E8ECF0",
+    "textMuted": "#8E99A4",
+    "accent": "#FF6B35",
+    "accentDim": "rgba(255, 107, 53, 0.6)",
+    "accentGlow": "rgba(255, 107, 53, 0.2)",
+    "border": "#1E3048",
+    "borderSubtle": "#162030"
+  },
+  "nameFont": "Montserrat",
+  "headingFont": "Playfair Display",
+  "bodyFont": "Inter",
+  "nameTreatment": {
+    "parts": [
+      { "text": "Prestige", "font": "name", "color": "accent" },
+      { "text": " Renovations", "font": "body", "color": "text" }
+    ],
+    "layout": "inline"
+  }
+}

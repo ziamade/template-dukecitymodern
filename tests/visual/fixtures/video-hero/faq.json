@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "question": "What size businesses do you work with?", "answer": "We serve businesses from 5 to 200 employees. Our managed plans scale with your team so you only pay for what you need." },
+    { "question": "Do you offer on-site support?", "answer": "Yes. While most issues are resolved remotely within minutes, we provide on-site support in the Albuquerque metro when needed." },
+    { "question": "How do you handle cybersecurity?", "answer": "We implement a layered security approach: endpoint protection, network monitoring, employee training, and regular penetration testing. Compliance reporting included." }
+  ]
+}

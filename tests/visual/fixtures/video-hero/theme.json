@@ -1,0 +1,34 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "video" },
+    { "id": "trust", "variant": "stats" },
+    { "id": "services", "variant": "icon-grid" },
+    { "id": "reviews" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" },
+    { "id": "hours" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "reviews", "faq", "contact", "about", "hours"],
+  "accentStyle": "tint",
+  "industry": "IT Services",
+  "layout": {
+    "heroStyle": "video",
+    "atmosphereLevel": "rich",
+    "motionIntensity": "standard",
+    "headerStyle": "glass",
+    "cardStyle": "elevated",
+    "cardRadius": "soft",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "editorial",
+    "imageStyle": "masked",
+    "sectionPattern": "wave",
+    "headerPosition": "sticky",
+    "buttonVariant": "solid",
+    "dividerStyle": "fade",
+    "depth": "editorial",
+    "darkSection": "reviews"
+  },
+  "marqueeItems": ["Cloud Solutions", "Managed IT", "24/7 Support", "Cybersecurity"]
+}

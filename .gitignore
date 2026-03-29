@@ -6,3 +6,9 @@ node_modules
 dist
 .astro
 _site
+
+# Visual test artifacts
+tests/visual/test-results/
+tests/visual/playwright-report/
+tests/visual/.backup/
+tests/visual/node_modules/

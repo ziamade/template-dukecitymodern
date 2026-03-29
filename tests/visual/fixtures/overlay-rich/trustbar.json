@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "number": "4.9", "label": "Star Rating" },
+    { "number": "89", "label": "Reviews" },
+    { "number": "9", "label": "Years of Excellence" },
+    { "number": "250+", "label": "Projects Completed" }
+  ]
+}

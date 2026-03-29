@@ -1,0 +1,11 @@
+{
+  "reviewCount": 56,
+  "averageRating": 4.9,
+  "reviewSource": "Google",
+  "items": [
+    { "text": "Apex migrated our entire office to the cloud in one weekend with zero downtime. Incredible team.", "author": "Rachel H.", "initials": "RH", "role": "Office Manager", "rating": 5, "source": "Google", "url": "" },
+    { "text": "They caught a security vulnerability our previous IT company missed for years. Proactive and thorough.", "author": "Derek N.", "initials": "DN", "role": "CEO", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Responsive support and they actually explain things in plain English. Rare for an IT company.", "author": "Priya K.", "initials": "PK", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Solid managed services. Our network has been rock-solid since we switched to Apex.", "author": "Mark W.", "initials": "MW", "role": "Operations Director", "rating": 4, "source": "Yelp", "url": "" }
+  ]
+}

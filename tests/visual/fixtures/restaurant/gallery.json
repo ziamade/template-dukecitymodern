@@ -1,0 +1,9 @@
+{
+  "images": [
+    { "url": "/assets/images/hero-v3.jpg", "alt": "Dining room interior" },
+    { "url": "/assets/images/service-0.png", "alt": "Green chile cheeseburger" },
+    { "url": "/assets/images/service-1.png", "alt": "Carne adovada plate" },
+    { "url": "/assets/images/service-2.png", "alt": "Fresh sopapillas with honey" },
+    { "url": "/assets/images/hero-v2.jpg", "alt": "Outdoor patio seating" }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "overlay" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "icon-grid" },
+    { "id": "gallery", "variant": "scroll" },
+    { "id": "reviews" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "gallery", "reviews", "faq", "contact", "about"],
+  "accentStyle": "border",
+  "industry": "Home Renovation",
+  "layout": {
+    "heroStyle": "overlay",
+    "atmosphereLevel": "cinematic",
+    "motionIntensity": "dramatic",
+    "headerStyle": "transparent",
+    "cardStyle": "luxury",
+    "cardRadius": "sharp",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "sharp",
+    "sectionPattern": "gradient",
+    "headerPosition": "sticky",
+    "buttonVariant": "tactile",
+    "dividerStyle": "glow"
+  },
+  "marqueeItems": ["Award-Winning Design", "Premium Materials", "White Glove Service", "Luxury Renovations"]
+}
