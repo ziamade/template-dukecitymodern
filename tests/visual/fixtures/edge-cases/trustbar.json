@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "label": "Google Reviews",
+      "value": "42",
+      "icon": "star"
+    },
+    {
+      "label": "Years in Business",
+      "value": "28",
+      "icon": "calendar"
+    },
+    {
+      "label": "Licensed & Insured",
+      "value": "NM-98765",
+      "icon": "shield"
+    },
+    {
+      "label": "Se Habla Espa\u00f1ol",
+      "value": "S\u00ed",
+      "icon": "check"
+    }
+  ]
+}

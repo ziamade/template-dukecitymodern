@@ -1,0 +1,12 @@
+{
+  "reviewCount": 234,
+  "averageRating": 4.6,
+  "reviewSource": "Google",
+  "items": [
+    { "text": "Best green chile in the city, hands down. We eat here every week.", "author": "Michelle R.", "initials": "MR", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "The carne adovada is the real deal. Tastes like my grandma used to make.", "author": "Antonio S.", "initials": "AS", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Great food but the wait can be long on weekends. Worth it though.", "author": "Karen L.", "initials": "KL", "role": "", "rating": 4, "source": "Yelp", "url": "" },
+    { "text": "We drove down from Santa Fe just for the enchiladas. Did not disappoint.", "author": "Brian T.", "initials": "BT", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Friendly staff and huge portions. The sopapillas alone are reason to come back.", "author": "Lisa M.", "initials": "LM", "role": "", "rating": 5, "source": "Google", "url": "" }
+  ]
+}

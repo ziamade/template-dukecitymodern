@@ -1,0 +1,9 @@
+{
+  "images": [
+    { "url": "/assets/images/hero-v3.jpg", "alt": "Modern living room renovation" },
+    { "url": "/assets/images/service-grid.png", "alt": "Custom kitchen island" },
+    { "url": "/assets/images/service-grid-v2.png", "alt": "Master bathroom remodel" },
+    { "url": "/assets/images/hero.jpg", "alt": "Open floor plan transformation" },
+    { "url": "/assets/images/service-0.png", "alt": "Luxury finish details" }
+  ]
+}

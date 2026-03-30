@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "number": "4.9", "label": "Star Rating" },
+    { "number": "56", "label": "Client Reviews" },
+    { "number": "99.9%", "label": "Uptime SLA" },
+    { "number": "24/7", "label": "Support" }
+  ]
+}

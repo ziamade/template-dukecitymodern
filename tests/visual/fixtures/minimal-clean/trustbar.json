@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "number": "500+", "label": "Jobs Completed" },
+    { "number": "100%", "label": "Satisfaction Rate" },
+    { "number": "Same Day", "label": "Availability" },
+    { "number": "Insured", "label": "& Bonded" }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "bg": "#0F172A",
+    "surface": "#1E293B",
+    "surfaceAlt": "#253449",
+    "text": "#E2E8F0",
+    "textMuted": "#94A3B8",
+    "accent": "#10B981",
+    "accentDim": "rgba(16, 185, 129, 0.6)",
+    "accentGlow": "rgba(16, 185, 129, 0.15)",
+    "border": "#334155",
+    "borderSubtle": "#1E293B"
+  },
+  "nameFont": "Inter",
+  "headingFont": "Inter",
+  "bodyFont": "Inter",
+  "nameTreatment": {
+    "parts": [
+      { "text": "Test", "font": "name", "color": "accent" },
+      { "text": " Business", "font": "body", "color": "textMuted" }
+    ],
+    "layout": "inline"
+  }
+}

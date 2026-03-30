@@ -1,0 +1,18 @@
+{
+  "name": "Sunrise Plumbing",
+  "slug": "sunrise-plumbing",
+  "foundingYear": "2015",
+  "license": "NM-PL-54321",
+  "insured": true,
+  "serviceArea": "Albuquerque, Rio Rancho, and Corrales",
+  "industry": "Plumbing",
+  "delivery": null,
+  "orderUrl": "",
+  "socials": {
+    "facebook": "https://facebook.com/sunriseplumbing",
+    "instagram": "",
+    "google": "https://g.page/sunriseplumbing",
+    "yelp": ""
+  },
+  "domain": "sunriseplumbingabq.com"
+}

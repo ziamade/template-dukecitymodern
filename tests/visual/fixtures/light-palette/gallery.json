@@ -1,0 +1,24 @@
+{
+  "images": [
+    {
+      "url": "/assets/images/hero-v3.jpg",
+      "alt": "Sunrise Plumbing work photo 1",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-0.png",
+      "alt": "Sunrise Plumbing work photo 2",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-1.png",
+      "alt": "Sunrise Plumbing work photo 3",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-2.png",
+      "alt": "Sunrise Plumbing work photo 4",
+      "fallbackUrl": ""
+    }
+  ]
+}

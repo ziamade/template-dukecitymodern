@@ -1,0 +1,34 @@
+{
+  "images": [
+    {
+      "url": "/assets/images/hero.jpg",
+      "alt": "Aria Interiors portfolio 1",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/hero-v2.jpg",
+      "alt": "Aria Interiors portfolio 2",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/hero-v3.jpg",
+      "alt": "Aria Interiors portfolio 3",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-0.png",
+      "alt": "Aria Interiors portfolio 4",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-1.png",
+      "alt": "Aria Interiors portfolio 5",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-2.png",
+      "alt": "Aria Interiors portfolio 6",
+      "fallbackUrl": ""
+    }
+  ]
+}

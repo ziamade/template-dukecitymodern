@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "number": "4.6", "label": "Star Rating" },
+    { "number": "234", "label": "Google Reviews" },
+    { "number": "26", "label": "Years Open" },
+    { "number": "3 Gen.", "label": "Family Recipes" }
+  ]
+}

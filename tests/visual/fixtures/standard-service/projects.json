@@ -1,0 +1,18 @@
+{
+  "projects": [
+    {
+      "title": "Kitchen Remodel",
+      "description": "Complete kitchen renovation with new countertops and cabinets",
+      "before": "/assets/images/hero-v2.jpg",
+      "after": "/assets/images/hero-v3.jpg",
+      "service": "Kitchen Remodeling"
+    },
+    {
+      "title": "Bathroom Update",
+      "description": "Master bath tile work and vanity replacement",
+      "before": "/assets/images/service-grid.png",
+      "after": "/assets/images/service-grid-v2.png",
+      "service": "Bathroom Renovation"
+    }
+  ]
+}

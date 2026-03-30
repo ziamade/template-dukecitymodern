@@ -1,0 +1,39 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "split" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "cards" },
+    { "id": "projects" },
+    { "id": "process" },
+    { "id": "gallery", "variant": "masonry" },
+    { "id": "differentiator" },
+    { "id": "beforeAfter" },
+    { "id": "reviews", "variant": "scroll" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" },
+    { "id": "hours" },
+    { "id": "marquee" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "projects", "process", "gallery", "differentiator", "beforeAfter", "reviews", "faq", "contact", "about", "hours", "marquee"],
+  "accentStyle": "tint",
+  "faviconShape": "squircle",
+  "industry": "General Contractor",
+  "layout": {
+    "heroStyle": "split",
+    "atmosphereLevel": "rich",
+    "motionIntensity": "standard",
+    "headerStyle": "glass",
+    "cardStyle": "elevated",
+    "cardRadius": "soft",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "sharp",
+    "sectionPattern": "gradient",
+    "headerPosition": "hidden-on-scroll",
+    "buttonVariant": "solid",
+    "dividerStyle": "glow"
+  },
+  "marqueeItems": ["Roofing", "Plumbing", "Electrical", "HVAC", "Painting", "Concrete", "Albuquerque", "Licensed & Insured", "Free Estimates", "Since 2005"]
+}

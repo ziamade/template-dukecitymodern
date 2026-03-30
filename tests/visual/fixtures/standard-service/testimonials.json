@@ -1,0 +1,12 @@
+{
+  "reviewCount": 127,
+  "averageRating": 4.8,
+  "reviewSource": "Google",
+  "items": [
+    { "text": "Excellent work on our kitchen remodel. On time, on budget, and the craftsmanship is outstanding.", "author": "Maria G.", "initials": "MG", "role": "Homeowner", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Professional team from start to finish. They replaced all our windows and the difference is incredible.", "author": "James K.", "initials": "JK", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Good work overall. Minor scheduling issue but they made it right. Would hire again.", "author": "Carlos R.", "initials": "CR", "role": "Homeowner", "rating": 4, "source": "Yelp", "url": "" },
+    { "text": "The bathroom renovation exceeded our expectations. Clean, efficient, and beautiful results.", "author": "Susan T.", "initials": "ST", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Best contractor we've ever worked with in Albuquerque. Fair pricing and they stand behind their work.", "author": "David M.", "initials": "DM", "role": "Property Manager", "rating": 5, "source": "Google", "url": "" }
+  ]
+}

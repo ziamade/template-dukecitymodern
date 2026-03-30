@@ -1,0 +1,29 @@
+{
+  "categories": [
+    {
+      "name": "Favorites",
+      "items": [
+        { "name": "Green Chile Cheeseburger", "description": "Half-pound Angus patty with roasted Hatch green chile and pepper jack", "price": "$14.99", "featured": true, "photo": "/assets/images/service-0.png" },
+        { "name": "Carne Adovada Plate", "description": "Slow-cooked pork in red chile, served with beans, rice, and fresh tortillas", "price": "$16.99", "featured": true, "photo": "/assets/images/service-1.png" },
+        { "name": "Sopapillas", "description": "Freshly fried, served with honey. A New Mexico classic.", "price": "$4.99" }
+      ]
+    },
+    {
+      "name": "Entrees",
+      "items": [
+        { "name": "Enchiladas (Red, Green, or Christmas)", "description": "Three rolled enchiladas with your choice of chicken, beef, or cheese. Topped with onion and sour cream.", "price": "$13.99" },
+        { "name": "Chile Relleno Plate", "description": "Two battered and fried green chiles stuffed with cheese, smothered in red or green sauce", "price": "$14.99" },
+        { "name": "Tamale Dinner", "description": "Three handmade tamales with red chile sauce, beans, and rice", "price": "$12.99" },
+        { "name": "Huevos Rancheros", "description": "Two eggs over easy on corn tortillas, smothered in green chile with beans and hash browns", "price": "$11.99" }
+      ]
+    },
+    {
+      "name": "Sides",
+      "items": [
+        { "name": "Beans & Rice", "description": "Pinto beans and Spanish rice", "price": "$4.99" },
+        { "name": "Guacamole & Chips", "description": "Fresh-made guacamole with warm tortilla chips", "price": "$7.99" },
+        { "name": "Green Chile Stew (Cup)", "description": "Hearty stew with pork, potatoes, and roasted green chile", "price": "$6.99", "featured": true, "photo": "/assets/images/service-2.png" }
+      ]
+    }
+  ]
+}

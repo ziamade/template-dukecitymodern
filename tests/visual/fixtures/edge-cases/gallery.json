@@ -1,0 +1,24 @@
+{
+  "images": [
+    {
+      "url": "https://broken.invalid/1.jpg",
+      "alt": "O'Brien & Sons project photo 1",
+      "fallbackUrl": "/assets/images/hero.jpg"
+    },
+    {
+      "url": "https://broken.invalid/2.jpg",
+      "alt": "O'Brien & Sons project photo 2",
+      "fallbackUrl": "/assets/images/service-0.png"
+    },
+    {
+      "url": "/assets/images/hero.jpg",
+      "alt": "O'Brien & Sons project photo 3",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-0.png",
+      "alt": "O'Brien & Sons project photo 4",
+      "fallbackUrl": ""
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "images": [
+    {
+      "url": "/assets/images/hero.jpg",
+      "alt": "MaxBuild project photo 1",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/hero-v2.jpg",
+      "alt": "MaxBuild project photo 2",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/hero-v3.jpg",
+      "alt": "MaxBuild project photo 3",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-0.png",
+      "alt": "MaxBuild project photo 4",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-1.png",
+      "alt": "MaxBuild project photo 5",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-2.png",
+      "alt": "MaxBuild project photo 6",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-grid.png",
+      "alt": "MaxBuild project photo 7",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/service-grid-v2.png",
+      "alt": "MaxBuild project photo 8",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/logo-mark.png",
+      "alt": "MaxBuild project photo 9",
+      "fallbackUrl": ""
+    },
+    {
+      "url": "/assets/images/hero.jpg",
+      "alt": "MaxBuild project photo 10",
+      "fallbackUrl": ""
+    }
+  ]
+}

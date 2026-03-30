@@ -1,0 +1,42 @@
+{
+  "items": [
+    {
+      "text": "Called Sunrise about a water heater that quit on a Sunday morning. They had someone out by noon and a new unit installed by dinner. Saved the weekend.",
+      "author": "Rachel Gutierrez",
+      "initials": "RG",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000001/reviews"
+    },
+    {
+      "text": "Honest pricing and no upselling. They fixed the actual problem instead of trying to sell us a whole new system. We have used them twice now.",
+      "author": "Daniel Perea",
+      "initials": "DP",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000002/reviews"
+    },
+    {
+      "text": "Good work on our kitchen sink drain. Took about an hour. Only reason for four stars is that the appointment window was pretty wide, but they called ahead to narrow it down.",
+      "author": "Karen Baca",
+      "initials": "KB",
+      "role": "Verified Customer",
+      "rating": 4,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000003/reviews"
+    },
+    {
+      "text": "Sunrise repiped our 1960s house and the difference is night and day. Water pressure is strong, no more rusty water in the mornings. Big job, done right.",
+      "author": "Victor Montoya",
+      "initials": "VM",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Yelp",
+      "url": "https://yelp.com/biz/sunrise-plumbing?hrid=review4"
+    }
+  ],
+  "reviewCount": 89,
+  "averageRating": 4.8
+}

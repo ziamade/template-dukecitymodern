@@ -1,0 +1,11 @@
+{
+  "reviewCount": 89,
+  "averageRating": 4.9,
+  "reviewSource": "Google",
+  "items": [
+    { "text": "They turned our dated kitchen into something out of a magazine. Every detail was perfect.", "author": "Angela P.", "initials": "AP", "role": "Homeowner", "rating": 5, "source": "Google", "url": "" },
+    { "text": "The design team really listened to what we wanted. The finished master suite is stunning.", "author": "Robert L.", "initials": "RL", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Premium quality and it shows. Worth every penny for the level of craftsmanship.", "author": "Diana W.", "initials": "DW", "role": "Homeowner", "rating": 5, "source": "Yelp", "url": "" },
+    { "text": "Our whole-home renovation was a big project and they managed it flawlessly. Highly recommend.", "author": "Thomas B.", "initials": "TB", "role": "", "rating": 5, "source": "Google", "url": "" }
+  ]
+}

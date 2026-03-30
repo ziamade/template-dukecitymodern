@@ -1,0 +1,34 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "split" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "compact" },
+    { "id": "gallery", "variant": "scroll" },
+    { "id": "reviews", "variant": "scroll" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" },
+    { "id": "hours" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "gallery", "reviews", "faq", "contact", "about", "hours"],
+  "accentStyle": "tint",
+  "faviconShape": "squircle",
+  "industry": "Interior Design",
+  "layout": {
+    "heroStyle": "split",
+    "atmosphereLevel": "rich",
+    "motionIntensity": "standard",
+    "headerStyle": "glass",
+    "cardStyle": "elevated",
+    "cardRadius": "round",
+    "sectionGap": "normal",
+    "buttonStyle": "pill",
+    "typographyScale": "editorial",
+    "imageStyle": "rounded",
+    "sectionPattern": "wave",
+    "headerPosition": "hidden-on-scroll",
+    "buttonVariant": "solid",
+    "dividerStyle": "fade"
+  },
+  "marqueeItems": ["Interior Design", "Residential", "Commercial", "Albuquerque", "Custom Spaces", "Since 2018"]
+}

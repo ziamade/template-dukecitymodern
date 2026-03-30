@@ -1,0 +1,33 @@
+{
+  "items": [
+    {
+      "text": "O'Brien & Sons did a great job on our kitchen faucet. Sean said \"we'll have it done by noon\" and he wasn't kidding. 10/10 would recommend!",
+      "author": "Mar\u00eda del Carmen Garc\u00eda-L\u00f3pez",
+      "initials": "MG",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000001/reviews"
+    },
+    {
+      "text": "Fixed our \"impossible\" plumbing issue & didn't charge an arm & a leg. The quote said $350\u2014we paid $350. No surprises. \ud83d\udc4d",
+      "author": "Tom & Jerry's Auto\u2014Wash LLC",
+      "initials": "TJ",
+      "role": "Verified Customer",
+      "rating": 4,
+      "source": "Yelp",
+      "url": "https://yelp.com/biz/obrien-sons?hrid=review2"
+    },
+    {
+      "text": "\u00a1Excelente servicio! R\u00e1pido, profesional y el precio fue justo. Recomiendo a O'Brien & Sons para cualquier reparaci\u00f3n del hogar. \u2b50\u2b50\u2b50\u2b50\u2b50",
+      "author": "Jos\u00e9 \u00c1ngel Mu\u00f1oz",
+      "initials": "JM",
+      "role": "Verified Customer",
+      "rating": 5,
+      "source": "Google",
+      "url": "https://www.google.com/maps/contrib/100000000000000003/reviews"
+    }
+  ],
+  "reviewCount": 42,
+  "averageRating": 4.6
+}

@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "question": "Do you offer free estimates?", "answer": "Yes, all estimates are free with no obligation. We'll come to your home, assess the work, and provide a detailed written quote." },
+    { "question": "Are you licensed and insured?", "answer": "Absolutely. We carry full liability insurance and hold NM contractor license NM-98765." },
+    { "question": "What areas do you serve?", "answer": "We serve the greater Albuquerque metro including Rio Rancho, Corrales, Bernalillo, and the East Mountains." },
+    { "question": "How long does a typical project take?", "answer": "It depends on scope. A bathroom remodel takes 2-3 weeks, a kitchen 4-6 weeks. We give you a timeline before we start." }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Casa del Sol",
+  "slug": "casa-del-sol",
+  "foundingYear": "1998",
+  "license": "",
+  "insured": true,
+  "serviceArea": "Albuquerque",
+  "industry": "Mexican Restaurant",
+  "orderUrl": "https://doordash.com/store/casa-del-sol",
+  "delivery": true,
+  "socials": { "facebook": "", "instagram": "", "google": "", "yelp": "" },
+  "domain": "casadelsolabq.com"
+}

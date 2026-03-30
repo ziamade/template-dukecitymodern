@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "bg": "#0A192F",
+    "surface": "#112240",
+    "surfaceAlt": "#1A3050",
+    "text": "#CCD6F6",
+    "textMuted": "#8892B0",
+    "accent": "#64FFDA",
+    "accentDim": "rgba(100, 255, 218, 0.6)",
+    "accentGlow": "rgba(100, 255, 218, 0.15)",
+    "border": "#233554",
+    "borderSubtle": "#1A2940"
+  },
+  "nameFont": "Bebas Neue",
+  "headingFont": "Barlow",
+  "bodyFont": "Barlow",
+  "nameTreatment": {
+    "parts": [
+      { "text": "MaxBuild", "font": "name", "color": "accent" },
+      { "text": " Construction", "font": "body", "color": "textMuted" }
+    ],
+    "layout": "inline"
+  }
+}

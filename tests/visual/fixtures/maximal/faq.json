@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "question": "What areas do you serve?",
+      "answer": "We serve all of New Mexico, Southern Colorado, and West Texas. Our main office is in Albuquerque, with crews based in Santa Fe and Las Cruces."
+    },
+    {
+      "question": "Are you licensed and insured?",
+      "answer": "Yes. MaxBuild holds New Mexico General Contractor license NM-12345-GC and carries full liability and workers compensation insurance on every job."
+    },
+    {
+      "question": "Do you offer free estimates?",
+      "answer": "Every estimate is free. We come out, look at the job, and give you a written quote. No pressure, no hidden fees."
+    },
+    {
+      "question": "How long does a typical roof replacement take?",
+      "answer": "Most residential roofs take two to four days depending on size and weather. We will give you a timeline at the estimate and stick to it."
+    },
+    {
+      "question": "Can you handle both residential and commercial work?",
+      "answer": "Absolutely. We work on single-family homes, multi-unit buildings, offices, and retail spaces. Same quality standards across the board."
+    },
+    {
+      "question": "What kind of warranty do you offer?",
+      "answer": "Every project comes with a written warranty. Roofing carries a 10-year workmanship warranty. Plumbing, electrical, and HVAC come with a 5-year warranty on labor."
+    },
+    {
+      "question": "Do you pull permits?",
+      "answer": "Yes. We handle all permits and inspections as part of the job. You should never have to set foot in a city office."
+    },
+    {
+      "question": "What forms of payment do you accept?",
+      "answer": "We accept cash, check, credit cards, and offer financing on projects over $5,000. Ask about our 12-month same-as-cash option."
+    }
+  ]
+}

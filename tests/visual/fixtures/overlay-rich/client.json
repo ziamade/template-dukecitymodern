@@ -1,0 +1,12 @@
+{
+  "name": "Prestige Renovations",
+  "slug": "prestige-renovations",
+  "foundingYear": "2015",
+  "license": "NM-54321",
+  "insured": true,
+  "serviceArea": "Albuquerque and Santa Fe",
+  "industry": "Home Renovation",
+  "orderUrl": "",
+  "socials": { "facebook": "", "instagram": "", "google": "", "yelp": "" },
+  "domain": "prestigerenovations.com"
+}

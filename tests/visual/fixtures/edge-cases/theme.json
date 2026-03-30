@@ -1,0 +1,33 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "minimal" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "cards" },
+    { "id": "gallery", "variant": "masonry" },
+    { "id": "reviews", "variant": "scroll" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "gallery", "reviews", "faq", "contact", "about"],
+  "accentStyle": "tint",
+  "faviconShape": "squircle",
+  "industry": "Handyman",
+  "layout": {
+    "heroStyle": "minimal",
+    "atmosphereLevel": "minimal",
+    "motionIntensity": "subtle",
+    "headerStyle": "glass",
+    "cardStyle": "shadow",
+    "cardRadius": "soft",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "sharp",
+    "sectionPattern": "gradient",
+    "headerPosition": "sticky",
+    "buttonVariant": "solid",
+    "dividerStyle": "line"
+  },
+  "marqueeItems": ["Handyman", "Repairs", "Albuquerque", "O'Brien & Sons"]
+}

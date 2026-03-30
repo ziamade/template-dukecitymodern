@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "question": "Do you offer delivery?", "answer": "Yes, we deliver through DoorDash. You can also call ahead for pickup." },
+    { "question": "Do you take reservations?", "answer": "We are first-come, first-served. For parties of 8 or more, call ahead and we will do our best to accommodate you." },
+    { "question": "Can you accommodate dietary restrictions?", "answer": "Many of our dishes are naturally gluten-free. We can prepare most items without cheese or dairy on request. Let your server know." },
+    { "question": "What are your hours?", "answer": "We are open Tuesday through Sunday, 11 AM to 9 PM. Closed Mondays." }
+  ]
+}
