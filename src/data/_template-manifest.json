@@ -20,9 +20,9 @@
     "sectionIds": [
       "hero", "trust", "services", "projects", "beforeAfter",
       "process", "gallery", "menu", "reviews", "faq",
-      "contact", "about", "hours", "marquee", "differentiator"
+      "contact", "about", "hours", "marquee", "differentiator", "cta"
     ],
-    "maxSections": 15,
+    "maxSections": 16,
     "maxServices": 12,
     "maxGalleryImages": 20,
     "maxMarqueeItems": 10,
