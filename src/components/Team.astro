@@ -1,0 +1,506 @@
+---
+// src/components/Team.astro
+// Displays individual team members (barbers, stylists, attorneys, etc.)
+// with photos, bios, pricing, individual hours, and booking CTAs.
+// Variants: cards (default), compact.
+import OptimizedImg from './OptimizedImg.astro';
+import { resolveTeamMembers } from '../lib/team';
+import type { TeamMemberRaw } from '../lib/team';
+import client from '../data/client.json';
+
+interface Props { variant?: string | number; }
+const { variant: variantProp } = Astro.props;
+const variant = String(variantProp || 'cards');
+
+const teamData = await import('../data/team.json').then(m => m.default || m).catch(() => ({ items: [] }));
+const members = resolveTeamMembers(teamData.items as TeamMemberRaw[]);
+
+const industry = (client.industry || '').toLowerCase();
+const eyebrow = industry.includes('barber') ? 'The Barbers'
+  : industry.includes('salon') || industry.includes('stylist') ? 'The Stylists'
+  : industry.includes('tattoo') ? 'The Artists'
+  : 'Our Team';
+---
+{members.length > 0 && (
+  <section class="team-section section" data-variant={variant} id="team">
+    <div class="container">
+      <div class="section-heading reveal-up">
+        <span class="section-eyebrow">{eyebrow}</span>
+        <h2 class="section-title">Meet Your Team</h2>
+      </div>
+
+      {variant === 'cards' && (
+        <div class="team-grid stagger-parent">
+          {members.map((member: any) => {
+            const raw = teamData.items.find((i: any) => i.name === member.name) || {};
+            const pricing = raw.pricing || [];
+            const hours = raw.hours || [];
+            const phone = raw.phone || '';
+            return (
+              <div class="team-card reveal-up" data-tilt="4">
+                <div class="team-card-photo">
+                  {member.photo ? (
+                    <OptimizedImg
+                      src={member.photo}
+                      alt={member.name}
+                      width={400}
+                      height={400}
+                    />
+                  ) : (
+                    <div class="team-card-avatar">
+                      <span>{member.initials}</span>
+                    </div>
+                  )}
+                </div>
+                <div class="team-card-body">
+                  <div class="team-card-identity">
+                    <h3 class="team-card-name">{member.displayName}</h3>
+                    {member.brandName && member.name !== member.displayName && (
+                      <p class="team-card-realname">{member.name}{member.title ? ` · ${member.title}` : ''}</p>
+                    )}
+                    {!member.brandName && member.title && (
+                      <p class="team-card-realname">{member.title}</p>
+                    )}
+
+                    {member.bio && (
+                      <p class="team-card-bio">{member.bio}</p>
+                    )}
+                  </div>
+
+                  {pricing.length > 0 && (
+                    <div class="team-card-segment">
+                      <div class="team-card-pricing">
+                        <h4 class="team-pricing-label">Services & Pricing</h4>
+                        <ul class="team-price-list">
+                          {pricing.map((p: any) => (
+                            <li class="team-price-item">
+                              <span class="team-price-name">{p.service}</span>
+                              <span class="team-price-dots" />
+                              <span class="team-price-amount">${p.price}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {Array.isArray(hours) && hours.length > 0 && (
+                    <div class="team-card-segment">
+                      <div class="team-card-schedule">
+                        <h4 class="team-schedule-label">Hours</h4>
+                        <ul class="team-hours-list">
+                          {hours.filter((h: any) => h.open).map((h: any) => (
+                            <li class="team-hours-item">
+                              <span class="team-hours-day">{h.day.slice(0, 3)}</span>
+                              <span class="team-hours-time">{h.open} - {h.close}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  <div class="team-card-actions">
+                    {phone && (
+                      <a href={`tel:${phone.replace(/[^+\d]/g, '')}`} class="team-card-call">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        Call Now
+                      </a>
+                    )}
+                    {member.bookingUrl && (
+                      <a href={member.bookingUrl} class="team-card-cta" target="_blank" rel="noopener noreferrer">
+                        {member.bookingLabel}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {variant === 'compact' && (
+        <div class="team-compact stagger-parent">
+          {members.map((member) => (
+            <div class="team-compact-card reveal-up">
+              <div class="team-compact-photo">
+                {member.photo ? (
+                  <OptimizedImg
+                    src={member.photo}
+                    alt={member.name}
+                    width={200}
+                    height={200}
+                  />
+                ) : (
+                  <div class="team-compact-avatar">
+                    <span>{member.initials}</span>
+                  </div>
+                )}
+              </div>
+              <h3 class="team-compact-name">{member.displayName}</h3>
+              {member.title && <p class="team-compact-title">{member.title}</p>}
+              {member.bookingUrl && (
+                <a href={member.bookingUrl} class="team-compact-cta" target="_blank" rel="noopener noreferrer">
+                  {member.bookingLabel}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  /* ── Team Section ────────────────────────── */
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--gap-lg, 2rem);
+    margin-top: var(--gap-lg, 2rem);
+  }
+
+  .team-card {
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border));
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    transition:
+      transform var(--duration-normal, 0.4s) var(--ease-out-expo, ease),
+      box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo, ease),
+      border-color var(--duration-normal, 0.4s) ease;
+  }
+
+  .team-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover, 0 8px 24px rgba(0, 0, 0, 0.15));
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+  }
+
+  .team-card-photo {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--surfaceAlt, var(--surface));
+  }
+
+  .team-card-photo img,
+  .team-card-photo picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow, 0.8s) var(--ease-out-expo, ease);
+  }
+
+  .team-card:hover .team-card-photo img,
+  .team-card:hover .team-card-photo picture img {
+    transform: scale(1.05);
+  }
+
+  .team-card-avatar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+  }
+
+  .team-card-avatar span {
+    font-family: var(--font-heading, sans-serif);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.8;
+  }
+
+  .team-card-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Identity zone: name + bio */
+  .team-card-identity {
+    padding: var(--gap-md, 1.5rem);
+  }
+
+  .team-card-name {
+    font-family: var(--font-heading, sans-serif);
+    font-size: var(--subhead-size, 1.5rem);
+    color: var(--text);
+    margin: 0 0 0.25rem;
+  }
+
+  .team-card-realname {
+    font-size: 0.875rem;
+    color: var(--textMuted);
+    margin: 0 0 0.75rem;
+    font-style: italic;
+  }
+
+  .team-card-bio {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--textMuted);
+    margin: 0 0 1.25rem;
+  }
+
+  /* ── Pricing ─────────────────────────────── */
+
+  .team-card-pricing {
+    margin-bottom: 1.25rem;
+  }
+
+  .team-pricing-label,
+  .team-schedule-label {
+    font-family: var(--font-heading, sans-serif);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+  }
+
+  .team-price-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .team-price-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    padding: 0.3rem 0;
+    font-size: 0.875rem;
+    color: var(--text);
+  }
+
+  .team-price-item + .team-price-item {
+    border-top: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  }
+
+  .team-price-name {
+    white-space: nowrap;
+  }
+
+  .team-price-dots {
+    flex: 1;
+    border-bottom: 1px dotted color-mix(in srgb, var(--textMuted) 30%, transparent);
+    min-width: 1rem;
+    margin-bottom: 0.25em;
+  }
+
+  .team-price-amount {
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* ── Schedule ────────────────────────────── */
+
+  .team-card-schedule {
+    margin-bottom: 1.25rem;
+  }
+
+  .team-hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+
+  .team-hours-item {
+    font-size: 0.8125rem;
+    color: var(--textMuted);
+  }
+
+  .team-hours-day {
+    font-weight: 600;
+    color: var(--text);
+    margin-right: 0.25rem;
+  }
+
+  .team-hours-time {
+    opacity: 0.8;
+  }
+
+  /* ── Card Segments (alternating contrast) ── */
+
+  .team-card-segment {
+    padding: var(--gap-md, 1.5rem);
+  }
+
+  .team-card-segment:nth-child(odd) {
+    background: color-mix(in srgb, var(--surfaceAlt, var(--surface)) 80%, var(--bg));
+  }
+
+  .team-card-segment:nth-child(even) {
+    background: var(--surface);
+  }
+
+  /* ── Actions row ─────────────────────────── */
+
+  .team-card-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding: var(--gap-md, 1.5rem);
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    border-top: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
+    margin-top: auto;
+  }
+
+  .team-card-call {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: var(--btn-radius, 0.5rem);
+    text-decoration: none;
+    transition: background var(--duration-fast, 0.2s) ease, border-color var(--duration-fast, 0.2s) ease;
+    min-height: var(--touch-min, 44px);
+    white-space: nowrap;
+  }
+
+  .team-card-call svg {
+    flex-shrink: 0;
+  }
+
+  .team-card-call:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border-color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ── CTA ─────────────────────────────────── */
+
+  .team-card-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 0.75rem 1.75rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: var(--btn-radius, 0.5rem);
+    text-decoration: none;
+    transition: opacity var(--duration-fast, 0.2s) ease;
+    min-height: var(--touch-min, 44px);
+  }
+
+  .team-card-cta:hover {
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  /* ── Compact variant ─────────────────────── */
+
+  .team-compact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--gap-md, 1.5rem);
+    margin-top: var(--gap-lg, 2rem);
+    text-align: center;
+  }
+
+  .team-compact-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .team-compact-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  }
+
+  .team-compact-photo img,
+  .team-compact-photo picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .team-compact-avatar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+  }
+
+  .team-compact-avatar span {
+    font-family: var(--font-heading, sans-serif);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .team-compact-name {
+    font-family: var(--font-heading, sans-serif);
+    font-size: 1.125rem;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .team-compact-title {
+    font-size: 0.8125rem;
+    color: var(--textMuted);
+    margin: 0;
+  }
+
+  .team-compact-cta {
+    font-size: 0.8125rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.375rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: var(--btn-radius, 0.5rem);
+    transition: background var(--duration-fast, 0.2s) ease;
+    min-height: var(--touch-min, 44px);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .team-compact-cta:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+
+  /* ── Mobile: horizontal scroll for cards ─── */
+
+  @media (max-width: 767px) {
+    .team-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .team-card {
+      flex: 0 0 85vw;
+      max-width: 360px;
+      scroll-snap-align: center;
+    }
+  }
+</style>
