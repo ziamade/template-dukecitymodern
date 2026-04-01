@@ -25,6 +25,10 @@ if (services.length === 0) {
 const MAX_FEATURED = 6;
 const featured = services.filter((s: any) => s.beforeImage || s.image).slice(0, MAX_FEATURED);
 const secondary = services.filter((s: any) => !featured.includes(s));
+// Split variant: all services except the hero feature (featured[0])
+const splitRemaining = featured.length > 0
+  ? services.filter((s: any) => s !== featured[0])
+  : [];
 ---
 {services.length > 0 && (
   <section class="services-section section" data-variant={variant} id="services">
@@ -127,9 +131,9 @@ const secondary = services.filter((s: any) => !featured.includes(s));
             </div>
           </a>
 
-          {services.filter((s: any) => s !== featured[0]).length > 0 && (
+          {splitRemaining.length > 0 && (
             <ul class="split-remaining stagger-parent">
-              {services.filter((s: any) => s !== featured[0]).map((svc: any) => (
+              {splitRemaining.map((svc: any) => (
                 <li>
                   <a href="#contact" class="split-remaining-item reveal-up">
                     <span class="split-remaining-name">{svc.title}</span>
@@ -602,6 +606,11 @@ const secondary = services.filter((s: any) => !featured.includes(s));
     padding-left: 1.75rem;
   }
 
+  .split-remaining-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
   .split-remaining-name {
     font-weight: 600;
     font-size: 1rem;
@@ -611,5 +620,35 @@ const secondary = services.filter((s: any) => !featured.includes(s));
     font-size: var(--small-size, 0.875rem);
     color: var(--textMuted, var(--text));
     line-height: 1.4;
+  }
+
+  /* ── Reduced motion ────────────────────────────────────────────── */
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card,
+    .service-icon-card,
+    .split-featured {
+      transition: none;
+    }
+    .service-card:hover {
+      transform: none;
+    }
+    .service-card:hover .service-card-media :global(img),
+    .service-card:hover .service-card-media :global(picture img) {
+      transform: none;
+    }
+    .service-icon-card:hover {
+      transform: none;
+    }
+    .split-featured:hover .split-featured-media :global(img),
+    .split-featured:hover .split-featured-media :global(picture img) {
+      transform: none;
+    }
+    .split-remaining-item:hover {
+      padding-left: 1rem;
+    }
+    .split-featured-cta::after {
+      transition: none;
+    }
   }
 </style>
