@@ -1,7 +1,7 @@
 ---
 // src/components/ServiceCards.astro
 // v4 upgrade: data-tilt cards, gradient overlay on hover, mobile carousel,
-// GSAP reveal-up + stagger-parent, 3 variants (cards/icon-grid/compact).
+// GSAP reveal-up + stagger-parent, 4 variants (cards/icon-grid/compact/split).
 import OptimizedImg from './OptimizedImg.astro';
 
 interface Props { variant?: string | number; }
@@ -25,6 +25,10 @@ if (services.length === 0) {
 const MAX_FEATURED = 6;
 const featured = services.filter((s: any) => s.beforeImage || s.image).slice(0, MAX_FEATURED);
 const secondary = services.filter((s: any) => !featured.includes(s));
+// Split variant: all services except the hero feature (featured[0])
+const splitRemaining = featured.length > 0
+  ? services.filter((s: any) => s !== featured[0])
+  : [];
 ---
 {services.length > 0 && (
   <section class="services-section section" data-variant={variant} id="services">
@@ -103,6 +107,43 @@ const secondary = services.filter((s: any) => !featured.includes(s));
             </a>
           ))}
         </div>
+      )}
+
+      {variant === 'split' && featured.length > 0 && (
+        <>
+          <a href="#contact" class="split-featured reveal-up">
+            <div class="split-featured-media">
+              <OptimizedImg
+                src={featured[0].beforeImage || featured[0].image}
+                alt={featured[0].title}
+                width={800}
+                height={600}
+                fallback={featured[0].fallbackImage || ''}
+              />
+            </div>
+            <div class="split-featured-body">
+              <h3>{featured[0].title}</h3>
+              <p>{featured[0].description}</p>
+              {featured[0].startingPrice && (
+                <span class="split-featured-price">Starting at {featured[0].startingPrice}</span>
+              )}
+              <span class="split-featured-cta">Learn More</span>
+            </div>
+          </a>
+
+          {splitRemaining.length > 0 && (
+            <ul class="split-remaining stagger-parent">
+              {splitRemaining.map((svc: any) => (
+                <li>
+                  <a href="#contact" class="split-remaining-item reveal-up">
+                    <span class="split-remaining-name">{svc.title}</span>
+                    {svc.description && <span class="split-remaining-desc">{svc.description}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </div>
   </section>
@@ -406,5 +447,208 @@ const secondary = services.filter((s: any) => !featured.includes(s));
   .service-compact-desc {
     font-size: var(--small-size, 0.875rem);
     color: var(--textMuted, var(--text));
+  }
+
+  /* ── Variant: split ──────────────────────────────────────────────── */
+
+  .split-featured {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--card-radius, var(--radius, 12px));
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--border));
+    box-shadow: var(--shadow-card);
+    transition: box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo),
+                border-color var(--duration-normal, 0.4s) ease;
+  }
+
+  .split-featured:hover {
+    box-shadow: var(--shadow-card-hover);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--borderSubtle, var(--border)));
+    text-decoration: none;
+  }
+
+  .split-featured:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 768px) {
+    .split-featured {
+      flex-direction: row;
+    }
+  }
+
+  .split-featured-media {
+    flex: 1 1 50%;
+    min-height: 280px;
+    overflow: hidden;
+  }
+
+  .split-featured-media :global(img),
+  .split-featured-media :global(picture img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    transition: transform var(--duration-slow, 0.8s) var(--ease-out-expo);
+  }
+
+  .split-featured:hover .split-featured-media :global(img),
+  .split-featured:hover .split-featured-media :global(picture img) {
+    transform: scale(1.04);
+  }
+
+  .split-featured-body {
+    flex: 1 1 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--gap-lg, 2rem) var(--gap-md, 1.5rem);
+  }
+
+  @media (min-width: 768px) {
+    .split-featured-body {
+      padding: var(--gap-xl, 3rem) var(--gap-lg, 2rem);
+    }
+  }
+
+  .split-featured-body h3 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    margin-bottom: var(--gap-sm, 0.5rem);
+    color: var(--text);
+    line-height: var(--line-height-heading, 1.2);
+  }
+
+  .split-featured-body p {
+    font-size: 1rem;
+    color: var(--textMuted, var(--text));
+    line-height: var(--line-height-body, 1.6);
+    max-width: 48ch;
+  }
+
+  .split-featured-price {
+    display: inline-block;
+    margin-top: var(--gap-sm, 0.5rem);
+    font-weight: 600;
+    color: var(--accent);
+    font-size: var(--small-size, 0.875rem);
+    font-family: var(--font-heading);
+  }
+
+  .split-featured-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: var(--gap-md, 1.5rem);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--accent);
+    transition: gap var(--duration-fast, 0.2s) ease;
+  }
+
+  .split-featured-cta::after {
+    content: '\2192';
+    transition: transform var(--duration-fast, 0.2s) ease;
+  }
+
+  .split-featured:hover .split-featured-cta::after {
+    transform: translateX(4px);
+  }
+
+  /* ── Split: remaining services list ──────────────────────────────── */
+
+  .split-remaining {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: var(--gap-lg, 2rem);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 640px) {
+    .split-remaining {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .split-remaining li {
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (min-width: 640px) {
+    .split-remaining li:nth-child(odd) {
+      border-right: 1px solid var(--border);
+    }
+  }
+
+  .split-remaining-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 1rem 1.25rem;
+    min-height: var(--touch-min, 44px);
+    text-decoration: none;
+    color: inherit;
+    transition: background var(--transition-fast, 150ms ease),
+                padding-left var(--duration-fast, 0.2s) ease;
+  }
+
+  .split-remaining-item:hover {
+    background: color-mix(in oklch, var(--surface) 100%, white 5%);
+    text-decoration: none;
+    padding-left: 1.75rem;
+  }
+
+  .split-remaining-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+  .split-remaining-name {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .split-remaining-desc {
+    font-size: var(--small-size, 0.875rem);
+    color: var(--textMuted, var(--text));
+    line-height: 1.4;
+  }
+
+  /* ── Reduced motion ────────────────────────────────────────────── */
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card,
+    .service-icon-card,
+    .split-featured {
+      transition: none;
+    }
+    .service-card:hover {
+      transform: none;
+    }
+    .service-card:hover .service-card-media :global(img),
+    .service-card:hover .service-card-media :global(picture img) {
+      transform: none;
+    }
+    .service-icon-card:hover {
+      transform: none;
+    }
+    .split-featured:hover .split-featured-media :global(img),
+    .split-featured:hover .split-featured-media :global(picture img) {
+      transform: none;
+    }
+    .split-remaining-item:hover {
+      padding-left: 1rem;
+    }
+    .split-featured-cta::after {
+      transition: none;
+    }
   }
 </style>
