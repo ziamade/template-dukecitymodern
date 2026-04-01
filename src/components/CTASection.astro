@@ -3,20 +3,17 @@
 // Data-driven CTA section. Reads from cta.json and renders a full-width
 // accent band with text + button. Drop into theme.json sectionOrder to place
 // it anywhere on the page. Keeps CTABand.astro untouched for backwards compat.
-import ctaData from '../data/cta.json';
+const ctaFiles = import.meta.glob('../data/cta.json', { eager: true });
+const ctaData = (Object.values(ctaFiles)[0] as any)?.default || {};
+
+const { text, buttonText, buttonHref, enabled } = ctaData;
 
 interface Props {
+  // Reserved for future variant styling (e.g. "compact", "dark")
   variant?: string | number;
 }
 
 const { variant } = Astro.props;
-
-const { text, buttonText, buttonHref, enabled } = ctaData as {
-  text?: string;
-  buttonText?: string;
-  buttonHref?: string;
-  enabled?: boolean;
-};
 
 // Render nothing when disabled or missing required fields
 const shouldRender = enabled !== false && text && buttonText && buttonHref;
