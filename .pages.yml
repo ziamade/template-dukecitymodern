@@ -47,6 +47,30 @@ content:
         required: false
         description: "Leave blank to show indefinitely."
 
+  # ── Call to Action ──────────────────────────────────────────────────────────
+  - name: cta
+    label: Call to Action
+    type: file
+    path: src/data/cta.json
+    format: json
+    fields:
+      - name: enabled
+        label: Enable CTA Band
+        type: boolean
+        default: true
+      - name: text
+        label: Message
+        type: string
+        description: "Text displayed next to the button. Example: Ready to get started?"
+      - name: buttonText
+        label: Button Text
+        type: string
+        description: "Text on the button. Example: Contact Us"
+      - name: buttonHref
+        label: Button Link
+        type: string
+        description: "Where the button links to. Use #contact for the contact section, or a full URL."
+
   # ── Contact Info ───────────────────────────────────────────────────────────
   - name: contact
     label: Contact Info

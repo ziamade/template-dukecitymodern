@@ -1,0 +1,81 @@
+---
+// src/components/CTASection.astro
+// Data-driven CTA section. Reads from cta.json and renders a full-width
+// accent band with text + button. Drop into theme.json sectionOrder to place
+// it anywhere on the page. Keeps CTABand.astro untouched for backwards compat.
+const ctaFiles = import.meta.glob('../data/cta.json', { eager: true });
+const ctaData = (Object.values(ctaFiles)[0] as any)?.default || {};
+
+const { text, buttonText, buttonHref, enabled } = ctaData;
+
+interface Props {
+  // Reserved for future variant styling (e.g. "compact", "dark")
+  variant?: string | number;
+}
+
+const { variant } = Astro.props;
+
+// Render nothing when disabled or missing required fields
+const shouldRender = enabled !== false && text && buttonText && buttonHref;
+---
+{shouldRender && (
+  <section id="cta" class="cta-section" data-variant={variant}>
+    <div class="container cta-section-inner">
+      <p class="cta-section-text">{text}</p>
+      <a href={buttonHref} class="cta-section-btn">{buttonText}</a>
+    </div>
+  </section>
+)}
+
+<style>
+  .cta-section {
+    background: var(--accent);
+    color: var(--background);
+    padding: 1.25rem 0;
+  }
+
+  .cta-section-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .cta-section-inner {
+      flex-direction: row;
+      justify-content: center;
+      gap: 2rem;
+      text-align: left;
+    }
+  }
+
+  .cta-section-text {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .cta-section-btn {
+    display: inline-block;
+    padding: 0.625rem 1.5rem;
+    background: var(--background);
+    color: var(--accent);
+    border-radius: var(--btn-radius, var(--card-radius));
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .cta-section-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+  }
+
+  .cta-section-btn:active {
+    transform: translateY(0) scale(0.98);
+  }
+</style>

@@ -26,6 +26,7 @@ import BeforeAfter from '../components/BeforeAfter.astro';
 import Differentiator from '../components/Differentiator.astro';
 import Team from '../components/Team.astro';
 import Products from '../components/Products.astro';
+import CTASection from '../components/CTASection.astro';
 
 import client from '../data/client.json';
 import contact from '../data/contact.json';
@@ -66,6 +67,7 @@ const sectionMap: Record<string, any> = {
   marquee: Marquee,
   team: Team,
   products: Products,
+  cta: CTASection,
 };
 
 // Use theme.json sectionOrder or fall back to defaults
@@ -103,6 +105,7 @@ const sectionLabels: Record<string, string> = {
   marquee: '',        // not in nav
   team: 'Team',
   products: 'Products',
+  cta: '',            // not in nav
 };
 
 const navLinks = sections
