@@ -1,0 +1,285 @@
+---
+// src/components/Products.astro
+// Generic product cards with specs, tiered pricing, and tags.
+// Used for: dumpster fleets, tinting packages, equipment rentals, service tiers.
+import OptimizedImg from './OptimizedImg.astro';
+
+const productFiles = import.meta.glob('../content/products/*.md', { eager: true });
+const products = Object.values(productFiles)
+  .map((mod: any) => ({ ...mod.frontmatter, body: mod.compiledContent?.() || '' }))
+  .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+
+const hasProducts = products.length > 0;
+---
+
+{hasProducts && (
+  <section class="products section" id="products">
+    <div class="container">
+      <div class="products__grid stagger-parent">
+        {products.map((product: any) => (
+          <div
+            class={`product-card card-luxury ${product.featured ? 'product-card--featured' : ''}`}
+            data-tilt="4"
+          >
+            {product.image && (
+              <div class="product-card__image-wrap">
+                <OptimizedImg
+                  src={product.image}
+                  alt={product.name || ''}
+                  width={800}
+                  height={500}
+                  class="product-card__image"
+                />
+                <div class="product-card__image-gradient"></div>
+                {product.featured && (
+                  <span class="product-card__popular">Most Popular</span>
+                )}
+              </div>
+            )}
+
+            <div class="product-card__body">
+              <div class="product-card__header">
+                <h3 class="h3">{product.name}</h3>
+                {product.badge && (
+                  <span class="product-card__badge">{product.badge}</span>
+                )}
+              </div>
+
+              {product.subtitle && (
+                <span class="product-card__subtitle">{product.subtitle}</span>
+              )}
+
+              {product.detail && (
+                <p class="product-card__detail">{product.detail}</p>
+              )}
+
+              {product.body && (
+                <p class="product-card__desc">{product.body}</p>
+              )}
+
+              {product.pricing?.length > 0 && (
+                <div class="product-card__pricing">
+                  {product.pricing.map((p: any) => (
+                    <div class="product-card__price-row">
+                      <div>
+                        <span class="product-card__price-label">{p.label}</span>
+                        {p.note && <span class="product-card__price-note">{p.note}</span>}
+                      </div>
+                      <span class="product-card__price-value">${p.price}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {product.tags?.length > 0 && (
+                <div class="product-card__tags-wrap">
+                  <div class="product-card__tags">
+                    {product.tags.map((tag: string) => (
+                      <span class="product-card__tag">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .products {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Product grid ──────────────────────────────────────────────── */
+  .products__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: var(--gap-lg, 2rem);
+  }
+
+  /* ── Product card ──────────────────────────────────────────────── */
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-xl, 24px);
+    overflow: hidden;
+  }
+
+  .product-card--featured {
+    border-color: var(--border-glow);
+    box-shadow: 0 0 40px var(--accent-glow);
+  }
+
+  /* ── Image ─────────────────────────────────────────────────────── */
+  .product-card__image-wrap {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+  }
+
+  .product-card__image-wrap :global(picture) {
+    display: contents;
+  }
+
+  .product-card__image-wrap :global(.product-card__image),
+  .product-card__image-wrap :global(img) {
+    width: 100%;
+    height: 150%;
+    object-fit: cover;
+    object-position: center 100%;
+    transition: transform var(--duration-glacial, 0.8s) var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .product-card:hover :global(.product-card__image),
+  .product-card:hover :global(img) {
+    transform: scale(1.06);
+  }
+
+  .product-card__image-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, var(--surface, #111) 100%);
+  }
+
+  .product-card__popular {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: var(--accent);
+    color: var(--bg, #050505);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.375rem 0.875rem;
+    border-radius: 100px;
+  }
+
+  /* ── Card body ─────────────────────────────────────────────────── */
+  .product-card__body {
+    padding: 1.75rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .product-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .product-card__badge {
+    font-family: var(--font-mono, monospace);
+    font-size: var(--mono-size, 0.75rem);
+    color: var(--text-muted, #888);
+  }
+
+  .product-card__subtitle {
+    font-family: var(--font-display, sans-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .product-card__detail {
+    font-family: var(--font-mono, monospace);
+    font-size: var(--small-size, 0.8125rem);
+    color: var(--text-muted, #888);
+  }
+
+  .product-card__desc {
+    font-size: var(--small-size, 0.8125rem);
+    color: var(--text-secondary, #aaa);
+    line-height: 1.6;
+  }
+
+  /* ── Pricing table ─────────────────────────────────────────────── */
+  .product-card__pricing {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--border-subtle, #222);
+  }
+
+  .product-card__price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-subtle, #222);
+  }
+
+  .product-card__price-row:last-child {
+    border-bottom: none;
+  }
+
+  .product-card__price-label {
+    font-family: var(--font-display, sans-serif);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text, #eee);
+    display: block;
+  }
+
+  .product-card__price-note {
+    font-size: 0.75rem;
+    color: var(--text-muted, #888);
+    display: block;
+    margin-top: 2px;
+  }
+
+  .product-card__price-value {
+    font-family: var(--font-mono, monospace);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ── Tags ───────────────────────────────────────────────────────── */
+  .product-card__tags-wrap {
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+
+  .product-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .product-card__tag {
+    font-size: 0.75rem;
+    color: var(--text-secondary, #aaa);
+    background: var(--surface-glass, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--border-subtle, #222);
+    border-radius: 100px;
+    padding: 0.25rem 0.75rem;
+  }
+
+  /* ── Responsive ────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .products__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .product-card__body {
+      padding: 1.5rem;
+    }
+  }
+
+  /* ── Reduced motion ────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .product-card__image-wrap :global(.product-card__image),
+    .product-card__image-wrap :global(img) {
+      transition: none;
+    }
+  }
+</style>

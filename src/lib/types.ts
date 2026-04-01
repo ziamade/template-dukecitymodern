@@ -159,6 +159,7 @@ export interface GalleryImage {
 }
 
 export interface Gallery {
+  beholdFeedId?: string;
   images: GalleryImage[];
 }
 
@@ -195,4 +196,40 @@ export interface Project {
 
 export interface Projects {
   projects: Project[];
+}
+
+export interface ProductPricing {
+  label: string;
+  price: number;
+  note?: string;
+}
+
+export interface Product {
+  name: string;
+  subtitle?: string;
+  detail?: string;
+  badge?: string;
+  image?: string;
+  featured?: boolean;
+  order?: number;
+  specs?: Record<string, string>;
+  tags?: string[];
+  pricing?: ProductPricing[];
+}
+
+export interface TeamMember {
+  name: string;
+  brandName?: string;
+  title?: string;
+  bio?: string;
+  photo?: string;
+  bookingUrl?: string;
+  bookingLabel?: string;
+  hours?: string;
+  specialties?: string[];
+  order?: number;
+}
+
+export interface Team {
+  items: TeamMember[];
 }
