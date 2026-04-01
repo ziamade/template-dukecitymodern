@@ -1,124 +1,168 @@
-# Duke City Modern - Astro Template
+# Duke City Modern
 
-A modern, fast small business website template built with [Astro](https://astro.build/). Used by ZiaMade to generate client sites via the automated pipeline.
+Small business website template for the ZiaMade platform. Client repos hold data only; this template is fetched at build time via GitHub Actions.
 
 ## Tech Stack
 
 | Layer | Tool |
 |-------|------|
-| Framework | Astro 5.x (static output) |
-| Styling | Tailwind CSS v4 |
+| Framework | Astro 6.x (static output) |
+| Styling | Pure CSS with custom properties |
 | CMS | Pages CMS (pagescms.org, Git-based) |
 | Hosting | Cloudflare Pages (Direct Upload via GitHub Actions) |
-| Images | Astro Image (`astro:assets`), Sharp optimization |
+| Images | Astro Image (`astro:assets`), AVIF/WebP via Sharp |
+| Animations | GSAP + ScrollTrigger (reveal, stagger, tilt, parallax) |
+| Gallery | Behold Instagram widget with static fallback |
+
+## How It Works
+
+Client repos contain only data files (`src/data/*.json`, `src/content/`, `src/assets/images/`). On push, a GitHub Actions workflow in the client repo:
+
+1. Checks out this template at a pinned version tag (e.g. `v1.1.0`)
+2. Copies client data into the template
+3. Builds with Astro
+4. Deploys to Cloudflare Pages
 
 ## Project Structure
 
 ```
-.
-├── .github/workflows/       # CI/CD: preview, production, and build+deploy
-├── .pages.yml               # Pages CMS configuration
-├── src/
-│   ├── assets/              # Images, fonts, favicons, SVGs
-│   ├── components/          # Astro components (.astro)
-│   ├── content/             # Content collections (services, blog)
-│   ├── data/                # JSON data files (contact, hours, brand, etc.)
-│   ├── layouts/             # Page layouts
-│   ├── pages/               # File-based routing
-│   └── styles/              # Global CSS / Tailwind
-├── public/                  # Static assets (copied as-is to output)
-├── astro.config.mjs         # Astro configuration
-├── tailwind.config.mjs      # Tailwind configuration
-└── package.json
+src/
+├── components/        # 30 Astro components (sections + layout)
+├── content/           # Markdown collections (services/, products/)
+├── data/              # JSON data files (23 files)
+├── layouts/           # BaseLayout with theme CSS injection
+├── lib/               # Brand theming, image resolver, types
+├── pages/             # index.astro (data-driven section renderer)
+├── scripts/           # GSAP animation controller
+└── styles/            # tokens, base, layout, components, atmosphere, animations
+tests/visual/          # Playwright visual regression (10 fixtures x 7 viewports)
 ```
 
-## Getting Started
+## Section System
 
-### Prerequisites
+Sections are driven by `theme.json`. The page renderer loops over `sections` and renders matching components:
 
-- Node.js 20+
-- npm
-
-### Installation
-
-```bash
-npm install
+```json
+{
+  "sections": [
+    { "id": "hero", "variant": "overlay" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "split" },
+    { "id": "products" },
+    { "id": "cta" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" }
+  ]
+}
 ```
 
-### Development
+### Available Sections
 
-```bash
-npm run dev
+| Section | Variants | Data Source |
+|---------|----------|-------------|
+| `hero` | split, overlay, video, minimal | `hero.json` |
+| `trust` | badges, stats | `trustbar.json` |
+| `services` | cards, icon-grid, compact, split | `content/services/*.md` |
+| `products` | -- | `content/products/*.md` |
+| `cta` | -- | `cta.json` |
+| `reviews` | scroll | `testimonials.json` |
+| `faq` | -- | `faq.json` |
+| `gallery` | masonry, scroll | `gallery.json` (+ optional Behold feed) |
+| `projects` | -- | `projects.json` |
+| `process` | -- | (hardcoded steps) |
+| `menu` | -- | `menu.json` |
+| `contact` | QuoteForm / OrderVisit (auto) | `contact.json` |
+| `about` | -- | `about.json`, `location.json` |
+| `hours` | -- | `hours.json` |
+| `beforeAfter` | -- | (content collection) |
+| `differentiator` | -- | (content collection) |
+| `marquee` | -- | `theme.json` marqueeItems |
+| `team` | -- | `team.json` |
+
+### Layout Tokens
+
+`theme.json` also controls the visual design system:
+
+```json
+{
+  "layout": {
+    "heroStyle": "overlay",
+    "atmosphereLevel": "rich",
+    "motionIntensity": "standard",
+    "headerStyle": "glass",
+    "cardStyle": "elevated",
+    "cardRadius": "soft",
+    "buttonStyle": "rounded",
+    "buttonVariant": "tactile",
+    "dividerStyle": "glow",
+    "sectionPattern": "gradient"
+  }
+}
 ```
 
-Starts the Astro dev server at `http://localhost:4321`.
-
-### Build
-
-```bash
-npm run build
-```
-
-Outputs static files to `dist/`.
-
-### Preview
-
-```bash
-npm run preview
-```
-
-Serves the built `dist/` directory locally for testing before deployment.
+All valid values are documented in `src/data/_template-manifest.json`.
 
 ## Data Files
 
-Business data lives in `src/data/` as JSON files:
-
 | File | Contents |
 |------|----------|
-| `contact.json` | Email, phone number |
-| `location.json` | Address, city, state, ZIP, Google Maps link |
-| `hours.json` | Structured business hours by day |
-| `brand.json` | Color palette (primary, secondary, accent, backgrounds) |
-| `hero.json` | Hero image, tagline, subtitle |
+| `brand.json` | Color palette (light + dark), font families |
+| `client.json` | Business name, industry, slug |
+| `contact.json` | Phone, email, social links |
+| `location.json` | Address, map link, service area |
+| `hero.json` | Headline, tagline, hero image, CTA |
+| `theme.json` | Section order, variants, layout tokens, marquee |
+| `cta.json` | CTA band text, button, enabled flag |
+| `hours.json` | Business hours by day |
+| `faq.json` | Question/answer pairs |
+| `gallery.json` | Image list + optional Behold feed ID |
 | `testimonials.json` | Customer reviews |
-| `trustbar.json` | Trust bar statistics |
-| `alert.json` | Optional alert banner |
-| `seo.json` | SEO metadata |
-| `schema.json` | Schema.org structured data |
+| `trustbar.json` | Trust bar items or stats |
+| `seo.json` | Page title, meta description, OG tags |
+| `schema.json` | JSON-LD structured data |
+| `alert.json` | Banner text, dates, enabled flag |
+| `menu.json` | Restaurant menu categories + items |
+| `team.json` | Team members (barbers, stylists, etc.) |
+| `projects.json` | Portfolio/project gallery |
 
-These files are editable via Pages CMS (configured in `.pages.yml`).
+## Development
 
-## Deployment
+```bash
+npm install
+npm run dev        # http://localhost:4321
+npm run build      # Static output to dist/
+npm run test       # Vitest unit tests
+```
 
-Deployment is handled by GitHub Actions via Cloudflare Pages Direct Upload:
+### Visual Regression Tests
 
-- **Preview** (`deploy-preview.yml`): Deploys on push to `main` as a preview build.
-- **Production** (`deploy-production.yml`): Manual trigger via `workflow_dispatch`.
-- **Build + Deploy** (`deploy.yml`): Full build pipeline on push to `main`.
+10 fixture configurations x 7 viewport sizes. Fixtures live in `tests/visual/fixtures/` and cover service businesses, restaurants, edge cases, light/dark palettes, and all layout variants.
 
-### Required Secrets
+```bash
+cd tests/visual
+npx playwright test
+```
 
-Set these in your GitHub repository settings:
+## Versioning
 
-- `CLOUDFLARE_API_TOKEN` - Cloudflare API token with Pages permissions
-- `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare account ID
+Tags follow semver (`v1.0.0`, `v1.1.0`, etc.). Client repos pin to a version via `.template-version`. Bumping all client repos:
 
-## Content Management
+```bash
+npx tsx packages/pipeline/scripts/propagate-template.ts v1.1.0
+```
 
-Clients manage their site content through [Pages CMS](https://pagescms.org/), a Git-based CMS. The configuration is in `.pages.yml`. Editable sections include:
+## Client Repo Secrets
 
-- Alert banner
-- Contact info
-- Location and maps
-- Business hours
-- Brand colors
-- Hero section
-- Customer reviews
-- Trust bar stats
-- Services (markdown collection)
+Set these in the client repo (or as org secrets):
 
-Media uploads go to `src/assets/images/`.
+| Secret | Purpose |
+|--------|---------|
+| `CLOUDFLARE_API_TOKEN` | CF API token with Pages permissions |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
 
 ## License
 
-Proprietary. Part of the ZiaMade platform.
+Proprietary. Copyright (c) 2026 ZiaMade LLC. All rights reserved. See [LICENSE](LICENSE).
+
+Client site data (JSON, images, markdown) remains the property of the respective business owner.
