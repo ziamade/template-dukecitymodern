@@ -1,50 +1,129 @@
 ---
 // src/components/PhotoGallery.astro
-// DCD Luxury gallery — 12-column masonry grid with hover overlays,
-// 3D tilt on desktop, lightbox on click, staggered entrance
+// Gallery with optional Behold Instagram feed + static photo fallback.
+// Variants: masonry (default), scroll (horizontal scroll row).
+// If beholdFeedId is set in gallery.json, loads the live Instagram widget.
+// Falls back to the static grid if Behold fails or no feed ID configured.
 import galleryRaw from '../data/gallery.json';
 const gallery = galleryRaw as any;
 import OptimizedImg from './OptimizedImg.astro';
 
+interface Props { variant?: string | number; }
+const { variant: variantProp } = Astro.props;
+const variant = String(variantProp || 'masonry');
+
 const images = gallery?.images || gallery?.items || [];
 const hasGallery = images.length > 0;
+const beholdFeedId = gallery?.beholdFeedId || '';
 ---
 
-{hasGallery && (
+{(hasGallery || beholdFeedId) && (
   <section class="gallery-section section" id="gallery">
     <div class="container">
       <h2 class="section-heading">Photos</h2>
     </div>
 
-    <div class="gallery-grid stagger-parent container">
-      {images.map((img: any, i: number) => (
-        <button
-          class={`gallery-item gallery-thumb ${i % 4 < 2 ? 'gallery-item--wide' : 'gallery-item--narrow'}`}
-          data-tilt="3"
-          data-index={i}
-          type="button"
-          aria-label={`View ${img.alt || `photo ${i + 1}`}`}
-        >
-          <OptimizedImg
-            src={img.url || img.image}
-            alt={img.alt || ''}
-            width={800}
-            height={600}
-            fallback={img.fallbackUrl || img.fallback || ''}
-            class="gallery-img"
-          />
-          <div class="gallery-overlay">
-            <span class="gallery-caption">{img.alt || ''}</span>
-            <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              <line x1="11" y1="8" x2="11" y2="14"/>
-              <line x1="8" y1="11" x2="14" y2="11"/>
-            </svg>
-          </div>
-        </button>
-      ))}
-    </div>
+    {/* ── Behold Instagram widget ──────────────────────────────────── */}
+    {beholdFeedId && (
+      <div class="behold-wrap container" id="gallery-behold">
+        <behold-widget feed-id={beholdFeedId}></behold-widget>
+      </div>
+    )}
+
+    {/* ── Horizontal scroll variant ─────────────────────────────────── */}
+    {variant === 'scroll' && hasGallery && (
+      <div class="gallery-scroll container" id="gallery-static">
+        {images.map((img: any, i: number) => (
+          <button
+            class="gallery-scroll-item gallery-thumb"
+            data-index={i}
+            type="button"
+            aria-label={`View ${img.alt || `photo ${i + 1}`}`}
+          >
+            <OptimizedImg
+              src={img.url || img.image}
+              alt={img.alt || ''}
+              width={600}
+              height={400}
+              fallback={img.fallbackUrl || img.fallback || ''}
+              class="gallery-img"
+            />
+            <div class="gallery-overlay">
+              <span class="gallery-caption">{img.alt || ''}</span>
+              <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </div>
+          </button>
+        ))}
+      </div>
+    )}
+
+    {/* ── Static masonry grid (fallback when Behold active, primary otherwise) */}
+    {variant !== 'scroll' && hasGallery && (
+      <div
+        class="gallery-grid stagger-parent container"
+        id={variant === 'scroll' ? undefined : 'gallery-static'}
+        style={beholdFeedId ? 'display:none' : undefined}
+      >
+        {images.map((img: any, i: number) => (
+          <button
+            class={`gallery-item gallery-thumb ${i % 4 < 2 ? 'gallery-item--wide' : 'gallery-item--narrow'}`}
+            data-tilt="3"
+            data-index={i}
+            type="button"
+            aria-label={`View ${img.alt || `photo ${i + 1}`}`}
+          >
+            <OptimizedImg
+              src={img.url || img.image}
+              alt={img.alt || ''}
+              width={800}
+              height={600}
+              fallback={img.fallbackUrl || img.fallback || ''}
+              class="gallery-img"
+            />
+            <div class="gallery-overlay">
+              <span class="gallery-caption">{img.alt || ''}</span>
+              <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </div>
+          </button>
+        ))}
+      </div>
+    )}
+
+    {/* ── Behold loader + fallback script ──────────────────────────── */}
+    {beholdFeedId && (
+      <script is:inline>
+        (function() {
+          var s = document.createElement('script');
+          s.type = 'module';
+          s.src = 'https://w.behold.so/widget.js';
+          document.head.appendChild(s);
+
+          // If Behold hasn't rendered after 5s, show static fallback
+          setTimeout(function() {
+            var widget = document.querySelector('behold-widget');
+            var fallback = document.getElementById('gallery-static');
+            if (!widget || !fallback) return;
+            var shadow = widget.shadowRoot;
+            var rendered = shadow && shadow.children.length > 1;
+            if (!rendered) {
+              var wrap = document.getElementById('gallery-behold');
+              if (wrap) wrap.style.display = 'none';
+              fallback.style.removeProperty('display');
+            }
+          }, 5000);
+        })();
+      </script>
+    )}
 
     <!-- Lightbox markup (driven by gallery-lightbox.js) -->
     <div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true" role="dialog" aria-label="Image lightbox">
@@ -77,6 +156,78 @@ const hasGallery = images.length > 0;
   .gallery-section {
     padding: var(--section-pad, 4rem) 0;
     overflow: hidden;
+  }
+
+  /* ── Behold Instagram widget ───────────────────────────────────── */
+  .behold-wrap {
+    margin-bottom: 2rem;
+  }
+
+  /* ── Horizontal scroll variant ─────────────────────────────────── */
+  .gallery-scroll {
+    display: flex;
+    gap: var(--gap, 1rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+
+  .gallery-scroll-item {
+    flex: 0 0 auto;
+    width: min(400px, 75vw);
+    aspect-ratio: 3 / 2;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--card-radius, var(--radius-lg, 12px));
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--accent) 10%, var(--border));
+    padding: 0;
+    background: var(--surface);
+    scroll-snap-align: start;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .gallery-scroll-item :global(picture) {
+    display: contents;
+  }
+
+  .gallery-scroll-item :global(.gallery-img),
+  .gallery-scroll-item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .gallery-scroll-item:hover :global(.gallery-img),
+  .gallery-scroll-item:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .gallery-scroll-item .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 40%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .gallery-scroll-item:hover .gallery-overlay,
+  .gallery-scroll-item:focus-visible .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-scroll-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   /* ── 12-column masonry grid ─────────────────────────────────────── */

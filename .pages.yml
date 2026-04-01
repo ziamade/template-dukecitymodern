@@ -231,6 +231,11 @@ content:
     path: src/data/gallery.json
     format: json
     fields:
+      - name: beholdFeedId
+        label: Instagram Feed ID
+        type: string
+        required: false
+        description: "Behold.so feed ID for a live Instagram feed. Leave blank to show static photos only."
       - name: images
         label: Photos
         type: object
@@ -394,3 +399,80 @@ content:
         type: number
         default: 1
         description: "Lower numbers appear first (1 = first card). Maximum 6 services total."
+
+  # ── Products (Pricing + Specs) ─────────────────────────────────────────────
+  - name: products
+    label: Products
+    type: collection
+    path: src/content/products
+    extension: md
+    format: yaml-frontmatter
+    filename: "{order}-{fields.name | slugify}"
+    media:
+      input: src/assets/images/products
+      output: /assets/images/products
+    view:
+      primary: name
+      fields: [name, subtitle]
+      sort: [order]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: name
+        label: Product Name
+        type: string
+      - name: subtitle
+        label: Subtitle
+        type: string
+        required: false
+        description: "Size, capacity, or tier label. Example: 20 Cubic Yards"
+      - name: detail
+        label: Detail Line
+        type: string
+        required: false
+        description: "Dimensions or specs summary. Example: 22' L x 7.5' W x 4.5' H"
+      - name: badge
+        label: Badge Text
+        type: string
+        required: false
+        description: "Secondary label shown next to the name."
+      - name: image
+        label: Image
+        type: image
+      - name: featured
+        label: Featured
+        type: boolean
+        default: false
+        description: "Featured products get accent styling and a 'Most Popular' badge."
+      - name: order
+        label: Display Order
+        type: number
+        default: 1
+        description: "Lower numbers appear first."
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+        required: false
+        description: "Tag pills shown below pricing. Example: Garage cleanouts"
+      - name: pricing
+        label: Pricing Tiers
+        type: object
+        required: false
+        list:
+          collapsible:
+            summary: "{{label}} — ${{price}}"
+        fields:
+          - name: label
+            label: Label
+            type: string
+            description: "Duration or tier name. Example: 1-3 Days"
+          - name: price
+            label: Price
+            type: number
+          - name: note
+            label: Note
+            type: string
+            required: false
+            description: "Short description of this tier."

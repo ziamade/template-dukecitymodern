@@ -24,6 +24,8 @@ import FloatingCTA from '../components/FloatingCTA.astro';
 import Marquee from '../components/Marquee.astro';
 import BeforeAfter from '../components/BeforeAfter.astro';
 import Differentiator from '../components/Differentiator.astro';
+import Team from '../components/Team.astro';
+import Products from '../components/Products.astro';
 
 import client from '../data/client.json';
 import contact from '../data/contact.json';
@@ -37,6 +39,8 @@ interface SectionEntry {
 }
 
 const isRestaurant = (client.industry || '').toLowerCase().includes('restaurant');
+const industryLower = (client.industry || '').toLowerCase();
+const hasTeam = industryLower.includes('barber') || industryLower.includes('salon') || industryLower.includes('stylist') || industryLower.includes('tattoo');
 const hasReviews = testimonials?.items?.length > 0;
 
 // Resolve trust component from theme variant
@@ -60,6 +64,8 @@ const sectionMap: Record<string, any> = {
   beforeAfter: BeforeAfter,
   differentiator: Differentiator,
   marquee: Marquee,
+  team: Team,
+  products: Products,
 };
 
 // Use theme.json sectionOrder or fall back to defaults
@@ -95,6 +101,8 @@ const sectionLabels: Record<string, string> = {
   beforeAfter: '',    // not in nav
   differentiator: '', // not in nav
   marquee: '',        // not in nav
+  team: 'Team',
+  products: 'Products',
 };
 
 const navLinks = sections
@@ -102,10 +110,12 @@ const navLinks = sections
   .filter(s => s.id !== 'reviews' || hasReviews)
   .map(s => ({ href: `#${s.id}`, text: sectionLabels[s.id] }));
 
-const ctaText = isRestaurant ? 'Order Now' : 'Get Quote';
-const ctaHref = isRestaurant ? '#contact' : '#contact';
+const ctaText = isRestaurant ? 'Order Now' : hasTeam ? 'Book Now' : 'Get Quote';
+const ctaHref = isRestaurant ? '#contact' : hasTeam ? '#team' : '#contact';
 const heroCta = isRestaurant
   ? { text: 'View Our Menu', href: '#menu' }
+  : hasTeam
+  ? { text: 'Book Now', href: '#team' }
   : { text: 'Get Your Free Quote', href: '#contact' };
 // Load SVG icons for action bar
 const actionIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });
