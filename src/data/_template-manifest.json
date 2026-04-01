@@ -6,6 +6,7 @@
     "atmosphereLevels": ["none", "minimal", "rich", "cinematic"],
     "motionIntensities": ["none", "subtle", "standard", "dramatic"],
     "cardStyles": ["bordered", "shadow", "flat", "elevated", "luxury"],
+    "serviceVariants": ["cards", "icon-grid", "compact", "split"],
     "buttonVariants": ["solid", "ghost", "tactile"],
     "dividerStyles": ["line", "glow", "fade", "none"],
     "cardRadii": ["sharp", "soft", "round"],
