@@ -22,7 +22,7 @@ const shouldRender = enabled !== false && text && buttonText && buttonHref;
   <section id="cta" class="cta-section" data-variant={variant}>
     <div class="container cta-section-inner">
       <p class="cta-section-text">{text}</p>
-      <a href={buttonHref} class="cta-section-btn">{buttonText}</a>
+      <a href={buttonHref} class="cta-section-btn" data-umami-event="cta-section-click">{buttonText}</a>
     </div>
   </section>
 )}
