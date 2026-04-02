@@ -6,6 +6,7 @@ import client from '../data/client.json';
 import theme from '../data/theme.json';
 import alert from '../data/alert.json';
 import schema from '../data/schema.json';
+import analytics from '../data/analytics.json';
 import hours from '../data/hours.json';
 import gallery from '../data/gallery.json';
 import projects from '../data/projects.json';
@@ -82,6 +83,9 @@ const depth = layout.depth || '';
   <style set:html={fontFaceCSS}></style>
   <style set:html={themeCSS}></style>
   {layoutCSS && <style set:html={layoutCSS}></style>}
+  {(analytics as any)?.umamiWebsiteId && (
+    <script defer src={(analytics as any).umamiScriptUrl} data-website-id={(analytics as any).umamiWebsiteId} />
+  )}
 </head>
 <body
   data-accent={typedTheme.accentStyle || "border"}
