@@ -157,7 +157,6 @@ a:hover { text-decoration: underline; }
   .services-grid .service-card,
   .services-grid .service-icon-card,
   .services-grid .service-compact-item,
-  .trust-badges .trust-badge,
   .trust-stats .stat,
   .process-steps .process-step {
     opacity: 0;
