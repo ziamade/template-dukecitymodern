@@ -95,6 +95,7 @@ export interface LayoutTokens {
   heroStyle?: 'split' | 'overlay' | 'video' | 'minimal';
   buttonVariant?: 'solid' | 'ghost' | 'tactile';
   dividerStyle?: 'line' | 'glow' | 'fade' | 'none';
+  logoSize?: 'sm' | 'md' | 'lg';
 }
 
 export interface SectionEntry {

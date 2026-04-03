@@ -77,9 +77,10 @@ const depth = layout.depth || '';
   {seo.canonicalUrl && <link rel="canonical" href={seo.canonicalUrl} />}
   <ClientRouter fallback="swap" />
   {heroResolved && <link rel="preload" as="image" type="image/webp" href={heroResolved.src} fetchpriority="high" />}
-  <link rel="icon" href="/assets/favicons/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/assets/favicons/favicon.ico" sizes="32x32">
-  <link rel="icon" href="/assets/favicons/favicon-96x96.png" type="image/png" sizes="96x96">
+  <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicons/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicons/favicon-96x96.png" type="image/png" sizes="96x96">
+  <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
   <style set:html={fontFaceCSS}></style>
   <style set:html={themeCSS}></style>
   {layoutCSS && <style set:html={layoutCSS}></style>}

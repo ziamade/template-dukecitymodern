@@ -2,6 +2,7 @@
 // src/components/StickyHeader.astro
 // v4 rewrite: glass header with scroll hide/show, mobile overlay nav
 import client from '../data/client.json';
+import theme from '../data/theme.json';
 import OptimizedImg from './OptimizedImg.astro';
 import BrandName from './BrandName.astro';
 
@@ -13,8 +14,9 @@ interface Props {
 
 const { navLinks, ctaText, ctaHref } = Astro.props;
 const logoUrl = (client as any).logoUrl || '';
+const logoSize = (theme as any).layout?.logoSize || 'md';
 ---
-<header class="site-header" id="site-header">
+<header class="site-header" id="site-header" data-logo-size={logoSize}>
   <div class="header-inner">
     <a href="#" class="header-brand" aria-label={client.name}>
       {logoUrl && (
@@ -131,6 +133,31 @@ const logoUrl = (client as any).logoUrl || '';
     .header-logo {
       height: 48px;
       max-width: 200px;
+    }
+  }
+
+  /* Logo size variants: sm (28/32px), md (40/48px default), lg (48/56px) */
+  [data-logo-size="sm"] .header-logo {
+    height: 28px;
+    max-width: 100px;
+  }
+
+  @media (min-width: 768px) {
+    [data-logo-size="sm"] .header-logo {
+      height: 32px;
+      max-width: 120px;
+    }
+  }
+
+  [data-logo-size="lg"] .header-logo {
+    height: 48px;
+    max-width: 200px;
+  }
+
+  @media (min-width: 768px) {
+    [data-logo-size="lg"] .header-logo {
+      height: 56px;
+      max-width: 240px;
     }
   }
 

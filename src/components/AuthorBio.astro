@@ -1,0 +1,255 @@
+---
+// src/components/AuthorBio.astro
+// Rich author biography section with photo and social links.
+// Replaces AboutMap for author/publisher sites (no map, no address).
+// Reads from about.json + client.json.
+import client from '../data/client.json';
+import about from '../data/about.json';
+import brand from '../data/brand.json';
+import type { Brand } from '../lib/types';
+import BrandName from './BrandName.astro';
+import OptimizedImg from './OptimizedImg.astro';
+import { brandify } from '../lib/brandify';
+
+const typedBrand = brand as unknown as Brand;
+const authorPhoto = (client as any).authorPhoto || (client as any).logoUrl || '';
+const authorName = client.name || '';
+const heading = (about as any)?.heading || 'About the Author';
+const text = (about as any)?.text || '';
+const socials = (client as any).socials || {};
+
+interface Props { variant?: string | number; }
+
+// Build social links array from client.socials
+const socialLinks: { name: string; url: string; icon: string }[] = [];
+if (socials.amazon) socialLinks.push({ name: 'Amazon', url: socials.amazon, icon: 'amazon' });
+if (socials.goodreads) socialLinks.push({ name: 'Goodreads', url: socials.goodreads, icon: 'goodreads' });
+if (socials.instagram) socialLinks.push({ name: 'Instagram', url: socials.instagram, icon: 'instagram' });
+if (socials.facebook) socialLinks.push({ name: 'Facebook', url: socials.facebook, icon: 'facebook' });
+if (socials.twitter || socials.x) socialLinks.push({ name: 'X', url: socials.twitter || socials.x, icon: 'twitter' });
+if (socials.linkedin) socialLinks.push({ name: 'LinkedIn', url: socials.linkedin, icon: 'linkedin' });
+if (socials.website) socialLinks.push({ name: 'Website', url: socials.website, icon: 'globe' });
+---
+<section class="author-bio section" id="about">
+  <div class="container">
+    <div class="author-layout">
+      {/* Author photo */}
+      {authorPhoto && (
+        <div class="author-photo-wrap reveal-scale">
+          <div class="author-photo">
+            <OptimizedImg
+              src={authorPhoto}
+              alt={authorName}
+              width={500}
+              height={600}
+              loading="lazy"
+            />
+          </div>
+          <div class="author-photo-accent" aria-hidden="true" />
+        </div>
+      )}
+
+      {/* Bio content */}
+      <div class="author-content reveal-up">
+        <span class="section-eyebrow">The Author</span>
+        <h2 class="author-heading">{heading}</h2>
+
+        {text && (
+          <div class="author-text" set:html={brandify(text, authorName, typedBrand)} />
+        )}
+
+        {/* Social links */}
+        {socialLinks.length > 0 && (
+          <div class="author-socials">
+            {socialLinks.map(({ name, url }) => (
+              <a href={url} class="author-social-link" target="_blank" rel="noopener" aria-label={name}>
+                <span>{name}</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Author Bio Section ────────────────────────────────────────── */
+
+  .author-bio {
+    background: var(--background);
+  }
+
+  .author-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-xl, 3rem);
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .author-layout {
+      grid-template-columns: 2fr 3fr;
+      gap: clamp(2rem, 5vw, 5rem);
+    }
+  }
+
+  /* ── Author photo ──────────────────────────────────────────────── */
+
+  .author-photo-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .author-photo {
+    position: relative;
+    z-index: 1;
+    border-radius: var(--img-radius, var(--radius, 12px));
+    overflow: hidden;
+    box-shadow:
+      0 16px 40px rgba(0, 0, 0, 0.15),
+      0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
+    max-width: 380px;
+  }
+
+  .author-photo :global(img),
+  .author-photo :global(picture img) {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    aspect-ratio: 5 / 6;
+    object-fit: cover;
+  }
+
+  /* Decorative accent block behind photo */
+  .author-photo-accent {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 100%;
+    height: 100%;
+    max-width: 380px;
+    border-radius: var(--img-radius, var(--radius, 12px));
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    z-index: 0;
+  }
+
+  /* ── Content ───────────────────────────────────────────────────── */
+
+  .author-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap, 1rem);
+  }
+
+  .author-heading {
+    font-family: var(--font-heading);
+    font-size: var(--title-size, clamp(1.75rem, 1.5rem + 2vw, 2.75rem));
+    font-weight: 700;
+    line-height: var(--line-height-heading, 1.2);
+    letter-spacing: var(--tracking-tight, -0.02em);
+    color: var(--text);
+  }
+
+  .author-heading::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin-top: 0.75rem;
+  }
+
+  .author-text {
+    font-size: var(--lead-size, clamp(1rem, 0.9rem + 0.3vw, 1.125rem));
+    line-height: var(--line-height-body, 1.6);
+    color: var(--textMuted, var(--text));
+    max-width: 55ch;
+  }
+
+  .author-text :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .author-text :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* ── Social links ──────────────────────────────────────────────── */
+
+  .author-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .author-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 15%, var(--border));
+    border-radius: var(--radius-full, 9999px);
+    font-size: var(--small-size, 0.875rem);
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    transition: background var(--duration-fast, 0.2s) ease,
+                border-color var(--duration-fast, 0.2s) ease,
+                color var(--duration-fast, 0.2s) ease;
+  }
+
+  .author-social-link:hover {
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ── Responsive ────────────────────────────────────────────────── */
+
+  @media (max-width: 767px) {
+    .author-layout {
+      text-align: center;
+    }
+
+    .author-content {
+      align-items: center;
+    }
+
+    .author-heading::after {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .author-text {
+      text-align: center;
+    }
+
+    .author-socials {
+      justify-content: center;
+    }
+
+    .author-photo {
+      max-width: 280px;
+    }
+
+    .author-photo-accent {
+      max-width: 280px;
+    }
+  }
+
+  /* ── Reduced motion ────────────────────────────────────────────── */
+
+  @media (prefers-reduced-motion: reduce) {
+    .author-social-link {
+      transition: none;
+    }
+  }
+</style>

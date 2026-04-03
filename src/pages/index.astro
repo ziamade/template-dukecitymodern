@@ -27,6 +27,8 @@ import Differentiator from '../components/Differentiator.astro';
 import Team from '../components/Team.astro';
 import Products from '../components/Products.astro';
 import CTASection from '../components/CTASection.astro';
+import BookShowcase from '../components/BookShowcase.astro';
+import AuthorBio from '../components/AuthorBio.astro';
 
 import client from '../data/client.json';
 import contact from '../data/contact.json';
@@ -41,6 +43,7 @@ interface SectionEntry {
 
 const isRestaurant = (client.industry || '').toLowerCase().includes('restaurant');
 const industryLower = (client.industry || '').toLowerCase();
+const isAuthor = industryLower.includes('author') || industryLower.includes('writer') || industryLower.includes('publisher');
 const hasTeam = industryLower.includes('barber') || industryLower.includes('salon') || industryLower.includes('stylist') || industryLower.includes('tattoo');
 const hasReviews = testimonials?.items?.length > 0;
 
@@ -60,7 +63,7 @@ const sectionMap: Record<string, any> = {
   reviews: Reviews,
   faq: FAQ,
   contact: isRestaurant ? OrderVisit : QuoteForm,
-  about: AboutMap,
+  about: isAuthor ? AuthorBio : AboutMap,
   hours: HoursDisplay,
   beforeAfter: BeforeAfter,
   differentiator: Differentiator,
@@ -68,10 +71,13 @@ const sectionMap: Record<string, any> = {
   team: Team,
   products: Products,
   cta: CTASection,
+  book: BookShowcase,
 };
 
 // Use theme.json sectionOrder or fall back to defaults
-const defaultOrder = isRestaurant
+const defaultOrder = isAuthor
+  ? ['hero', 'trust', 'book', 'about', 'reviews', 'faq', 'cta', 'contact']
+  : isRestaurant
   ? ['hero', 'menu', 'gallery', 'reviews', 'hours', 'about', 'contact']
   : ['hero', 'trust', 'services', 'projects', 'process', 'reviews', 'faq', 'contact', 'about'];
 
@@ -95,7 +101,7 @@ const sectionLabels: Record<string, string> = {
   process: '',    // not in nav
   gallery: 'Photos',
   menu: 'Menu',
-  reviews: 'Reviews',
+  reviews: isAuthor ? 'Praise' : 'Reviews',
   faq: 'FAQ',
   contact: isRestaurant ? 'Order' : 'Contact',
   about: 'About',
@@ -106,6 +112,7 @@ const sectionLabels: Record<string, string> = {
   team: 'Team',
   products: 'Products',
   cta: '',            // not in nav
+  book: isAuthor ? 'The Book' : '',
 };
 
 const navLinks = sections
@@ -113,9 +120,11 @@ const navLinks = sections
   .filter(s => s.id !== 'reviews' || hasReviews)
   .map(s => ({ href: `#${s.id}`, text: sectionLabels[s.id] }));
 
-const ctaText = isRestaurant ? 'Order Now' : hasTeam ? 'Book Now' : 'Get Quote';
-const ctaHref = isRestaurant ? '#contact' : hasTeam ? '#team' : '#contact';
-const heroCta = isRestaurant
+const ctaText = isAuthor ? 'Order Now' : isRestaurant ? 'Order Now' : hasTeam ? 'Book Now' : 'Get Quote';
+const ctaHref = isAuthor ? '#book' : isRestaurant ? '#contact' : hasTeam ? '#team' : '#contact';
+const heroCta = isAuthor
+  ? { text: 'Get the Book', href: '#book' }
+  : isRestaurant
   ? { text: 'View Our Menu', href: '#menu' }
   : hasTeam
   ? { text: 'Book Now', href: '#team' }
@@ -176,5 +185,5 @@ const actionBarLinks = [
 
   <Footer />
   <FloatingCTA />
-  <StickyActionBar links={actionBarLinks} />
+  {!isAuthor && <StickyActionBar links={actionBarLinks} />}
 </BaseLayout>
