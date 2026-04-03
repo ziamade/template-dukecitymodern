@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const days = hours.days || [];
     const badgeText = badge.querySelector('.badge-text');
     if (!badgeText) return;
+    const hasAnyHours = days.some(d => d.open && d.open.toLowerCase() !== 'closed');
+    if (!hasAnyHours) { badge.style.display = 'none'; return; }
     const is24_7 = days.length > 0 && days.every(d => d.open && d.open.toLowerCase().includes('24 hour'));
     if (is24_7) { badge.classList.add('open', 'open-24-7'); badgeText.textContent = 'Open 24/7'; return; }
     const now = new Date();
