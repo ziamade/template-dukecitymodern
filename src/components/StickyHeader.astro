@@ -121,7 +121,7 @@ const logoSize = (theme as any).layout?.logoSize || 'md';
     text-decoration: none;
   }
 
-  .header-logo {
+  :global(.header-logo) {
     height: 40px;
     width: auto;
     max-width: 160px;
@@ -130,32 +130,33 @@ const logoSize = (theme as any).layout?.logoSize || 'md';
   }
 
   @media (min-width: 768px) {
-    .header-logo {
+    :global(.header-logo) {
       height: 48px;
       max-width: 200px;
     }
   }
 
   /* Logo size variants: sm (28/32px), md (40/48px default), lg (48/56px) */
-  [data-logo-size="sm"] .header-logo {
+  /* :global() needed because .header-logo is on OptimizedImg (different scope) */
+  [data-logo-size="sm"] :global(.header-logo) {
     height: 28px;
     max-width: 100px;
   }
 
   @media (min-width: 768px) {
-    [data-logo-size="sm"] .header-logo {
+    [data-logo-size="sm"] :global(.header-logo) {
       height: 32px;
       max-width: 120px;
     }
   }
 
-  [data-logo-size="lg"] .header-logo {
+  [data-logo-size="lg"] :global(.header-logo) {
     height: 48px;
     max-width: 200px;
   }
 
   @media (min-width: 768px) {
-    [data-logo-size="lg"] .header-logo {
+    [data-logo-size="lg"] :global(.header-logo) {
       height: 56px;
       max-width: 240px;
     }
@@ -348,14 +349,14 @@ const logoSize = (theme as any).layout?.logoSize || 'md';
   }
 
   /* ── Dark mode logo treatment ─────────────────────────────────── */
-  :global([data-theme="dark"]) .header-logo {
+  :global([data-theme="dark"]) :global(.header-logo) {
     background: rgba(255, 255, 255, 0.12);
     padding: 3px;
     border-radius: 6px;
   }
 
   @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme])) .header-logo {
+    :global(:root:not([data-theme])) :global(.header-logo) {
       background: rgba(255, 255, 255, 0.12);
       padding: 3px;
       border-radius: 6px;
