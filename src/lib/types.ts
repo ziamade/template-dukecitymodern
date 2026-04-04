@@ -234,3 +234,14 @@ export interface TeamMember {
 export interface Team {
   items: TeamMember[];
 }
+
+export interface TourStep {
+  target: string;
+  title: string;
+  body: string;
+}
+
+export interface TourData {
+  steps: TourStep[];
+  businessName: string;
+}

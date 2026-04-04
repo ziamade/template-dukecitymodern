@@ -31,6 +31,20 @@ import '../styles/menu.css';
 // Legacy CSS removed in Phase 4 — v4 atmosphere.css replaces visual-depth.css,
 // accent styles moved to components.css, bg-presets replaced by atmosphere system.
 import { ClientRouter } from "astro:transitions";
+import TourOverlay from '../components/TourOverlay.astro';
+import type { TourData } from '../lib/types';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// tour.json is optional: preview sites have it, production sites don't.
+let tourData: TourData | undefined;
+{
+  const tourPath = resolve(dirname(fileURLToPath(import.meta.url)), '../data/tour.json');
+  if (existsSync(tourPath)) {
+    tourData = JSON.parse(readFileSync(tourPath, 'utf-8')) as TourData;
+  }
+}
 
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
@@ -129,5 +143,6 @@ const depth = layout.depth || '';
   {hasProjects && (
     <script is:inline src="/scripts/gallery-slider.js"></script>
   )}
+  <TourOverlay tour={tourData} />
 </body>
 </html>
