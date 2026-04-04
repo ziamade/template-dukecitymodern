@@ -4,8 +4,8 @@
 // Reads from src/data/book.json. Designed for author/publisher sites.
 import OptimizedImg from './OptimizedImg.astro';
 
-let book: any = {};
-try { book = (await import('../data/book.json')).default; } catch {}
+const bookFiles = import.meta.glob<{ default: any }>('../data/book.json', { eager: true });
+const book: any = Object.values(bookFiles)[0]?.default || {};
 
 const title = book?.title || '';
 const subtitle = book?.subtitle || '';

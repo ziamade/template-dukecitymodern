@@ -25,8 +25,8 @@ const averageRating = (testimonials as any)?.averageRating || null;
 
 // Build the "See all reviews" link
 let allReviewsUrl = (client as any).socials?.google || '';
-let googleLinks: any = {};
-try { googleLinks = (await import('../data/google-links.json')).default; } catch {}
+const glFiles = import.meta.glob<{ default: any }>('../data/google-links.json', { eager: true });
+const googleLinks: any = Object.values(glFiles)[0]?.default || {};
 if (googleLinks?.allReviews) allReviewsUrl = googleLinks.allReviews;
 
 // Load source icons

@@ -10,8 +10,8 @@ import { formatPhone } from '../lib/utils';
 import OptimizedImg from './OptimizedImg.astro';
 import BrandName from './BrandName.astro';
 
-let googleLinks: any = {};
-try { googleLinks = (await import('../data/google-links.json')).default; } catch {}
+const glFiles = import.meta.glob<{ default: any }>('../data/google-links.json', { eager: true });
+const googleLinks: any = Object.values(glFiles)[0]?.default || {};
 
 const logoUrl = (client as any).logoUrl || '';
 const phoneForTel = (contact as any).phoneForTel || '';

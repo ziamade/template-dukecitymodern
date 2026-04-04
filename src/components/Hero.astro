@@ -18,8 +18,8 @@ const heroSubtitle = (hero as any)?.heroSubtitle || '';
 const marqueeItems = (theme as any)?.marqueeItems || [];
 
 // Hero stats from schema.json (authoritative source for rating/reviews)
-let schema: any = {};
-try { schema = (await import('../data/schema.json')).default; } catch {}
+const schemaFiles = import.meta.glob<{ default: any }>('../data/schema.json', { eager: true });
+const schema: any = Object.values(schemaFiles)[0]?.default || {};
 const aggregateRating = schema?.aggregateRating;
 const ratingValue = aggregateRating?.ratingValue ? String(aggregateRating.ratingValue) : '';
 const reviewCount = aggregateRating?.reviewCount ? String(aggregateRating.reviewCount) : '';
