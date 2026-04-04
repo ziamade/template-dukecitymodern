@@ -111,7 +111,7 @@ const { tour } = Astro.props;
     })();
 
     if (shouldAutoload && intro) {
-      intro.style.display = '';
+      intro.style.display = 'flex';
       document.getElementById('tour-start').addEventListener('click', function() {
         intro.classList.add('tour-intro--fade-out');
         setTimeout(function() {
@@ -143,15 +143,22 @@ const { tour } = Astro.props;
 </script>
 
 <style>
+  #tour-overlay {
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .tour-intro {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background: rgba(13, 17, 23, 0.92);
     animation: tourFadeIn 0.6s ease;
+    pointer-events: auto;
   }
 
   .tour-intro--fade-out {
@@ -230,6 +237,7 @@ const { tour } = Astro.props;
     bottom: 5.5rem;
     right: 1.25rem;
     z-index: 899;
+    pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 0.5rem;
