@@ -29,7 +29,14 @@
   text-shadow: none !important;
 }
 
-.driver-popover-prev-btn,
+.driver-popover-prev-btn {
+  background: #d4a017 !important;
+  color: #111 !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  text-shadow: none !important;
+}
+
 .driver-popover-close-btn {
   color: var(--brand-text-muted, #e8d5b7) !important;
   text-shadow: none !important;
