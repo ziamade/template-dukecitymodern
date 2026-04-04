@@ -156,6 +156,17 @@
 }
 
 
+/* ── Hover + Interaction ─────────────────────────────────────────── */
+
+:root {
+  --hover-scale: 1.03;
+  --hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --overlay-darkness: 0.5;
+  --glass-opacity: 0.06;
+  --border-weight: 1px;
+}
+
+
 /* ── Touch target ────────────────────────────────────────────────── */
 
 :root {

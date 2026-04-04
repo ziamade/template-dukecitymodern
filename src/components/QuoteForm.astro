@@ -19,9 +19,6 @@ const state = (location as any).state || '';
 const zip = (location as any).zip || '';
 const fullAddress = [address, city, state, zip].filter(Boolean).join(', ');
 
-const industry = ((client as any).industry || '').toLowerCase();
-const isRestaurant = industry.includes('restaurant') || industry.includes('food') || industry.includes('dining');
-
 // Summarize hours for the sidebar
 const hoursData = (hours as any)?.days || [];
 function summarizeHours(): string {
@@ -35,17 +32,15 @@ function summarizeHours(): string {
 }
 const hoursSummary = summarizeHours();
 
-// Load services for dropdown (non-restaurant only)
+// Load services for dropdown — show if services exist (no industry check)
 let serviceNames: string[] = [];
-if (!isRestaurant) {
-  try {
-    const serviceFiles = import.meta.glob('../content/services/*.md', { eager: true });
-    serviceNames = Object.values(serviceFiles)
-      .map((mod: any) => mod.frontmatter?.title)
-      .filter(Boolean)
-      .sort();
-  } catch {}
-}
+try {
+  const serviceFiles = import.meta.glob('../content/services/*.md', { eager: true });
+  serviceNames = Object.values(serviceFiles)
+    .map((mod: any) => mod.frontmatter?.title)
+    .filter(Boolean)
+    .sort();
+} catch {}
 ---
 
 <section class="form-section section" id="contact">
@@ -122,7 +117,7 @@ if (!isRestaurant) {
               <label for="contact-phone">Phone</label>
               <input type="tel" id="contact-phone" name="phone" autocomplete="tel" placeholder="(505) 555-1234" />
             </div>
-            {!isRestaurant && serviceNames.length > 0 && (
+            {serviceNames.length > 0 && (
               <div class="form-group">
                 <label for="contact-service">Service</label>
                 <select id="contact-service" name="service">

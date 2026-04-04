@@ -99,6 +99,37 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
     },
   };
 
+  const SHADOW_MAP: Record<string, string> = {
+    subtle: '0 1px 3px rgba(0,0,0,0.08)',
+    standard: '0 2px 8px rgba(0,0,0,0.12)',
+    dramatic: '0 4px 16px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.08)',
+  };
+  const HOVER_SCALE_MAP: Record<string, string> = {
+    none: '1',
+    subtle: '1.01',
+    standard: '1.03',
+  };
+  const HOVER_SHADOW_MAP: Record<string, string> = {
+    none: 'none',
+    subtle: '0 2px 8px rgba(0,0,0,0.1)',
+    standard: '0 4px 16px rgba(0,0,0,0.15)',
+  };
+  const OVERLAY_MAP: Record<string, string> = {
+    light: '0.3',
+    medium: '0.5',
+    heavy: '0.7',
+  };
+  const GLASS_MAP: Record<string, string> = {
+    subtle: '0.03',
+    standard: '0.06',
+    heavy: '0.12',
+  };
+  const BORDER_WEIGHT_MAP: Record<string, string> = {
+    none: '0',
+    subtle: '1px',
+    standard: '2px',
+  };
+
   const vars: string[] = [];
 
   if (layout.cardRadius && RADIUS_MAP[layout.cardRadius]) {
@@ -118,6 +149,22 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
     vars.push(`  --font-size-base: ${scale.base};`);
     vars.push(`  --font-size-h1: ${scale.h1};`);
     vars.push(`  --font-size-h2: ${scale.h2};`);
+  }
+  if (layout.shadowStyle && SHADOW_MAP[layout.shadowStyle]) {
+    vars.push(`  --shadow-card: ${SHADOW_MAP[layout.shadowStyle]};`);
+  }
+  if (layout.hoverIntensity && HOVER_SCALE_MAP[layout.hoverIntensity]) {
+    vars.push(`  --hover-scale: ${HOVER_SCALE_MAP[layout.hoverIntensity]};`);
+    vars.push(`  --hover-shadow: ${HOVER_SHADOW_MAP[layout.hoverIntensity]};`);
+  }
+  if (layout.overlayDarkness && OVERLAY_MAP[layout.overlayDarkness]) {
+    vars.push(`  --overlay-darkness: ${OVERLAY_MAP[layout.overlayDarkness]};`);
+  }
+  if (layout.glassOpacity && GLASS_MAP[layout.glassOpacity]) {
+    vars.push(`  --glass-opacity: ${GLASS_MAP[layout.glassOpacity]};`);
+  }
+  if (layout.borderWeight && BORDER_WEIGHT_MAP[layout.borderWeight]) {
+    vars.push(`  --border-weight: ${BORDER_WEIGHT_MAP[layout.borderWeight]};`);
   }
 
   return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';

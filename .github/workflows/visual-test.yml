@@ -1,0 +1,49 @@
+name: Visual Regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'package.json'
+
+jobs:
+  visual-diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Build test sites
+        run: |
+          # Build pwtint fixture with this template
+          cd /tmp
+          git clone --depth 1 https://github.com/ziamade/ziamade-platform.git
+          cd ziamade-platform/packages/pipeline
+          TEMPLATE_DIR=$GITHUB_WORKSPACE npx tsx scripts/build-from-fixture.ts pwtint
+          cd build/pwtint && npm ci && npx astro build
+
+      - name: Run visual diff
+        run: |
+          cd /tmp/ziamade-platform
+          npx playwright test tests/visual-regression/template-upgrade.spec.ts --reporter=list
+        env:
+          CI: true
+
+      - name: Upload diff artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff-results
+          path: /tmp/ziamade-platform/test-results/
+          retention-days: 7

@@ -96,6 +96,12 @@ export interface LayoutTokens {
   buttonVariant?: 'solid' | 'ghost' | 'tactile';
   dividerStyle?: 'line' | 'glow' | 'fade' | 'none';
   logoSize?: 'sm' | 'md' | 'lg';
+  shadowStyle?: 'subtle' | 'standard' | 'dramatic';
+  hoverIntensity?: 'none' | 'subtle' | 'standard';
+  gradientStyle?: 'none' | 'subtle' | 'accent-tint';
+  overlayDarkness?: 'light' | 'medium' | 'heavy';
+  glassOpacity?: 'subtle' | 'standard' | 'heavy';
+  borderWeight?: 'none' | 'subtle' | 'standard';
 }
 
 export interface SectionEntry {

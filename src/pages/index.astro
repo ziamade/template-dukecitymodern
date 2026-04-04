@@ -1,5 +1,7 @@
 ---
 // src/pages/index.astro
+// Data-driven section rendering — no industry detection.
+// All layout decisions come from theme.json (set by pipeline or agent skills).
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StickyHeader from '../components/StickyHeader.astro';
 import Hero from '../components/Hero.astro';
@@ -30,7 +32,8 @@ import CTASection from '../components/CTASection.astro';
 import BookShowcase from '../components/BookShowcase.astro';
 import AuthorBio from '../components/AuthorBio.astro';
 
-import client from '../data/client.json';
+import { resolveNavLabels, resolveCta, resolveHeroCta } from '../lib/section-registry';
+
 import contact from '../data/contact.json';
 import location from '../data/location.json';
 import testimonials from '../data/testimonials.json';
@@ -39,96 +42,82 @@ import theme from '../data/theme.json';
 interface SectionEntry {
   id: string;
   variant?: string | number;
+  component?: string;
 }
 
-const isRestaurant = (client.industry || '').toLowerCase().includes('restaurant');
-const industryLower = (client.industry || '').toLowerCase();
-const isAuthor = industryLower.includes('author') || industryLower.includes('writer') || industryLower.includes('publisher');
-const hasTeam = industryLower.includes('barber') || industryLower.includes('salon') || industryLower.includes('stylist') || industryLower.includes('tattoo');
 const hasReviews = testimonials?.items?.length > 0;
 
-// Resolve trust component from theme variant
-const trustVariant = (theme as any).sections?.find((s: any) => s.id === 'trust')?.variant;
-const TrustComponent = trustVariant === 'stats' ? TrustStats : TrustBar;
-
-// Section component map
-const sectionMap: Record<string, any> = {
-  hero: Hero,
-  trust: TrustComponent,
-  services: ServiceCards,
-  projects: ProjectGallery,
-  process: ProcessSteps,
-  gallery: PhotoGallery,
-  menu: MenuSection,
-  reviews: Reviews,
-  faq: FAQ,
-  contact: isRestaurant ? OrderVisit : QuoteForm,
-  about: isAuthor ? AuthorBio : AboutMap,
-  hours: HoursDisplay,
-  beforeAfter: BeforeAfter,
-  differentiator: Differentiator,
-  marquee: Marquee,
-  team: Team,
-  products: Products,
-  cta: CTASection,
-  book: BookShowcase,
+// Component lookup by name string
+const componentMap: Record<string, any> = {
+  Hero, ServiceCards, PhotoGallery, ProjectGallery,
+  TrustBar, TrustStats, ProcessSteps, MenuSection,
+  Reviews, FAQ, QuoteForm, OrderVisit, AboutMap,
+  HoursDisplay, BeforeAfter, Differentiator, Marquee,
+  Team, Products, CTASection, BookShowcase, AuthorBio,
 };
 
-// Use theme.json sectionOrder or fall back to defaults
-const defaultOrder = isAuthor
-  ? ['hero', 'trust', 'book', 'about', 'reviews', 'faq', 'cta', 'contact']
-  : isRestaurant
-  ? ['hero', 'menu', 'gallery', 'reviews', 'hours', 'about', 'contact']
-  : ['hero', 'trust', 'services', 'projects', 'process', 'reviews', 'faq', 'contact', 'about'];
+// Default component for each section ID
+const defaultComponentMap: Record<string, string> = {
+  hero: 'Hero', trust: 'TrustBar', services: 'ServiceCards',
+  projects: 'ProjectGallery', process: 'ProcessSteps',
+  gallery: 'PhotoGallery', menu: 'MenuSection', reviews: 'Reviews',
+  faq: 'FAQ', contact: 'QuoteForm', about: 'AboutMap',
+  hours: 'HoursDisplay', beforeAfter: 'BeforeAfter',
+  differentiator: 'Differentiator', marquee: 'Marquee',
+  team: 'Team', products: 'Products', cta: 'CTASection',
+  book: 'BookShowcase',
+};
 
+// Variant overrides (e.g., trust:stats → TrustStats)
+const variantOverrides: Record<string, Record<string, string>> = {
+  trust: { stats: 'TrustStats' },
+  contact: { 'order-visit': 'OrderVisit' },
+  about: { 'author-bio': 'AuthorBio' },
+};
+
+function resolveComponent(entry: SectionEntry): any {
+  // Explicit component override from theme data
+  if (entry.component && componentMap[entry.component]) {
+    return componentMap[entry.component];
+  }
+  // Variant-based override
+  if (entry.variant !== undefined) {
+    const overrides = variantOverrides[entry.id];
+    if (overrides && String(entry.variant) in overrides) {
+      return componentMap[overrides[String(entry.variant)]];
+    }
+  }
+  // Default
+  const name = defaultComponentMap[entry.id];
+  return name ? componentMap[name] : null;
+}
+
+// Resolve sections from theme data
 function resolveSections(themeData: any): SectionEntry[] {
   if (themeData.sections?.length > 0) return themeData.sections;
-  const order = themeData.sectionOrder?.length > 0 ? themeData.sectionOrder : defaultOrder;
-  return order.map((id: string) => {
-    if (id === 'hero' && themeData.heroVariant) return { id, variant: themeData.heroVariant };
-    return { id };
-  });
+  const order = themeData.sectionOrder?.length > 0
+    ? themeData.sectionOrder
+    : ['hero', 'trust', 'services', 'projects', 'process', 'reviews', 'faq', 'contact', 'about'];
+  return order.map((id: string) => ({ id }));
 }
 
 const sections = resolveSections(theme);
 
-// Build nav links from section order
-const sectionLabels: Record<string, string> = {
-  hero: '',       // not in nav
-  trust: '',      // not in nav
-  services: 'Services',
-  projects: 'Our Work',
-  process: '',    // not in nav
-  gallery: 'Photos',
-  menu: 'Menu',
-  reviews: isAuthor ? 'Praise' : 'Reviews',
-  faq: 'FAQ',
-  contact: isRestaurant ? 'Order' : 'Contact',
-  about: 'About',
-  hours: 'Hours',
-  beforeAfter: '',    // not in nav
-  differentiator: '', // not in nav
-  marquee: '',        // not in nav
-  team: 'Team',
-  products: 'Products',
-  cta: '',            // not in nav
-  book: isAuthor ? 'The Book' : '',
-};
+// Nav, CTA, and hero CTA — all data-driven from theme.json
+const themeNav = (theme as any).nav || {};
+const themeCta = (theme as any).cta || {};
+const themeHeroCta = (theme as any).heroCta || {};
+const themeActionBar = (theme as any).actionBar || {};
+
+const sectionLabels = resolveNavLabels(themeNav.labels);
+const cta = resolveCta(themeCta);
+const heroCta = resolveHeroCta(themeHeroCta);
 
 const navLinks = sections
   .filter(s => sectionLabels[s.id] && s.id !== 'hero')
   .filter(s => s.id !== 'reviews' || hasReviews)
   .map(s => ({ href: `#${s.id}`, text: sectionLabels[s.id] }));
 
-const ctaText = isAuthor ? 'Order Now' : isRestaurant ? 'Order Now' : hasTeam ? 'Book Now' : 'Get Quote';
-const ctaHref = isAuthor ? '#book' : isRestaurant ? '#contact' : hasTeam ? '#team' : '#contact';
-const heroCta = isAuthor
-  ? { text: 'Get the Book', href: '#book' }
-  : isRestaurant
-  ? { text: 'View Our Menu', href: '#menu' }
-  : hasTeam
-  ? { text: 'Book Now', href: '#team' }
-  : { text: 'Get Your Free Quote', href: '#contact' };
 // Load SVG icons for action bar
 const actionIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });
 function actionIcon(name: string): string {
@@ -141,24 +130,26 @@ const depth = layout.depth || '';
 const darkSection = layout.darkSection || '';
 const useEditorialDividers = depth === 'editorial';
 
-const actionBarLinks = [
+// Action bar — data-driven with sensible defaults
+const defaultActionBarLinks = [
   { href: `tel:${contact.phoneForTel || ''}`, icon: actionIcon('phone'), text: 'Call' },
   { href: location.mapLink || '#', icon: actionIcon('navigation'), text: 'Directions' },
-  { href: '#contact', icon: isRestaurant ? actionIcon('utensils') : actionIcon('mail'), text: isRestaurant ? 'Order' : 'Quote' },
+  { href: cta.href, icon: actionIcon('mail'), text: cta.text },
 ];
+const actionBarLinks = themeActionBar.links || defaultActionBarLinks;
+const showActionBar = themeActionBar.hidden !== true;
 ---
 <BaseLayout>
-  <StickyHeader navLinks={navLinks} ctaText={ctaText} ctaHref={ctaHref} />
+  <StickyHeader navLinks={navLinks} ctaText={cta.text} ctaHref={cta.href} />
 
   {sections.map((entry, i) => {
-    const Component = sectionMap[entry.id];
+    const Component = resolveComponent(entry);
     if (!Component) return null;
     if (entry.id === 'reviews' && !hasReviews) return null;
     const isDark = darkSection && entry.id === darkSection;
     const nextEntry = sections[i + 1];
     const nextIsDark = nextEntry && darkSection && nextEntry.id === darkSection;
 
-    // Editorial dividers: before dark sections and after hero
     const showDividerBefore = useEditorialDividers && isDark;
     const showDividerAfterHero = useEditorialDividers && entry.id === 'hero' && nextEntry;
 
@@ -185,5 +176,5 @@ const actionBarLinks = [
 
   <Footer />
   <FloatingCTA />
-  {!isAuthor && <StickyActionBar links={actionBarLinks} />}
+  {showActionBar && <StickyActionBar links={actionBarLinks} />}
 </BaseLayout>

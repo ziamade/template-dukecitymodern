@@ -6,8 +6,6 @@
 import OptimizedImg from './OptimizedImg.astro';
 import { resolveTeamMembers } from '../lib/team';
 import type { TeamMemberRaw } from '../lib/team';
-import client from '../data/client.json';
-
 interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'cards');
@@ -16,18 +14,9 @@ const teamFiles = import.meta.glob<{ default: any }>('../data/team.json', { eage
 const teamData = Object.values(teamFiles)[0]?.default || { items: [] };
 const members = resolveTeamMembers(teamData.items as TeamMemberRaw[]);
 
-const industry = (client.industry || '').toLowerCase();
 const solo = members.length === 1;
-const eyebrow = solo
-  ? (industry.includes('barber') ? 'Your Barber'
-    : industry.includes('salon') || industry.includes('stylist') ? 'Your Stylist'
-    : industry.includes('tattoo') ? 'Your Artist'
-    : 'About')
-  : (industry.includes('barber') ? 'The Barbers'
-    : industry.includes('salon') || industry.includes('stylist') ? 'The Stylists'
-    : industry.includes('tattoo') ? 'The Artists'
-    : 'Our Team');
-const title = solo ? `Meet Your ${eyebrow.replace('Your ', '')}` : 'Meet Your Team';
+const eyebrow = (teamData as any).eyebrow || (solo ? 'About' : 'Our Team');
+const title = (teamData as any).title || (solo ? 'Meet the Owner' : 'Meet Your Team');
 ---
 {members.length > 0 && (
   <section class="team-section section" data-variant={variant} id="team" data-solo={solo ? '' : undefined}>

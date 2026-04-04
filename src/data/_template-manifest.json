@@ -21,8 +21,14 @@
     "sectionIds": [
       "hero", "trust", "services", "projects", "beforeAfter",
       "process", "gallery", "menu", "reviews", "faq",
-      "contact", "about", "hours", "marquee", "differentiator", "cta"
+      "contact", "about", "hours", "marquee", "differentiator", "cta",
+      "team", "products", "book"
     ],
+    "componentOverrides": {
+      "contact": ["QuoteForm", "OrderVisit"],
+      "about": ["AboutMap", "AuthorBio"],
+      "trust": ["TrustBar", "TrustStats"]
+    },
     "maxSections": 16,
     "maxServices": 12,
     "maxGalleryImages": 20,

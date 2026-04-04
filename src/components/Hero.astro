@@ -36,9 +36,11 @@ const badgeText = serviceArea || (city ? `Serving ${city}${state ? ` & ${state}`
 const phone = (contact as any)?.phoneForTel || (contact as any)?.phone || '';
 const phoneClean = phone.replace(/\D/g, '');
 
-// Determine hero CTA targets
-const primaryHref = phoneClean ? `sms:+1${phoneClean}` : '#contact';
-const primaryText = phoneClean ? 'Text Us' : 'Get in Touch';
+// Hero CTA: use prop from index.astro (data-driven), hero.json, or contact fallback
+const { heroCta, variant } = Astro.props as { heroCta?: { text: string; href: string }; variant?: string | number };
+const heroCTAData = (hero as any)?.cta;
+const primaryHref = heroCta?.href || heroCTAData?.href || (phoneClean ? `sms:+1${phoneClean}` : '#contact');
+const primaryText = heroCta?.text || heroCTAData?.text || (phoneClean ? 'Text Us' : 'Get in Touch');
 const secondaryHref = '#services';
 const secondaryText = 'Our Services';
 ---
@@ -472,9 +474,9 @@ const secondaryText = 'Our Services';
     inset: 0;
     background: linear-gradient(
       to right,
-      rgba(0, 0, 0, 0.8) 30%,
-      rgba(0, 0, 0, 0.4) 60%,
-      rgba(0, 0, 0, 0.2)
+      rgba(0, 0, 0, var(--overlay-darkness, 0.8)) 30%,
+      rgba(0, 0, 0, calc(var(--overlay-darkness, 0.8) * 0.5)) 60%,
+      rgba(0, 0, 0, calc(var(--overlay-darkness, 0.8) * 0.25))
     );
     z-index: 1;
   }
@@ -542,8 +544,8 @@ const secondaryText = 'Our Services';
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, var(--overlay-darkness, 0.5)) 0%,
+      rgba(0, 0, 0, calc(var(--overlay-darkness, 0.5) * 0.6)) 50%,
       var(--bg, var(--background)) 100%
     );
     z-index: 1;
