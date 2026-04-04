@@ -34,6 +34,9 @@ if (!prefersReduced && motionLevel !== 'none') {
     touchMultiplier: 1.5,
   });
 
+  // Expose for tour overlay (Driver.js pauses smooth scroll during tour steps)
+  (window as any).__lenis = lenis;
+
   // Bridge Lenis scroll events to GSAP ScrollTrigger
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time: number) => lenis.raf(time * 1000));
