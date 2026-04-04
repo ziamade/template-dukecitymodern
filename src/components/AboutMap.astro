@@ -11,6 +11,9 @@ import { brandify } from '../lib/brandify';
 
 const typedBrand = brand as unknown as Brand;
 const logoUrl = client.logoUrl || '';
+const aboutImage = (about as any).image || '';
+const address = [location.address, location.city, location.state, location.zip].filter(Boolean).join(', ');
+const mapQuery = encodeURIComponent(address);
 ---
 <section class="about-section section" id="about">
   <div class="container about-grid">
@@ -21,7 +24,18 @@ const logoUrl = client.logoUrl || '';
       </div>
     )}
     <div class="about-sidebar">
-      {logoUrl && (
+      {aboutImage && (
+        <div class="about-portrait">
+          <OptimizedImg
+            src={aboutImage}
+            alt={client.name}
+            class="about-portrait-img"
+            width={320}
+            height={320}
+          />
+        </div>
+      )}
+      {!aboutImage && logoUrl && (
         <div class="about-logo">
           <OptimizedImg
             src={logoUrl}
@@ -32,12 +46,114 @@ const logoUrl = client.logoUrl || '';
           />
         </div>
       )}
-      <div class="about-map-link">
-        {location.mapLink && (
-          <a href={location.mapLink} class="btn-primary" target="_blank" rel="noopener">View on Google Maps</a>
+      <div class="about-map">
+        {address && (
+          <iframe
+            class="about-map-embed"
+            src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+            width="100%"
+            height="200"
+            style="border:0; border-radius: var(--radius, 12px);"
+            allowfullscreen=""
+            loading="lazy"
+            sandbox="allow-scripts allow-same-origin"
+            referrerpolicy="no-referrer-when-downgrade"
+            title={`Map of ${client.name}`}
+          />
         )}
         <p class="about-address">{location.address || ''}<br />{location.city || ''}, {location.state || ''} {location.zip || ''}</p>
+        {location.mapLink && (
+          <a href={location.mapLink} class="about-directions-link" target="_blank" rel="noopener">Get Directions →</a>
+        )}
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .about-section {
+    padding-block: var(--section-pad, 4rem);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap-xl, 3rem);
+    align-items: start;
+  }
+
+  .about-text h2 {
+    margin-bottom: 1rem;
+  }
+
+  .about-text-content {
+    line-height: 1.7;
+    color: var(--textMuted, var(--text));
+  }
+
+  .about-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .about-portrait {
+    display: flex;
+    justify-content: center;
+  }
+
+  .about-portrait-img,
+  .about-portrait picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .about-logo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .about-logo-img,
+  .about-logo picture img {
+    max-width: 180px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .about-map {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .about-map-embed {
+    width: 100%;
+    border-radius: var(--radius, 12px);
+  }
+
+  .about-address {
+    font-size: 0.9rem;
+    color: var(--textMuted, var(--text));
+    line-height: 1.5;
+  }
+
+  .about-directions-link {
+    font-size: 0.875rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .about-directions-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 767px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: var(--gap-lg, 2rem);
+    }
+  }
+</style>

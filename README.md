@@ -27,9 +27,9 @@ Client repos contain only data files (`src/data/*.json`, `src/content/`, `src/as
 
 ```
 src/
-├── components/        # 30 Astro components (sections + layout)
+├── components/        # 31 Astro components (sections + layout)
 ├── content/           # Markdown collections (services/, products/)
-├── data/              # JSON data files (23 files)
+├── data/              # JSON data files (24 files)
 ├── layouts/           # BaseLayout with theme CSS injection
 ├── lib/               # Brand theming, image resolver, types
 ├── pages/             # index.astro (data-driven section renderer)

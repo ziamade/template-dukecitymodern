@@ -16,17 +16,24 @@ const teamData = await import('../data/team.json').then(m => m.default || m).cat
 const members = resolveTeamMembers(teamData.items as TeamMemberRaw[]);
 
 const industry = (client.industry || '').toLowerCase();
-const eyebrow = industry.includes('barber') ? 'The Barbers'
-  : industry.includes('salon') || industry.includes('stylist') ? 'The Stylists'
-  : industry.includes('tattoo') ? 'The Artists'
-  : 'Our Team';
+const solo = members.length === 1;
+const eyebrow = solo
+  ? (industry.includes('barber') ? 'Your Barber'
+    : industry.includes('salon') || industry.includes('stylist') ? 'Your Stylist'
+    : industry.includes('tattoo') ? 'Your Artist'
+    : 'About')
+  : (industry.includes('barber') ? 'The Barbers'
+    : industry.includes('salon') || industry.includes('stylist') ? 'The Stylists'
+    : industry.includes('tattoo') ? 'The Artists'
+    : 'Our Team');
+const title = solo ? `Meet Your ${eyebrow.replace('Your ', '')}` : 'Meet Your Team';
 ---
 {members.length > 0 && (
-  <section class="team-section section" data-variant={variant} id="team">
+  <section class="team-section section" data-variant={variant} id="team" data-solo={solo ? '' : undefined}>
     <div class="container">
       <div class="section-heading reveal-up">
         <span class="section-eyebrow">{eyebrow}</span>
-        <h2 class="section-title">Meet Your Team</h2>
+        <h2 class="section-title">{title}</h2>
       </div>
 
       {variant === 'cards' && (
@@ -92,6 +99,7 @@ const eyebrow = industry.includes('barber') ? 'The Barbers'
                           {hours.filter((h: any) => h.open).map((h: any) => (
                             <li class="team-hours-item">
                               <span class="team-hours-day">{h.day.slice(0, 3)}</span>
+                              <span class="team-hours-dots" />
                               <span class="team-hours-time">{h.open} - {h.close}</span>
                             </li>
                           ))}
@@ -161,6 +169,28 @@ const eyebrow = industry.includes('barber') ? 'The Barbers'
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--gap-lg, 2rem);
     margin-top: var(--gap-lg, 2rem);
+  }
+
+  /* Single-member: center and constrain */
+  [data-solo] .team-grid {
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  [data-solo] .team-card-photo {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 1.5rem 0;
+    background: transparent;
+    aspect-ratio: auto;
+  }
+
+  [data-solo] .team-card-photo img,
+  [data-solo] .team-card-photo picture img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
   }
 
   .team-card {
@@ -312,23 +342,34 @@ const eyebrow = industry.includes('barber') ? 'The Barbers'
     padding: 0;
     margin: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
+    flex-direction: column;
+    gap: 0.35rem;
   }
 
   .team-hours-item {
     font-size: 0.8125rem;
     color: var(--textMuted);
+    display: flex;
+    justify-content: space-between;
   }
 
   .team-hours-day {
     font-weight: 600;
     color: var(--text);
-    margin-right: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .team-hours-dots {
+    flex: 1;
+    border-bottom: 1px dotted color-mix(in srgb, var(--text) 20%, transparent);
+    margin: 0 0.5rem;
+    align-self: end;
+    margin-bottom: 0.25em;
   }
 
   .team-hours-time {
     opacity: 0.8;
+    white-space: nowrap;
   }
 
   /* ── Card Segments (alternating contrast) ── */
