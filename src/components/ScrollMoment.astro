@@ -8,8 +8,8 @@ import hero from '../data/hero.json';
 import theme from '../data/theme.json';
 import OptimizedImg from './OptimizedImg.astro';
 
-let schema: any = {};
-try { schema = (await import('../data/schema.json')).default; } catch {}
+const schemaFiles = import.meta.glob<{ default: any }>('../data/schema.json', { eager: true });
+const schema: any = Object.values(schemaFiles)[0]?.default || {};
 
 const depth = (theme as any).layout?.depth || '';
 const items = testimonials?.items || [];

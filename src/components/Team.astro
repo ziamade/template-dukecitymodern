@@ -12,7 +12,8 @@ interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'cards');
 
-const teamData = await import('../data/team.json').then(m => m.default || m).catch(() => ({ items: [] }));
+const teamFiles = import.meta.glob<{ default: any }>('../data/team.json', { eager: true });
+const teamData = Object.values(teamFiles)[0]?.default || { items: [] };
 const members = resolveTeamMembers(teamData.items as TeamMemberRaw[]);
 
 const industry = (client.industry || '').toLowerCase();

@@ -33,18 +33,12 @@ import '../styles/menu.css';
 import { ClientRouter } from "astro:transitions";
 import TourOverlay from '../components/TourOverlay.astro';
 import type { TourData } from '../lib/types';
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 // tour.json is optional: preview sites have it, production sites don't.
-let tourData: TourData | undefined;
-{
-  const tourPath = resolve(dirname(fileURLToPath(import.meta.url)), '../data/tour.json');
-  if (existsSync(tourPath)) {
-    tourData = JSON.parse(readFileSync(tourPath, 'utf-8')) as TourData;
-  }
-}
+// Uses import.meta.glob (Vite-native) instead of node:fs — existsSync + import.meta.url
+// resolves to a virtual path during Astro build, causing tour markup to silently disappear.
+const tourFiles = import.meta.glob<{ default: TourData }>('../data/tour.json', { eager: true });
+const tourData: TourData | undefined = Object.values(tourFiles)[0]?.default;
 
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
