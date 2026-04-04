@@ -71,7 +71,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
       >
         {images.map((img: any, i: number) => (
           <button
-            class={`gallery-item gallery-thumb ${i % 4 < 2 ? 'gallery-item--wide' : 'gallery-item--narrow'}`}
+            class="gallery-item gallery-thumb"
             data-tilt="3"
             data-index={i}
             type="button"
@@ -230,29 +230,11 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     outline-offset: 2px;
   }
 
-  /* ── 12-column masonry grid ─────────────────────────────────────── */
+  /* ── Uniform grid ─────────────────────────────────────────────── */
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--gap, 1rem);
-  }
-
-  /* Alternating wide/narrow spans for visual rhythm */
-  .gallery-item--wide {
-    grid-column: span 7;
-  }
-
-  .gallery-item--narrow {
-    grid-column: span 5;
-  }
-
-  /* Flip pattern for alternating rows */
-  .gallery-item--wide:nth-child(4n+3) {
-    grid-column: span 5;
-  }
-
-  .gallery-item--narrow:nth-child(4n+4) {
-    grid-column: span 7;
   }
 
   /* ── Gallery item ───────────────────────────────────────────────── */
@@ -439,10 +421,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
       gap: 0.75rem;
     }
 
-    .gallery-item--wide,
-    .gallery-item--narrow,
-    .gallery-item--wide:nth-child(4n+3),
-    .gallery-item--narrow:nth-child(4n+4) {
+    .gallery-item {
       grid-column: span 1;
     }
 
@@ -469,23 +448,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     }
   }
 
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .gallery-item--wide {
-      grid-column: span 6;
-    }
-
-    .gallery-item--narrow {
-      grid-column: span 6;
-    }
-
-    .gallery-item--wide:nth-child(4n+3) {
-      grid-column: span 6;
-    }
-
-    .gallery-item--narrow:nth-child(4n+4) {
-      grid-column: span 6;
-    }
-  }
+  /* Tablet: handled by auto-fit grid */
 
   /* ── Reduced motion ─────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
