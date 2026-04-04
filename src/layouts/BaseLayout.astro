@@ -33,12 +33,20 @@ import '../styles/menu.css';
 import { ClientRouter } from "astro:transitions";
 import TourOverlay from '../components/TourOverlay.astro';
 import type { TourData } from '../lib/types';
+import { isPreview, getDisclaimerHtml, getNoindexMeta, getPreviewOgTitle, type PreviewData } from '../lib/preview';
 
 // tour.json is optional: preview sites have it, production sites don't.
 // Uses import.meta.glob (Vite-native) instead of node:fs — existsSync + import.meta.url
 // resolves to a virtual path during Astro build, causing tour markup to silently disappear.
 const tourFiles = import.meta.glob<{ default: TourData }>('../data/tour.json', { eager: true });
 const tourData: TourData | undefined = Object.values(tourFiles)[0]?.default;
+
+// preview.json is optional: present during preview builds, removed on go-live.
+// When present, the fallback disclaimer bar is rendered (visible by default via CSS).
+// The proxy overlay CSS hides it with #zm-fallback-disclaimer { display: none !important }.
+const previewFiles = import.meta.glob<{ default: PreviewData }>('../data/preview.json', { eager: true });
+const previewData: PreviewData | undefined = Object.values(previewFiles)[0]?.default;
+const inPreview = isPreview(previewData);
 
 const typedBrand = brand as unknown as Brand;
 const typedTheme = theme as unknown as Theme;
@@ -79,10 +87,11 @@ const depth = layout.depth || '';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{seo.pageTitle || client.name}</title>
   <meta name="description" content={seo.metaDescription || ""}>
-  <meta property="og:title" content={seo.ogTitle || client.name}>
+  <meta property="og:title" content={inPreview ? getPreviewOgTitle(seo.ogTitle || client.name) : (seo.ogTitle || client.name)}>
   <meta property="og:description" content={seo.ogDescription || ""}>
   {seo.ogImage && <meta property="og:image" content={seo.ogImage} />}
   {seo.canonicalUrl && <link rel="canonical" href={seo.canonicalUrl} />}
+  {inPreview && <Fragment set:html={getNoindexMeta()} />}
   <ClientRouter fallback="swap" />
   {heroResolved && <link rel="preload" as="image" type="image/webp" href={heroResolved.src} fetchpriority="high" />}
   <link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml">
@@ -110,6 +119,8 @@ const depth = layout.depth || '';
   data-bg-preset={bgPreset}
   data-depth={depth || undefined}
 >
+  {inPreview && previewData && <Fragment set:html={getDisclaimerHtml(previewData)} />}
+
   {atmosphereLevel !== 'none' && (
     <div class="noise-overlay" aria-hidden="true"></div>
   )}
