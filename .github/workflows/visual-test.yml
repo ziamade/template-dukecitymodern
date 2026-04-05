@@ -28,7 +28,7 @@ jobs:
         run: |
           # Build pwtint fixture with this template
           cd /tmp
-          git clone --depth 1 https://github.com/ziamade/ziamade-platform.git
+          git clone --depth 1 https://x-access-token:${{ secrets.PLATFORM_READ_TOKEN }}@github.com/ziamade/ziamade-platform.git
           cd ziamade-platform/packages/pipeline
           TEMPLATE_DIR=$GITHUB_WORKSPACE npx tsx scripts/build-from-fixture.ts pwtint
           cd build/pwtint && npm ci && npx astro build
