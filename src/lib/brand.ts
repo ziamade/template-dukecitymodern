@@ -50,7 +50,7 @@ function getRelativeLuminance(hex: string): number {
 
 /**
  * WCAG 2.1 contrast ratio between two hex colors.
- * Returns a value between 1 and 21.
+ * Returns a value between 1 and 21, or NaN if either input is not valid hex.
  */
 export function getContrastRatio(hex1: string, hex2: string): number {
   const lum1 = getRelativeLuminance(hex1);
@@ -119,7 +119,7 @@ export function generateThemeCSS(brand: Brand): string {
     const ratio = getContrastRatio(brand.palette.accent, brand.palette.bg);
     if (ratio < 4.5) {
       console.warn(
-        `[brand] Low contrast: accent (${brand.palette.accent}) on bg (${brand.palette.bg}) = ${ratio.toFixed(1)}:1. WCAG AA requires 4.5:1.`
+        `[brand] Low contrast: accent (${brand.palette.accent}) on bg (${brand.palette.bg}) = ${ratio.toFixed(2)}:1. WCAG AA requires 4.5:1.`
       );
     }
   }
