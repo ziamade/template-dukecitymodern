@@ -25,6 +25,12 @@
   --surfaceAlt: var(--surface);
   --surfaceAccent: var(--surface);
   --borderSubtle: var(--border);
+
+  /* Status tokens — overridden by paletteToCSS() in brand.ts */
+  --status-success: #16a34a;
+  --status-error: #dc2626;
+  --status-warning: #f59e0b;
+  --star-color: #f5a623;
 }
 
 
