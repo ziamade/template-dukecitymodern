@@ -200,4 +200,6 @@ a:hover { text-decoration: underline; }
 
 .skip-link:focus {
   top: 1rem;
+  outline: 3px solid var(--bg);
+  outline-offset: 2px;
 }

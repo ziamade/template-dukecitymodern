@@ -134,6 +134,7 @@ const showActionBar = (themeActionBar as Record<string, unknown>).hidden !== tru
 <BaseLayout>
   <StickyHeader navLinks={navLinks} ctaText={cta.text} ctaHref={cta.href} />
 
+  <main id="main-content">
   {sections.map((entry, i) => {
     const Component = resolveComponent(entry);
     if (!Component) return null;
@@ -165,6 +166,8 @@ const showActionBar = (themeActionBar as Record<string, unknown>).hidden !== tru
       </>
     );
   })}
+
+  </main>
 
   <Footer />
   <FloatingCTA />
