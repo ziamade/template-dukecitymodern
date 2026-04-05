@@ -1,9 +1,9 @@
 ---
 // src/components/Marquee.astro
 // CSS infinite scroll strip for branding, service highlights, taglines
-import theme from '../data/theme.json';
+import { theme } from '../lib/data';
 
-const marqueeItems: string[] = (theme as any)?.marqueeItems || [];
+const marqueeItems: string[] = theme?.marqueeItems || [];
 const hasItems = marqueeItems.length > 0;
 ---
 {hasItems && (

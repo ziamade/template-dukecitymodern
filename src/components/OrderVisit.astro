@@ -1,12 +1,9 @@
 ---
 // src/components/OrderVisit.astro
-import client from '../data/client.json';
-import hours from '../data/hours.json';
-import contact from '../data/contact.json';
-import location from '../data/location.json';
+import { client, hours, contact, location } from '../lib/data';
 import { formatPhone } from '../lib/utils';
 
-const delivery = (client.delivery || {}) as any;
+const delivery = client.delivery || {};
 const days = hours?.days || [];
 const addressLine = `${location.address}, ${location.city} ${location.state} ${location.zip}`;
 ---
@@ -25,7 +22,7 @@ const addressLine = `${location.address}, ${location.city} ${location.state} ${l
         <div class="hours-table">
           <h3>Hours</h3>
           <table>
-            {days.map((d: any) => (
+            {days.map((d) => (
               <tr>
                 <td>{d.day}</td>
                 <td>{d.open ? `${d.open} - ${d.close}` : 'Closed'}</td>

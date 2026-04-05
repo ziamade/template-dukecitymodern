@@ -1,10 +1,10 @@
 ---
 // src/components/ProjectGallery.astro
-import projects from '../data/projects.json';
+import { projects } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
 const items = (projects?.projects || []).filter(
-  (p: any) => p.before && p.after
+  (p) => p.before && p.after
 );
 const hasProjects = items.length > 0;
 ---
@@ -13,7 +13,7 @@ const hasProjects = items.length > 0;
     <div class="container">
       <h2 class="section-heading">Our Work</h2>
       <div class="projects-grid">
-        {items.map((project: any, i: number) => (
+        {items.map((project, i) => (
           <div class="project-card">
             <div class="project-slider" data-index={i}>
               <div class="project-slider-wrap">

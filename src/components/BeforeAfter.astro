@@ -3,11 +3,11 @@
 // PW Tint scroll-scrubbed before/after comparison
 // Draggable divider with touch + mouse + keyboard support
 // Renders the first project with both before and after images
-import projects from '../data/projects.json';
+import { projects } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
-const items = ((projects as any)?.projects || []).filter(
-  (p: any) => p.before && p.after
+const items = (projects?.projects || []).filter(
+  (p) => p.before && p.after
 );
 const project = items.length > 0 ? items[0] : null;
 ---

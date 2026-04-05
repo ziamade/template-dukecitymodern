@@ -3,8 +3,7 @@
 // v4 upgrade: glass cards, accent left border, expandable details, avatar
 // initial circle, source icon, infinite auto-scroll with hover-pause,
 // review count from testimonials.reviewCount (NEVER items.length).
-import testimonials from '../data/testimonials.json';
-import client from '../data/client.json';
+import { testimonials, client, googleLinks } from '../lib/data';
 
 interface Props { variant?: string | number; }
 
@@ -13,29 +12,27 @@ const variant = 'scroll';
 
 // Sort by rating desc so best review shows first
 const items = [...(testimonials?.items || [])].sort(
-  (a: any, b: any) => (b.rating || 0) - (a.rating || 0)
+  (a, b) => (b.rating || 0) - (a.rating || 0)
 );
 
 // Real review count from Google, NOT items.length
-const reviewCount = (testimonials as any)?.reviewCount
-  || (testimonials as any)?.totalReviewCount
-  || (testimonials as any)?.totalReviews
+const reviewCount = testimonials?.reviewCount
+  || testimonials?.totalReviewCount
+  || testimonials?.totalReviews
   || null;
-const averageRating = (testimonials as any)?.averageRating || null;
+const averageRating = testimonials?.averageRating || null;
 
 // Build platform "See our reviews" links
-let googleReviewsUrl = (client as any).socials?.google || '';
-const glFiles = import.meta.glob<{ default: any }>('../data/google-links.json', { eager: true });
-const googleLinks: any = Object.values(glFiles)[0]?.default || {};
+let googleReviewsUrl = client.socials?.google || '';
 if (googleLinks?.allReviews) googleReviewsUrl = googleLinks.allReviews;
-const yelpUrl = (client as any).socials?.yelp || '';
+const yelpUrl = client.socials?.yelp || '';
 
 // Per-platform review detection for CTA gating
-const hasGoogleReviews = items.some((t: any) => (t.source || '').toLowerCase() === 'google');
-const hasYelpReviews = items.some((t: any) => (t.source || '').toLowerCase() === 'yelp');
+const hasGoogleReviews = items.some((t) => (t.source || '').toLowerCase() === 'google');
+const hasYelpReviews = items.some((t) => (t.source || '').toLowerCase() === 'yelp');
 
 // Card link helper: only platform-sourced reviews link to their platform
-function cardUrl(t: any): string | undefined {
+function cardUrl(t: typeof items[number]): string | undefined {
   if (t.url) return t.url;
   const src = (t.source || '').toLowerCase();
   if (src === 'google' && googleReviewsUrl) return googleReviewsUrl;
@@ -44,7 +41,7 @@ function cardUrl(t: any): string | undefined {
 }
 
 // Precompute card URLs (build-time only, avoids repeated calls in template)
-const enrichedItems = items.map((t: any) => ({ ...t, _url: cardUrl(t) }));
+const enrichedItems = items.map((t) => ({ ...t, _url: cardUrl(t) }));
 
 // Keep for backward compat with meta subtitle link
 const allReviewsUrl = googleReviewsUrl;
@@ -86,10 +83,10 @@ function stars(count: number): string {
       <div class="reviews-track" style={`--review-count: ${items.length}`}>
         <div class="reviews-scroll">
           {/* Original set */}
-          {enrichedItems.map((t: any) => t._url ? (
+          {enrichedItems.map((t) => t._url ? (
             <a class="review-card review-card--linked" href={t._url} target="_blank" rel="noopener">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -108,7 +105,7 @@ function stars(count: number): string {
           ) : (
             <div class="review-card">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -126,10 +123,10 @@ function stars(count: number): string {
             </div>
           ))}
           {/* Duplicate set for infinite scroll illusion */}
-          {enrichedItems.map((t: any) => t._url ? (
+          {enrichedItems.map((t) => t._url ? (
             <a class="review-card review-card--linked" href={t._url} target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -148,7 +145,7 @@ function stars(count: number): string {
           ) : (
             <div class="review-card" aria-hidden="true">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>

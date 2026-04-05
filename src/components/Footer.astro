@@ -2,29 +2,23 @@
 // src/components/Footer.astro
 // DCD Luxury footer — 3-column grid with brand, contact, service area
 // Social icons with glow hover, divider glow line, ambient orb
-import client from '../data/client.json';
-import contact from '../data/contact.json';
-import location from '../data/location.json';
-import about from '../data/about.json';
+import { client, contact, location, about } from '../lib/data';
 import { formatPhone } from '../lib/utils';
 import OptimizedImg from './OptimizedImg.astro';
 import BrandName from './BrandName.astro';
 
-const glFiles = import.meta.glob<{ default: any }>('../data/google-links.json', { eager: true });
-const googleLinks: any = Object.values(glFiles)[0]?.default || {};
+const logoUrl = client.logoUrl || '';
+const phoneForTel = contact.phoneForTel || '';
+const email = contact.email || '';
+const address = location.address || '';
+const city = location.city || '';
+const state = location.state || '';
+const zip = location.zip || '';
 
-const logoUrl = (client as any).logoUrl || '';
-const phoneForTel = (contact as any).phoneForTel || '';
-const email = (contact as any).email || '';
-const address = (location as any).address || '';
-const city = (location as any).city || '';
-const state = (location as any).state || '';
-const zip = (location as any).zip || '';
-
-const tagline = (about as any)?.heading || (about as any)?.text?.slice(0, 120) || '';
+const tagline = about?.heading || about?.text?.slice(0, 120) || '';
 
 // Parse service area cities from comma-separated string
-const serviceAreaRaw = (client as any).serviceArea || '';
+const serviceAreaRaw = client.serviceArea || '';
 const serviceAreaCities = serviceAreaRaw
   .split(/,\s*(?:and\s+)?/)
   .map((c: string) => c.replace(/^and\s+/i, '').trim())
@@ -54,7 +48,7 @@ const socialPlatforms: Record<string, { label: string; path: string; viewBox?: s
   },
 };
 
-const socials = (client as any).socials || {};
+const socials = client.socials || {};
 const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
 ---
 

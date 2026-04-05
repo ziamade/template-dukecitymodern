@@ -1,11 +1,10 @@
 ---
-import menu from '../data/menu.json';
-import client from '../data/client.json';
+import { menu, client } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
 const categories = menu?.categories || [];
-const hasMenu = categories.length > 0 && categories.some((c: any) => c.items?.length > 0);
-const orderUrl = (client as Record<string, any>)?.orderUrl || '';
+const hasMenu = categories.length > 0 && categories.some((c) => c.items?.length > 0);
+const orderUrl = client.orderUrl || '';
 ---
 {hasMenu && (
   <section class="menu-section section" id="menu">
@@ -13,18 +12,18 @@ const orderUrl = (client as Record<string, any>)?.orderUrl || '';
       <h2 class="section-heading">Menu</h2>
 
       <nav class="menu-nav" aria-label="Menu categories">
-        {categories.map((cat: any, i: number) => (
+        {categories.map((cat, i) => (
           <a href={`#menu-cat-${i}`} class="menu-pill" data-cat-index={i}>
             {cat.name}
           </a>
         ))}
       </nav>
 
-      {categories.map((cat: any, i: number) => (
+      {categories.map((cat, i) => (
         <div class="menu-category" id={`menu-cat-${i}`}>
           <h3 class="menu-category-name">{cat.name}</h3>
           <div class="menu-items">
-            {cat.items.map((item: any) => (
+            {cat.items.map((item) => (
               <div class={`menu-item ${item.featured ? 'menu-item--featured' : ''}`}>
                 {item.featured && item.photo && (
                   <OptimizedImg

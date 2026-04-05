@@ -6,8 +6,10 @@
 
 // process.json is optional: loaded via import.meta.glob so the build
 // succeeds without it. When absent, the component uses sensible defaults.
-const processFiles = import.meta.glob<{ default: any }>('../data/process.json', { eager: true });
-const processData: any = Object.values(processFiles)[0]?.default ?? null;
+import { processSchema } from '../lib/schemas';
+const processFiles = import.meta.glob('../data/process.json', { eager: true });
+const rawProcess = (Object.values(processFiles)[0] as Record<string, unknown>)?.default ?? null;
+const processData = rawProcess ? processSchema.parse(rawProcess) : null;
 
 const heading = processData?.heading || 'How It Works';
 const eyebrow = processData?.eyebrow || 'Our Process';
@@ -21,13 +23,13 @@ const defaultSteps = [
 ];
 
 // Use process.json steps if available and non-empty, otherwise defaults
-const rawSteps = processData?.steps?.length > 0 ? processData.steps : defaultSteps;
+const rawSteps = (processData?.steps?.length ?? 0) > 0 ? processData!.steps : defaultSteps;
 
 // Normalize step data: ensure 2-digit number format
-const steps = rawSteps.map((step: any, idx: number) => ({
+const steps = rawSteps.map((step, idx) => ({
   number: step.number ? String(step.number).padStart(2, '0') : String(idx + 1).padStart(2, '0'),
   title: step.title,
-  description: step.description || step.desc || '',
+  description: step.description || '',
 }));
 ---
 {steps.length > 0 && (
@@ -39,7 +41,7 @@ const steps = rawSteps.map((step: any, idx: number) => ({
       </div>
 
       <div class="process-grid stagger-parent">
-        {steps.map((step: any, idx: number) => (
+        {steps.map((step, idx) => (
           <div class="process-step reveal-up">
             <div class="process-step-card">
               <span class="process-step-watermark" aria-hidden="true">{step.number}</span>

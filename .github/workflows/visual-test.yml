@@ -11,12 +11,16 @@ jobs:
   visual-diff:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        fixture: [pwtint, dcdrentals, martinezwelding]
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -24,19 +28,18 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium
 
-      - name: Build test sites
+      - name: Build test site (${{ matrix.fixture }})
         run: |
-          # Build pwtint fixture with this template
           cd /tmp
           git clone --depth 1 https://x-access-token:${{ secrets.PLATFORM_READ_TOKEN }}@github.com/ziamade/ziamade-platform.git
           cd ziamade-platform/packages/pipeline
-          TEMPLATE_DIR=$GITHUB_WORKSPACE npx tsx scripts/build-from-fixture.ts pwtint
-          cd build/pwtint && npm ci && npx astro build
+          TEMPLATE_DIR=$GITHUB_WORKSPACE npx tsx scripts/build-from-fixture.ts ${{ matrix.fixture }}
+          cd build/${{ matrix.fixture }} && npm ci && npx astro build
 
-      - name: Run visual diff
+      - name: Run visual diff (${{ matrix.fixture }})
         run: |
           cd /tmp/ziamade-platform
-          npx playwright test tests/visual-regression/template-upgrade.spec.ts --reporter=list
+          FIXTURE=${{ matrix.fixture }} npx playwright test tests/visual-regression/template-upgrade.spec.ts --reporter=list
         env:
           CI: true
 
@@ -44,6 +47,6 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-diff-results
+          name: visual-diff-${{ matrix.fixture }}
           path: /tmp/ziamade-platform/test-results/
           retention-days: 7

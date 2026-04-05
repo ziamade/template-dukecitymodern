@@ -3,8 +3,7 @@
 // Data-driven CTA section. Reads from cta.json and renders a full-width
 // accent band with text + button. Drop into theme.json sectionOrder to place
 // it anywhere on the page.
-const ctaFiles = import.meta.glob('../data/cta.json', { eager: true });
-const ctaData = (Object.values(ctaFiles)[0] as any)?.default || {};
+import { cta as ctaData } from '../lib/data';
 
 const { text, buttonText, buttonHref, enabled } = ctaData;
 

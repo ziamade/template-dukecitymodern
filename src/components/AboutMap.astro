@@ -1,17 +1,12 @@
 ---
 // src/components/AboutMap.astro
-import client from '../data/client.json';
-import location from '../data/location.json';
-import about from '../data/about.json';
-import brand from '../data/brand.json';
-import type { Brand } from '../lib/types';
+import { client, location, about, brand } from '../lib/data';
 import BrandName from './BrandName.astro';
 import OptimizedImg from './OptimizedImg.astro';
 import { brandify } from '../lib/brandify';
 
-const typedBrand = brand as unknown as Brand;
 const logoUrl = client.logoUrl || '';
-const aboutImage = (about as any).image || '';
+const aboutImage = about.image || '';
 const address = [location.address, location.city, location.state, location.zip].filter(Boolean).join(', ');
 ---
 <section class="about-section section" id="about">
@@ -19,7 +14,7 @@ const address = [location.address, location.city, location.state, location.zip].
     {about?.text && (
       <div class="about-text">
         <h2>{about.heading || 'About'} <BrandName size="inline" /></h2>
-        <p class="about-text-content" set:html={brandify(about.text, client.name, typedBrand)} />
+        <p class="about-text-content" set:html={brandify(about.text, client.name, brand)} />
       </div>
     )}
     <div class="about-sidebar">

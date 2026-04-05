@@ -3,15 +3,17 @@
 // PW Tint side-by-side comparison panels ("Us" vs "Them")
 // Panels slide in from opposite sides, "or" divider on desktop
 // Renders nothing if no differentiator data exists
-import client from '../data/client.json';
+import { client } from '../lib/data';
+import { differentiatorSchema } from '../lib/schemas';
 
 // Use import.meta.glob to avoid build errors when file doesn't exist
 const diffFiles = import.meta.glob('../data/differentiator.json', { eager: true });
-const diffData: any = (Object.values(diffFiles)[0] as any)?.default ?? null;
+const rawDiff = (Object.values(diffFiles)[0] as Record<string, unknown>)?.default ?? null;
+const diffData = rawDiff ? differentiatorSchema.parse(rawDiff) : null;
 
 // If no data file, render nothing (template below is wrapped in diffData check)
 
-const businessName = (client as any).name || 'Us';
+const businessName = client.name || 'Us';
 
 // Expected data shape:
 // {
@@ -36,7 +38,7 @@ const hasContent = diffData && usPanel.features?.length > 0 && themPanel.feature
         <!-- "Them" panel (left) -->
         <div class="diff-panel diff-panel--them reveal-left">
           {themPanel.image && (
-            <div class="diff-panel-bg" style={`background-image: url('${themPanel.image}')`}></div>
+            <div class="diff-panel-bg" style={`background-image: url('${encodeURI(themPanel.image || '')}')`}></div>
           )}
           <div class="diff-panel-content">
             <h3 class="diff-panel-title">{themPanel.title || 'Other Guys'}</h3>
@@ -62,7 +64,7 @@ const hasContent = diffData && usPanel.features?.length > 0 && themPanel.feature
         <!-- "Us" panel (right) -->
         <div class="diff-panel diff-panel--us reveal-right">
           {usPanel.image && (
-            <div class="diff-panel-bg" style={`background-image: url('${usPanel.image}')`}></div>
+            <div class="diff-panel-bg" style={`background-image: url('${encodeURI(usPanel.image || '')}')`}></div>
           )}
           <div class="diff-panel-content">
             <h3 class="diff-panel-title">{usPanel.title || businessName}</h3>

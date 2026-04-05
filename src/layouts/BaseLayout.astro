@@ -1,22 +1,10 @@
 ---
 // src/layouts/BaseLayout.astro
-import brand from '../data/brand.json';
-import seo from '../data/seo.json';
-import client from '../data/client.json';
-import theme from '../data/theme.json';
-import alert from '../data/alert.json';
-import schema from '../data/schema.json';
-import analytics from '../data/analytics.json';
-import hours from '../data/hours.json';
-import gallery from '../data/gallery.json';
-import projects from '../data/projects.json';
-import hero from '../data/hero.json';
+import { brand, seo, client, theme, alert, schemaJson as schema, analytics, hours, gallery, projects, hero } from '../lib/data';
 import { generateThemeCSS, generateLayoutCSS } from '../lib/brand';
 import { buildFontFaceCSS } from '../lib/fonts';
 import { resolveImage } from '../lib/images';
 import { isAlertVisible } from '../lib/alert';
-import type { AlertData } from '../lib/alert';
-import type { Brand, Theme } from '../lib/types';
 // v4 CSS architecture
 import '../styles/tokens.css';
 import '../styles/base.css';
@@ -48,22 +36,20 @@ const previewFiles = import.meta.glob<{ default: PreviewData }>('../data/preview
 const previewData: PreviewData | undefined = Object.values(previewFiles)[0]?.default;
 const inPreview = isPreview(previewData);
 
-const typedBrand = brand as unknown as Brand;
-const typedTheme = theme as unknown as Theme;
-const themeCSS = generateThemeCSS(typedBrand);
-const layout = (theme as any).layout || {};
+const themeCSS = generateThemeCSS(brand);
+const layout = (theme.layout || {}) as Record<string, string>;
 const layoutCSS = generateLayoutCSS(layout);
-const fontFaceCSS = buildFontFaceCSS(typedBrand);
-const schemaJson = JSON.stringify(schema);
+const fontFaceCSS = buildFontFaceCSS(brand);
+const schemaJsonStr = JSON.stringify(schema);
 const hoursJson = JSON.stringify(hours);
 const hasGallery = gallery?.images?.length > 0;
-const hasProjects = (projects as any)?.projects?.length > 0;
+const hasProjects = projects?.projects?.length > 0;
 
 // Alert banner date gating — hide if outside startDate/endDate window
-const alertVisible = isAlertVisible(alert as AlertData);
+const alertVisible = isAlertVisible(alert);
 
 // Preload hero image for LCP optimization
-const heroImage = (hero as any)?.heroImage;
+const heroImage = hero?.heroImage;
 const heroResolved = heroImage ? resolveImage(heroImage) : null;
 
 // Structural layout tokens → data attributes on body
@@ -101,12 +87,12 @@ const depth = layout.depth || '';
   <style set:html={fontFaceCSS}></style>
   <style set:html={themeCSS}></style>
   {layoutCSS && <style set:html={layoutCSS}></style>}
-  {(analytics as any)?.umamiWebsiteId && (
-    <script defer src={(analytics as any).umamiScriptUrl} data-website-id={(analytics as any).umamiWebsiteId} />
+  {analytics?.umamiWebsiteId && (
+    <script defer src={analytics.umamiScriptUrl} data-website-id={analytics.umamiWebsiteId} />
   )}
 </head>
 <body
-  data-accent={typedTheme.accentStyle || "border"}
+  data-accent={theme.accentStyle || "border"}
   data-header-style={headerStyle}
   data-card-style={cardStyle}
   data-section-pattern={sectionPattern}
@@ -132,7 +118,7 @@ const depth = layout.depth || '';
   <slot />
 
   {schema && (
-    <script type="application/ld+json" set:html={schemaJson}></script>
+    <script type="application/ld+json" set:html={schemaJsonStr}></script>
   )}
   <script type="application/json" id="hours-data" set:html={hoursJson}></script>
   <script src="../scripts/animation-controller.ts"></script>

@@ -4,15 +4,15 @@
 // Variants: masonry (default), scroll (horizontal scroll row).
 // If beholdFeedId is set in gallery.json, loads the live Instagram widget.
 // Falls back to the static grid if Behold fails or no feed ID configured.
-import galleryRaw from '../data/gallery.json';
-const gallery = galleryRaw as any;
+import { gallery } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
 interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'masonry');
 
-const images = gallery?.images || gallery?.items || [];
+type GalleryImg = { url: string; alt: string; fallbackUrl?: string; image?: string; fallback?: string; [k: string]: unknown };
+const images: GalleryImg[] = (gallery?.images || (gallery as any)?.items || []) as GalleryImg[];
 const hasGallery = images.length > 0;
 const beholdFeedId = gallery?.beholdFeedId || '';
 ---
@@ -33,7 +33,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     {/* ── Horizontal scroll variant ─────────────────────────────────── */}
     {variant === 'scroll' && hasGallery && (
       <div class="gallery-scroll container" id="gallery-static">
-        {images.map((img: any, i: number) => (
+        {images.map((img, i) => (
           <button
             class="gallery-scroll-item gallery-thumb"
             data-index={i}
@@ -41,7 +41,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
             aria-label={`View ${img.alt || `photo ${i + 1}`}`}
           >
             <OptimizedImg
-              src={img.url || img.image}
+              src={img.url || img.image || ''}
               alt={img.alt || ''}
               width={600}
               height={400}
@@ -69,7 +69,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
         id={variant === 'scroll' ? undefined : 'gallery-static'}
         style={beholdFeedId ? 'display:none' : undefined}
       >
-        {images.map((img: any, i: number) => (
+        {images.map((img, i) => (
           <button
             class="gallery-item gallery-thumb"
             data-tilt="3"
@@ -78,7 +78,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
             aria-label={`View ${img.alt || `photo ${i + 1}`}`}
           >
             <OptimizedImg
-              src={img.url || img.image}
+              src={img.url || img.image || ''}
               alt={img.alt || ''}
               width={800}
               height={600}

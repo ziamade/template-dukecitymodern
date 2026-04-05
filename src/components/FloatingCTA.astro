@@ -1,9 +1,9 @@
 ---
 // src/components/FloatingCTA.astro
 // Fixed-position CTA that appears when hero scrolls out of view
-import contact from '../data/contact.json';
+import { contact } from '../lib/data';
 
-const phone = (contact as any)?.phoneForTel || (contact as any)?.phone || '';
+const phone = contact?.phoneForTel || contact?.phone || '';
 const phoneClean = phone.replace(/\D/g, '');
 const href = phoneClean ? `sms:+1${phoneClean}` : '#contact';
 const label = phoneClean ? 'Text Us' : 'Get in Touch';
