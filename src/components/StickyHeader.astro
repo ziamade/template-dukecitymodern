@@ -362,6 +362,33 @@ const logoSize = theme.layout?.logoSize || 'md';
     }
   }
 
+  /* ── Focus-visible states ───────────────────────────────────────── */
+
+  .header-brand:focus-visible,
+  .header-nav-link:focus-visible,
+  .mobile-nav-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .header-hamburger:hover {
+    opacity: 0.7;
+  }
+
+  .header-hamburger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .mobile-nav-cta:hover {
+    opacity: 0.9;
+  }
+
+  .mobile-nav-cta:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   /* ── Reduced motion ───────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     .site-header {
