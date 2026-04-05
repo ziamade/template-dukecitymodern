@@ -476,24 +476,25 @@ const secondaryText = 'Our Services';
   }
 
   .hero--overlay .hero-content {
-    color: #f0eaec;
+    color: var(--hero-overlay-text, #f0eaec);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, var(--overlay-darkness, 0.5));
   }
 
   .hero--overlay .hero-tagline {
-    color: #ffffff;
+    color: var(--hero-overlay-heading, #ffffff);
   }
 
   .hero--overlay .hero-subtitle {
-    color: #e0e0e0;
+    color: var(--hero-overlay-muted, #e0e0e0);
   }
 
   .hero--overlay .hero-location {
-    color: #d0d0d0;
+    color: var(--hero-overlay-muted, #d0d0d0);
   }
 
   .hero--overlay .hero-stat-value,
   .hero--overlay .hero-stat-star {
-    color: #ffffff;
+    color: var(--hero-overlay-heading, #ffffff);
   }
 
   .hero--overlay .hero-stat-sep {
@@ -503,7 +504,7 @@ const secondaryText = 'Our Services';
   .hero--overlay .hero-badge {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+    color: var(--hero-overlay-heading, #ffffff);
   }
 
   .hero--overlay .open-badge {
@@ -546,24 +547,25 @@ const secondaryText = 'Our Services';
   }
 
   .hero--video .hero-content {
-    color: #f0eaec;
+    color: var(--hero-overlay-text, #f0eaec);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, var(--overlay-darkness, 0.5));
   }
 
   .hero--video .hero-tagline {
-    color: #ffffff;
+    color: var(--hero-overlay-heading, #ffffff);
   }
 
   .hero--video .hero-subtitle {
-    color: #e0e0e0;
+    color: var(--hero-overlay-muted, #e0e0e0);
   }
 
   .hero--video .hero-location {
-    color: #d0d0d0;
+    color: var(--hero-overlay-muted, #d0d0d0);
   }
 
   .hero--video .hero-stat-value,
   .hero--video .hero-stat-star {
-    color: #ffffff;
+    color: var(--hero-overlay-heading, #ffffff);
   }
 
   .hero--video .hero-stat-sep {
@@ -573,7 +575,7 @@ const secondaryText = 'Our Services';
   .hero--video .hero-badge {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+    color: var(--hero-overlay-heading, #ffffff);
   }
 
   .hero--video .open-badge {
