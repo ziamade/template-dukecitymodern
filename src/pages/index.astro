@@ -169,7 +169,7 @@ const showActionBar = (themeActionBar as Record<string, unknown>).hidden !== tru
 
   </main>
 
-  <Footer />
+  <Footer navLinks={navLinks} />
   <FloatingCTA />
   {showActionBar && <StickyActionBar links={actionBarLinks} />}
 </BaseLayout>

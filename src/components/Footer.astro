@@ -1,8 +1,13 @@
 ---
 // src/components/Footer.astro
-// DCD Luxury footer — 3-column grid with brand, contact, service area
+// DCD Luxury footer — 4-column grid with brand, nav links, contact, service area
 // Social icons with glow hover, divider glow line, ambient orb
 import { client, contact, location, about } from '../lib/data';
+
+interface Props {
+  navLinks?: Array<{ href: string; text: string }>;
+}
+const { navLinks = [] } = Astro.props;
 import { formatPhone } from '../lib/utils';
 import OptimizedImg from './OptimizedImg.astro';
 import BrandName from './BrandName.astro';
@@ -78,6 +83,18 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
           <p class="footer-tagline">{tagline}</p>
         )}
       </div>
+
+      <!-- Nav links column -->
+      {navLinks.length > 0 && (
+        <div class="footer-nav-col">
+          <h4 class="footer-col-title">Quick Links</h4>
+          <ul class="footer-nav-list">
+            {navLinks.map((link) => (
+              <li><a href={link.href}>{link.text}</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <!-- Contact column -->
       <div class="footer-contact-col">
@@ -181,7 +198,7 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
 
   @media (min-width: 768px) {
     .footer-grid {
-      grid-template-columns: 1.5fr 1fr 1fr;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
       gap: 2.5rem;
     }
   }
@@ -257,6 +274,27 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
     color: var(--accent);
     opacity: 0.7;
     margin-top: 0.125rem;
+  }
+
+  /* ── Nav links list ────────────────────────────────────────────── */
+  .footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .footer-nav-list a {
+    font-size: 0.875rem;
+    color: var(--textMuted);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .footer-nav-list a:hover {
+    color: var(--accent);
   }
 
   /* ── Service area cities ────────────────────────────────────────── */
