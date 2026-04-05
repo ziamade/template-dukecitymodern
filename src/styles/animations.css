@@ -166,7 +166,7 @@
    ===================================================================
    Tabular nums prevent layout shift as digits animate up. */
 
-.counter {
+[data-count-to] {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
 }
