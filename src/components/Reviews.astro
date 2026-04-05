@@ -23,11 +23,27 @@ const reviewCount = (testimonials as any)?.reviewCount
   || null;
 const averageRating = (testimonials as any)?.averageRating || null;
 
-// Build the "See all reviews" link
-let allReviewsUrl = (client as any).socials?.google || '';
+// Build platform "See our reviews" links
+let googleReviewsUrl = (client as any).socials?.google || '';
 const glFiles = import.meta.glob<{ default: any }>('../data/google-links.json', { eager: true });
 const googleLinks: any = Object.values(glFiles)[0]?.default || {};
-if (googleLinks?.allReviews) allReviewsUrl = googleLinks.allReviews;
+if (googleLinks?.allReviews) googleReviewsUrl = googleLinks.allReviews;
+const yelpUrl = (client as any).socials?.yelp || '';
+
+// Platform sources that need attribution CTAs
+const platformSources = new Set(['google', 'yelp']);
+const hasPlatformReviews = items.some((t: any) => platformSources.has((t.source || '').toLowerCase()));
+
+// Card link helper: only platform-sourced reviews link to their platform
+function cardUrl(t: any): string | undefined {
+  if (t.url) return t.url;
+  const src = (t.source || '').toLowerCase();
+  if (src === 'google' && googleReviewsUrl) return googleReviewsUrl;
+  if (src === 'yelp' && yelpUrl) return yelpUrl;
+  return undefined;
+}
+// Keep for backward compat with meta subtitle link
+const allReviewsUrl = googleReviewsUrl;
 
 // Load source icons
 const sourceIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', {
@@ -46,7 +62,7 @@ function stars(count: number): string {
   <section class="reviews-section section" id="reviews" data-tour="reviews">
     <div class="container">
       <div class="section-heading reveal-up">
-        <span class="section-eyebrow">Testimonials</span>
+        <span class="section-eyebrow">Featured Reviews</span>
         <h2 class="section-title">What Our Customers Say</h2>
         {(reviewCount || averageRating) && (
           <p class="section-subtitle reviews-meta">
@@ -68,10 +84,10 @@ function stars(count: number): string {
           {/* Original set */}
           {items.map((t: any) => (
             <a
-              class:list={['review-card', { 'review-card--linked': t.url || allReviewsUrl }]}
-              href={t.url || allReviewsUrl || undefined}
-              target={t.url || allReviewsUrl ? '_blank' : undefined}
-              rel={t.url || allReviewsUrl ? 'noopener' : undefined}
+              class:list={['review-card', { 'review-card--linked': !!cardUrl(t) }]}
+              href={cardUrl(t)}
+              target={cardUrl(t) ? '_blank' : undefined}
+              rel={cardUrl(t) ? 'noopener' : undefined}
             >
               <div class="review-accent-border" />
               <div class="review-stars">{stars(t.rating)}</div>
@@ -94,10 +110,10 @@ function stars(count: number): string {
           {/* Duplicate set for infinite scroll illusion */}
           {items.map((t: any) => (
             <a
-              class:list={['review-card', { 'review-card--linked': t.url || allReviewsUrl }]}
-              href={t.url || allReviewsUrl || undefined}
-              target={t.url || allReviewsUrl ? '_blank' : undefined}
-              rel={t.url || allReviewsUrl ? 'noopener' : undefined}
+              class:list={['review-card', { 'review-card--linked': !!cardUrl(t) }]}
+              href={cardUrl(t)}
+              target={cardUrl(t) ? '_blank' : undefined}
+              rel={cardUrl(t) ? 'noopener' : undefined}
               aria-hidden="true"
               tabindex="-1"
             >
@@ -122,10 +138,21 @@ function stars(count: number): string {
         </div>
       </div>
 
-      {allReviewsUrl && (
-        <a href={allReviewsUrl} class="reviews-link reveal-up" target="_blank" rel="noopener">
-          See all {reviewCount ? `${reviewCount}+` : ''} reviews on Google &rarr;
-        </a>
+      {hasPlatformReviews && (googleReviewsUrl || yelpUrl) && (
+        <div class="reviews-ctas reveal-up">
+          {googleReviewsUrl && (
+            <a href={googleReviewsUrl} class="reviews-cta-btn" target="_blank" rel="noopener">
+              <span class="reviews-cta-icon" set:html={sourceIcon('google')} />
+              See our {reviewCount ? `${reviewCount}+` : ''} reviews on Google
+            </a>
+          )}
+          {yelpUrl && (
+            <a href={yelpUrl} class="reviews-cta-btn" target="_blank" rel="noopener">
+              <span class="reviews-cta-icon" set:html={sourceIcon('yelp')} />
+              See our reviews on Yelp
+            </a>
+          )}
+        </div>
       )}
     </div>
   </section>
@@ -359,21 +386,46 @@ function stars(count: number): string {
     cursor: pointer;
   }
 
-  /* ── See all reviews link ──────────────────────────────────────── */
+  /* ── See our reviews CTA buttons ──────────────────────────────── */
 
-  .reviews-link {
-    display: block;
-    text-align: center;
+  .reviews-ctas {
+    display: flex;
+    justify-content: center;
+    gap: var(--gap-md, 1.5rem);
+    flex-wrap: wrap;
     margin-top: var(--gap-lg, 2rem);
+  }
+
+  .reviews-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
     font-weight: 600;
     font-size: var(--small-size, 0.875rem);
     color: var(--accent);
     text-decoration: none;
-    transition: color var(--duration-fast, 0.2s) ease;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-radius: var(--radius, 8px);
+    transition: background var(--duration-fast, 0.2s) ease,
+                border-color var(--duration-fast, 0.2s) ease;
   }
 
-  .reviews-link:hover {
-    text-decoration: underline;
+  .reviews-cta-btn:hover {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+    text-decoration: none;
+  }
+
+  .reviews-cta-icon {
+    display: flex;
+    align-items: center;
+    opacity: 0.7;
+  }
+
+  .reviews-cta-icon :global(svg) {
+    width: 18px;
+    height: 18px;
   }
 
   /* ── Reduced motion ──────────────────────────────────────────────── */
