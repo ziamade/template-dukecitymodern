@@ -75,6 +75,16 @@ describe('paletteToCSS', () => {
     expect(css).toContain('--surface-glass: rgba(255, 255, 255, 0.03)');
   });
 
+  it('uses black-based glass for 3-digit light hex bg', () => {
+    const css = paletteToCSS({ ...lightPalette, bg: '#fff' } as any);
+    expect(css).toContain('--surface-glass: rgba(0, 0, 0, 0.03)');
+  });
+
+  it('uses white-based glass for non-hex bg (defaults to dark)', () => {
+    const css = paletteToCSS({ ...darkPalette, bg: 'rgb(255,255,255)' } as any);
+    expect(css).toContain('--surface-glass: rgba(255, 255, 255, 0.03)');
+  });
+
   it('includes all core palette vars', () => {
     const css = paletteToCSS(darkPalette as any);
     expect(css).toContain('--bg:');

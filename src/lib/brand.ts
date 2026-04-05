@@ -15,7 +15,7 @@ function cssSafe(val: string): string {
  */
 function isLightColor(hex: string): boolean {
   // Only handle hex colors; non-hex (rgb(...), named colors) default to dark
-  const match = hex.match(/^#?([0-9a-fA-F]{3,6})$/);
+  const match = hex.match(/^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/);
   if (!match) return false;
 
   const h = match[1];
