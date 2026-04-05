@@ -4,7 +4,15 @@
 // hover lift on cards, .stagger-parent for entrance animation,
 // responsive 4-col > 2-col > 1-col grid.
 
-// Default process steps (used when no process.json or client.processSteps)
+// process.json is optional: loaded via import.meta.glob so the build
+// succeeds without it. When absent, the component uses sensible defaults.
+const processFiles = import.meta.glob<{ default: any }>('../data/process.json', { eager: true });
+const processData: any = Object.values(processFiles)[0]?.default ?? null;
+
+const heading = processData?.heading || 'How It Works';
+const eyebrow = processData?.eyebrow || 'Our Process';
+
+// Default process steps (used when no process.json exists)
 const defaultSteps = [
   { number: '01', title: 'Get in Touch', description: 'Call, text, or fill out our form.' },
   { number: '02', title: 'Free Estimate', description: 'We assess your needs and provide a quote.' },
@@ -12,8 +20,11 @@ const defaultSteps = [
   { number: '04', title: 'Enjoy the Results', description: 'Quality work, guaranteed satisfaction.' },
 ];
 
+// Use process.json steps if available and non-empty, otherwise defaults
+const rawSteps = processData?.steps?.length > 0 ? processData.steps : defaultSteps;
+
 // Normalize step data: ensure 2-digit number format
-const steps = defaultSteps.map((step: any, idx: number) => ({
+const steps = rawSteps.map((step: any, idx: number) => ({
   number: step.number ? String(step.number).padStart(2, '0') : String(idx + 1).padStart(2, '0'),
   title: step.title,
   description: step.description || step.desc || '',
@@ -23,8 +34,8 @@ const steps = defaultSteps.map((step: any, idx: number) => ({
   <section class="process-section section" id="process">
     <div class="container">
       <div class="section-heading reveal-up">
-        <span class="section-eyebrow">Our Process</span>
-        <h2 class="section-title">How It Works</h2>
+        <span class="section-eyebrow">{eyebrow}</span>
+        <h2 class="section-title">{heading}</h2>
       </div>
 
       <div class="process-grid stagger-parent">
