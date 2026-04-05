@@ -10,6 +10,27 @@ function cssSafe(val: string): string {
 }
 
 /**
+ * Determine if a hex color is "light" using perceived brightness.
+ * Used to flip glass surface base color for light vs dark palettes.
+ */
+function isLightColor(hex: string): boolean {
+  // Only handle hex colors; non-hex (rgb(...), named colors) default to dark
+  const match = hex.match(/^#?([0-9a-fA-F]{3,6})$/);
+  if (!match) return false;
+
+  const h = match[1];
+  const full = h.length === 3
+    ? h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
+    : h;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  // ITU-R BT.601 luma
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5;
+}
+
+/**
  * Generate CSS custom properties from a single color palette.
  * v4: Single palette, no light/dark toggle.
  */
@@ -35,9 +56,10 @@ export function paletteToCSS(palette: ColorPalette): string {
     vars.push(`  --borderSubtle: ${cssSafe(palette.border)};`);
   }
 
-  // Derived glass surfaces (theme-agnostic)
-  vars.push(`  --surface-glass: rgba(255, 255, 255, 0.03);`);
-  vars.push(`  --surface-glass-hover: rgba(255, 255, 255, 0.06);`);
+  // Derived glass surfaces — auto-detect light/dark palette
+  const glassBase = isLightColor(palette.bg) ? '0, 0, 0' : '255, 255, 255';
+  vars.push(`  --surface-glass: rgba(${glassBase}, 0.03);`);
+  vars.push(`  --surface-glass-hover: rgba(${glassBase}, 0.06);`);
 
   // Semantic status tokens (palette-independent defaults, overridable via brand.json)
   vars.push(`  --status-success: #16a34a;`);
