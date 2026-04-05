@@ -13,8 +13,26 @@ import { z } from 'astro/zod';
 // Shared / reusable schemas
 // ---------------------------------------------------------------------------
 
-/** CSS color value — hex (#fff, #aabbcc), rgb(), rgba(), hsl(), named, etc. */
-const cssColor = z.string();
+/** CSS color value — hex (#fff, #aabbcc), rgb(), rgba(), hsl(), hsla(), or CSS keyword */
+const cssColor = z.string().refine(
+  (val) =>
+    /^(#[0-9a-fA-F]{3,8}|rgba?\([\d\s,.%]+\)|hsla?\([\d\s,.%deg]+\)|transparent|currentColor|inherit)$/i.test(
+      val,
+    ),
+  {
+    message:
+      'Must be a valid CSS color value (hex, rgb, rgba, hsl, hsla, or CSS keyword)',
+  },
+);
+
+/** Font name — letters, numbers, spaces, hyphens, and apostrophes only */
+const fontName = z.string().refine(
+  (val) => /^[a-zA-Z0-9\s\-']+$/.test(val),
+  {
+    message:
+      'Font name must contain only letters, numbers, spaces, hyphens, and apostrophes',
+  },
+);
 
 // ---------------------------------------------------------------------------
 // client.json
@@ -69,10 +87,10 @@ export const nameTreatmentSchema = z.object({
 
 export const brandSchema = z.object({
   palette: colorPaletteSchema,
-  nameFont: z.string(),
-  headingFont: z.string(),
-  bodyFont: z.string(),
-  monoFont: z.string().optional(),
+  nameFont: fontName,
+  headingFont: fontName,
+  bodyFont: fontName,
+  monoFont: fontName.optional(),
   nameTreatment: nameTreatmentSchema.optional(),
 }).loose();
 

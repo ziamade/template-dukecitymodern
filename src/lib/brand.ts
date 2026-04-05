@@ -2,6 +2,14 @@
 import type { Brand, ColorPalette } from './types';
 
 /**
+ * Strip characters that could break out of a CSS property value context.
+ * Defense-in-depth: schemas validate first, this catches anything that slips through.
+ */
+function cssSafe(val: string): string {
+  return val.replace(/[{}<>;"'\\]/g, '');
+}
+
+/**
  * Generate CSS custom properties from a single color palette.
  * v4: Single palette, no light/dark toggle.
  */
@@ -9,22 +17,22 @@ export function paletteToCSS(palette: ColorPalette): string {
   const vars: string[] = [];
 
   // Core palette
-  vars.push(`  --bg: ${palette.bg};`);
-  vars.push(`  --background: ${palette.bg};`); // alias for backward compat
-  vars.push(`  --surface: ${palette.surface};`);
-  vars.push(`  --surfaceAlt: ${palette.surfaceAlt};`);
-  vars.push(`  --text: ${palette.text};`);
-  vars.push(`  --textMuted: ${palette.textMuted};`);
-  vars.push(`  --accent: ${palette.accent};`);
-  vars.push(`  --accentDim: ${palette.accentDim};`);
-  vars.push(`  --accentGlow: ${palette.accentGlow};`);
-  vars.push(`  --border: ${palette.border};`);
+  vars.push(`  --bg: ${cssSafe(palette.bg)};`);
+  vars.push(`  --background: ${cssSafe(palette.bg)};`); // alias for backward compat
+  vars.push(`  --surface: ${cssSafe(palette.surface)};`);
+  vars.push(`  --surfaceAlt: ${cssSafe(palette.surfaceAlt)};`);
+  vars.push(`  --text: ${cssSafe(palette.text)};`);
+  vars.push(`  --textMuted: ${cssSafe(palette.textMuted)};`);
+  vars.push(`  --accent: ${cssSafe(palette.accent)};`);
+  vars.push(`  --accentDim: ${cssSafe(palette.accentDim)};`);
+  vars.push(`  --accentGlow: ${cssSafe(palette.accentGlow)};`);
+  vars.push(`  --border: ${cssSafe(palette.border)};`);
 
   // Optional
   if (palette.borderSubtle) {
-    vars.push(`  --borderSubtle: ${palette.borderSubtle};`);
+    vars.push(`  --borderSubtle: ${cssSafe(palette.borderSubtle)};`);
   } else {
-    vars.push(`  --borderSubtle: ${palette.border};`);
+    vars.push(`  --borderSubtle: ${cssSafe(palette.border)};`);
   }
 
   // Derived glass surfaces (theme-agnostic)
@@ -40,16 +48,19 @@ export function paletteToCSS(palette: ColorPalette): string {
  */
 export function generateThemeCSS(brand: Brand): string {
   const paletteCSS = paletteToCSS(brand.palette);
+  const safeName = cssSafe(brand.nameFont);
+  const safeHeading = cssSafe(brand.headingFont);
+  const safeBody = cssSafe(brand.bodyFont);
   const monoFont = brand.monoFont
-    ? `'${brand.monoFont}', 'JetBrains Mono', monospace`
+    ? `'${cssSafe(brand.monoFont)}', 'JetBrains Mono', monospace`
     : `'JetBrains Mono', 'SF Mono', monospace`;
 
   return `
 :root {
 ${paletteCSS}
-  --font-name: '${brand.nameFont}', var(--font-heading), sans-serif;
-  --font-heading: '${brand.headingFont}', sans-serif;
-  --font-body: '${brand.bodyFont}', system-ui, sans-serif;
+  --font-name: '${safeName}', var(--font-heading), sans-serif;
+  --font-heading: '${safeHeading}', sans-serif;
+  --font-body: '${safeBody}', system-ui, sans-serif;
   --font-mono: ${monoFont};
 }`.trim();
 }

@@ -38,7 +38,7 @@ const hasContent = diffData && usPanel.features?.length > 0 && themPanel.feature
         <!-- "Them" panel (left) -->
         <div class="diff-panel diff-panel--them reveal-left">
           {themPanel.image && (
-            <div class="diff-panel-bg" style={`background-image: url('${themPanel.image}')`}></div>
+            <div class="diff-panel-bg" style={`background-image: url('${encodeURI(themPanel.image || '')}')`}></div>
           )}
           <div class="diff-panel-content">
             <h3 class="diff-panel-title">{themPanel.title || 'Other Guys'}</h3>
@@ -64,7 +64,7 @@ const hasContent = diffData && usPanel.features?.length > 0 && themPanel.feature
         <!-- "Us" panel (right) -->
         <div class="diff-panel diff-panel--us reveal-right">
           {usPanel.image && (
-            <div class="diff-panel-bg" style={`background-image: url('${usPanel.image}')`}></div>
+            <div class="diff-panel-bg" style={`background-image: url('${encodeURI(usPanel.image || '')}')`}></div>
           )}
           <div class="diff-panel-content">
             <h3 class="diff-panel-title">{usPanel.title || businessName}</h3>
