@@ -80,6 +80,7 @@ All data lives in `src/data/`. Files are plain JSON imported at build time. Opti
 | `_template-manifest.json` | Internal | Machine-readable list of all valid layout tokens, section IDs, and component overrides |
 | `preview.json` | Optional | businessName, slug. Present = preview mode (disclaimer bar, noindex) |
 | `tour.json` | Optional | steps[]: target, title, body; businessName. Enables driver.js guided tour overlay |
+| `process.json` | Optional | heading, eyebrow, steps[]: number, title, description |
 
 Services: `src/content/services/*.md` (frontmatter: title, description, beforeImage, afterImage, startingPrice, order)
 
@@ -106,7 +107,7 @@ Resolution order: explicit `component` override > variant override > default com
 | `services` | ServiceCards | cards, icon-grid, compact, split | `content/services/*.md` |
 | `products` | Products | -- | `content/products/*.md` |
 | `projects` | ProjectGallery | -- | `projects.json` |
-| `process` | ProcessSteps | -- | (hardcoded steps) |
+| `process` | ProcessSteps | -- | `process.json` (optional, hardcoded fallback) |
 | `gallery` | PhotoGallery | masonry, scroll | `gallery.json` + optional Behold feed |
 | `menu` | MenuSection | -- | `menu.json` |
 | `reviews` | Reviews | scroll | `testimonials.json` (skipped if items empty) |

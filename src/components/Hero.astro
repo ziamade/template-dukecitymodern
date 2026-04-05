@@ -17,12 +17,10 @@ const heroTagline = (hero as any)?.heroTagline || client.name;
 const heroSubtitle = (hero as any)?.heroSubtitle || '';
 const marqueeItems = (theme as any)?.marqueeItems || [];
 
-// Hero stats from schema.json (authoritative source for rating/reviews)
-const schemaFiles = import.meta.glob<{ default: any }>('../data/schema.json', { eager: true });
-const schema: any = Object.values(schemaFiles)[0]?.default || {};
-const aggregateRating = schema?.aggregateRating;
-const ratingValue = aggregateRating?.ratingValue ? String(aggregateRating.ratingValue) : '';
-const reviewCount = aggregateRating?.reviewCount ? String(aggregateRating.reviewCount) : '';
+// Hero stats from testimonials.json (aggregateRating removed from schema per Google self-serving rule)
+import testimonials from '../data/testimonials.json';
+const ratingValue = (testimonials as any)?.averageRating ? String((testimonials as any).averageRating) : '';
+const reviewCount = (testimonials as any)?.reviewCount ? String((testimonials as any).reviewCount) : '';
 const foundingYear = parseInt((client as any).foundingYear || '0', 10);
 const hasHeroStats = !!(ratingValue || reviewCount || (foundingYear > 1900));
 
