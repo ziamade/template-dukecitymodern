@@ -9,7 +9,7 @@ const href = phoneClean ? `sms:+1${phoneClean}` : '#contact';
 const label = phoneClean ? 'Text Us' : 'Get in Touch';
 const ariaLabel = phoneClean ? `Text us at ${phone}` : 'Get in touch';
 ---
-{(phoneClean || true) && (
+{phoneClean && (
   <a
     href={href}
     class="floating-cta btn--tactile"
