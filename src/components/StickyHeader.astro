@@ -408,17 +408,17 @@ const logoSize = theme.layout?.logoSize || 'md';
         const y = window.scrollY;
 
         // Glass background after threshold
-        header.classList.toggle('header-scrolled', y > SCROLL_THRESHOLD);
+        header!.classList.toggle('header-scrolled', y > SCROLL_THRESHOLD);
 
         // Hide on scroll down / show on scroll up (only after HIDE_THRESHOLD)
         if (y > HIDE_THRESHOLD) {
           const scrollingDown = y > lastScrollY;
           // Only hide if not nav-open
-          if (!header.classList.contains('nav-open')) {
-            header.classList.toggle('header-hidden', scrollingDown);
+          if (!header!.classList.contains('nav-open')) {
+            header!.classList.toggle('header-hidden', scrollingDown);
           }
         } else {
-          header.classList.remove('header-hidden');
+          header!.classList.remove('header-hidden');
         }
 
         lastScrollY = y;
@@ -435,9 +435,9 @@ const logoSize = theme.layout?.logoSize || 'md';
         const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
         hamburger.setAttribute('aria-expanded', String(!isOpen));
         hamburger.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
-        header.classList.toggle('nav-open', !isOpen);
+        header!.classList.toggle('nav-open', !isOpen);
         // Always show header when nav is open
-        header.classList.remove('header-hidden');
+        header!.classList.remove('header-hidden');
         // Prevent body scroll when overlay is open
         document.body.style.overflow = isOpen ? '' : 'hidden';
       });
@@ -447,7 +447,7 @@ const logoSize = theme.layout?.logoSize || 'md';
     const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-nav-cta');
     mobileLinks.forEach(link => {
       link.addEventListener('click', () => {
-        header.classList.remove('nav-open');
+        header!.classList.remove('nav-open');
         if (hamburger) {
           hamburger.setAttribute('aria-expanded', 'false');
           hamburger.setAttribute('aria-label', 'Open menu');
@@ -458,8 +458,8 @@ const logoSize = theme.layout?.logoSize || 'md';
 
     // Close on Escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && header.classList.contains('nav-open')) {
-        header.classList.remove('nav-open');
+      if (e.key === 'Escape' && header!.classList.contains('nav-open')) {
+        header!.classList.remove('nav-open');
         if (hamburger) {
           hamburger.setAttribute('aria-expanded', 'false');
           hamburger.setAttribute('aria-label', 'Open menu');

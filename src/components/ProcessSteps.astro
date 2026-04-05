@@ -23,7 +23,7 @@ const defaultSteps = [
 ];
 
 // Use process.json steps if available and non-empty, otherwise defaults
-const rawSteps = processData?.steps?.length > 0 ? processData.steps : defaultSteps;
+const rawSteps = (processData?.steps?.length ?? 0) > 0 ? processData!.steps : defaultSteps;
 
 // Normalize step data: ensure 2-digit number format
 const steps = rawSteps.map((step, idx) => ({

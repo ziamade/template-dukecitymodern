@@ -37,7 +37,7 @@ import { resolveNavLabels, resolveCta, resolveHeroCta } from '../lib/section-reg
 import { contact, location, testimonials, theme } from '../lib/data';
 import type { SectionEntry } from '../lib/types';
 
-const hasReviews = testimonials?.items?.length > 0;
+const hasReviews = (testimonials?.items?.length ?? 0) > 0;
 
 // Component lookup by name string
 const componentMap: Record<string, any> = {
@@ -86,9 +86,9 @@ function resolveComponent(entry: SectionEntry): any {
 
 // Resolve sections from theme data
 function resolveSections(themeData: typeof theme): SectionEntry[] {
-  if (themeData.sections?.length > 0) return themeData.sections;
-  const order = themeData.sectionOrder?.length > 0
-    ? themeData.sectionOrder
+  if ((themeData.sections?.length ?? 0) > 0) return themeData.sections ?? [];
+  const order = (themeData.sectionOrder?.length ?? 0) > 0
+    ? themeData.sectionOrder!
     : ['hero', 'trust', 'services', 'projects', 'process', 'reviews', 'faq', 'contact', 'about'];
   return order.map((id: string) => ({ id }));
 }
@@ -128,7 +128,7 @@ const defaultActionBarLinks = [
   { href: location.mapLink || '#', icon: actionIcon('navigation'), text: 'Directions' },
   { href: cta.href, icon: actionIcon('mail'), text: cta.text },
 ];
-const actionBarLinks = (themeActionBar as Record<string, unknown>).links || defaultActionBarLinks;
+const actionBarLinks = ((themeActionBar as Record<string, unknown>).links || defaultActionBarLinks) as Array<{ href: string; icon: string; text: string }>;
 const showActionBar = (themeActionBar as Record<string, unknown>).hidden !== true;
 ---
 <BaseLayout>

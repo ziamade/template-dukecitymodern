@@ -35,9 +35,9 @@ const title = teamData.title || (solo ? 'Meet the Owner' : 'Meet Your Team');
         <div class="team-grid stagger-parent">
           {members.map((member: any) => {
             const raw = findRaw(member.name);
-            const pricing = raw.pricing || [];
-            const hours = raw.hours || [];
-            const phone = raw.phone || '';
+            const pricing = Array.isArray(raw.pricing) ? raw.pricing as any[] : [];
+            const hours = Array.isArray(raw.hours) ? raw.hours as any[] : [];
+            const phone = typeof raw.phone === 'string' ? raw.phone : '';
             return (
               <div class="team-card reveal-up" data-tilt="4">
                 <div class="team-card-photo">

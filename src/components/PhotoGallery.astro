@@ -11,7 +11,8 @@ interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'masonry');
 
-const images = gallery?.images || gallery?.items || [];
+type GalleryImg = { url: string; alt: string; fallbackUrl?: string; image?: string; fallback?: string; [k: string]: unknown };
+const images: GalleryImg[] = (gallery?.images || (gallery as any)?.items || []) as GalleryImg[];
 const hasGallery = images.length > 0;
 const beholdFeedId = gallery?.beholdFeedId || '';
 ---
@@ -40,7 +41,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
             aria-label={`View ${img.alt || `photo ${i + 1}`}`}
           >
             <OptimizedImg
-              src={img.url || img.image}
+              src={img.url || img.image || ''}
               alt={img.alt || ''}
               width={600}
               height={400}
@@ -77,7 +78,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
             aria-label={`View ${img.alt || `photo ${i + 1}`}`}
           >
             <OptimizedImg
-              src={img.url || img.image}
+              src={img.url || img.image || ''}
               alt={img.alt || ''}
               width={800}
               height={600}

@@ -13,15 +13,15 @@ import { z } from 'astro/zod';
 // Shared / reusable schemas
 // ---------------------------------------------------------------------------
 
-/** CSS color value — hex (#fff, #aabbcc), rgb(), rgba(), hsl(), hsla(), or CSS keyword */
+/** CSS color value — hex (#fff, #aabbcc), rgb(), rgba(), hsl(), hsla(), or CSS named color */
 const cssColor = z.string().refine(
   (val) =>
-    /^(#[0-9a-fA-F]{3,8}|rgba?\([\d\s,.%]+\)|hsla?\([\d\s,.%deg]+\)|transparent|currentColor|inherit)$/i.test(
+    /^(#[0-9a-fA-F]{3,8}|rgba?\([\d\s,.%]+\)|hsla?\([\d\s,.%deg]+\)|[a-zA-Z]+)$/i.test(
       val,
     ),
   {
     message:
-      'Must be a valid CSS color value (hex, rgb, rgba, hsl, hsla, or CSS keyword)',
+      'Must be a valid CSS color value (hex, rgb, rgba, hsl, hsla, or CSS named color)',
   },
 );
 
