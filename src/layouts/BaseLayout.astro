@@ -105,6 +105,8 @@ const depth = layout.depth || '';
   data-bg-preset={bgPreset}
   data-depth={depth || undefined}
 >
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   {inPreview && previewData && <Fragment set:html={getDisclaimerHtml(previewData)} />}
 
   {atmosphereLevel !== 'none' && (
@@ -115,7 +117,9 @@ const depth = layout.depth || '';
     <div class="alert-banner">{alert.text}</div>
   )}
 
-  <slot />
+  <main id="main-content">
+    <slot />
+  </main>
 
   {schema && (
     <script type="application/ld+json" set:html={schemaJsonStr}></script>
