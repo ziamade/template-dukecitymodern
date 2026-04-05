@@ -104,10 +104,8 @@ const { tour } = Astro.props;
 
     // Cinematic intro logic
     var shouldAutoload = (function() {
-      var params = new URLSearchParams(window.location.search);
-      var hasTourParam = params.has('tour') || params.get('utm_content') === 'tour';
       var alreadySeen = localStorage.getItem('tour-seen') === 'true';
-      return hasTourParam && !alreadySeen;
+      return !alreadySeen;
     })();
 
     if (shouldAutoload && intro) {
