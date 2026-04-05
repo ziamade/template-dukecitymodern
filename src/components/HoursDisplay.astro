@@ -45,16 +45,129 @@ const secondaryEntries = getSecondaryHoursEntries(hours.secondaryHours);
 </section>
 
 <style>
-.hours-secondary {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border, rgba(255,255,255,0.1));
-}
+  /* ── Hours Section ─────────────────────────────────────────────── */
 
-.hours-secondary-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 0.5rem;
-}
+  .hours-section {
+    background: var(--surface);
+  }
+
+  /* ── Grid layout: schedule + contact stacked ───────────────────── */
+
+  .hours-grid {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg, 2rem);
+  }
+
+  /* ── Schedule container ────────────────────────────────────────── */
+
+  .hours-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs, 0.25rem);
+  }
+
+  /* ── Individual day row ────────────────────────────────────────── */
+
+  .hours-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--gap-sm, 0.5rem) var(--gap, 1rem);
+    border-radius: var(--card-radius, var(--radius, 12px));
+    transition: background var(--duration-fast, 0.2s) ease;
+  }
+
+  .hours-row:hover {
+    background: var(--surface-glass-hover, rgba(255, 255, 255, 0.06));
+  }
+
+  /* Alternate row tint for readability */
+  .hours-schedule .hours-row:nth-child(even) {
+    background: var(--surface-glass, rgba(255, 255, 255, 0.03));
+  }
+
+  .hours-schedule .hours-row:nth-child(even):hover {
+    background: var(--surface-glass-hover, rgba(255, 255, 255, 0.06));
+  }
+
+  /* ── Day name ──────────────────────────────────────────────────── */
+
+  .hours-day {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--body-size, 1rem);
+    color: var(--text);
+    letter-spacing: var(--tracking-normal, 0);
+  }
+
+  /* ── Time value ────────────────────────────────────────────────── */
+
+  .hours-time {
+    font-family: var(--font-mono, monospace);
+    font-size: var(--small-size, 0.875rem);
+    font-variant-numeric: tabular-nums;
+    color: var(--textMuted, var(--text));
+    letter-spacing: var(--tracking-wide, 0.08em);
+  }
+
+  /* ── Secondary hours ───────────────────────────────────────────── */
+
+  .hours-secondary {
+    margin-top: var(--gap-md, 1.5rem);
+    padding-top: var(--gap, 1rem);
+    border-top: 1px solid var(--borderSubtle, var(--border));
+  }
+
+  .hours-secondary-label {
+    font-family: var(--font-heading);
+    font-size: var(--small-size, 0.875rem);
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide, 0.08em);
+    margin-bottom: var(--gap-sm, 0.5rem);
+  }
+
+  /* Secondary rows: single time string, centered */
+  .hours-secondary .hours-row {
+    justify-content: center;
+  }
+
+  /* ── Contact / phone CTA ───────────────────────────────────────── */
+
+  .hours-contact {
+    display: flex;
+    justify-content: center;
+    padding-top: var(--gap, 1rem);
+    border-top: 1px solid var(--borderSubtle, var(--border));
+  }
+
+  .hours-phone {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
+
+  /* ── Mobile adjustments ────────────────────────────────────────── */
+
+  @media (max-width: 639px) {
+    .hours-grid {
+      gap: var(--gap, 1rem);
+    }
+
+    .hours-row {
+      padding: var(--gap-sm, 0.5rem) var(--gap-sm, 0.5rem);
+    }
+
+    .hours-day {
+      font-size: var(--small-size, 0.875rem);
+    }
+
+    .hours-time {
+      font-size: var(--caption-size, 0.75rem);
+    }
+  }
 </style>
