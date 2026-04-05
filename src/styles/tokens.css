@@ -309,7 +309,16 @@
   background: var(--background);
 }
 
-/* alternating is the default in base.css */
+[data-section-pattern="alternating"] .section:nth-child(odd) {
+  background: var(--bg, var(--background));
+}
+[data-section-pattern="alternating"] .section:nth-child(even) {
+  background: var(--surface);
+}
+[data-section-pattern="alternating"] .section + .section {
+  border-top: none;
+  box-shadow: none;
+}
 
 [data-section-pattern="gradient"] .section:nth-child(even) {
   background: linear-gradient(180deg, var(--surface) 0%, var(--background) 100%);
