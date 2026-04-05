@@ -521,7 +521,10 @@ const beholdFeedId = gallery?.beholdFeedId || '';
 
     function announce(index: number) {
       if (announcer) {
-        announcer.textContent = `Image ${index + 1} of ${items.length}: ${getAlt(index)}`;
+        const alt = getAlt(index);
+        announcer.textContent = alt
+          ? `Image ${index + 1} of ${items.length}: ${alt}`
+          : `Image ${index + 1} of ${items.length}`;
       }
     }
 
