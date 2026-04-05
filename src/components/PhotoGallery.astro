@@ -466,3 +466,121 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     }
   }
 </style>
+
+<script>
+  let controller: AbortController | null = null;
+
+  function initLightbox() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const lightbox = document.querySelector('.gallery-lightbox') as HTMLElement;
+    if (!lightbox) return;
+
+    const img = lightbox.querySelector('.lightbox-img') as HTMLImageElement;
+    const caption = lightbox.querySelector('.lightbox-caption') as HTMLElement;
+    const closeBtn = lightbox.querySelector('.lightbox-close') as HTMLElement;
+    const prevBtn = lightbox.querySelector('.lightbox-prev') as HTMLElement;
+    const nextBtn = lightbox.querySelector('.lightbox-next') as HTMLElement;
+
+    // Use .gallery-thumb which is shared by both masonry (.gallery-item) and scroll (.gallery-scroll-item) variants
+    const items = Array.from(document.querySelectorAll('.gallery-thumb')) as HTMLElement[];
+    if (!items.length) return;
+
+    let currentIndex = 0;
+    let triggerEl: HTMLElement | null = null;
+
+    /** Collect image srcs from gallery thumbnails */
+    function getSrcs(): string[] {
+      return items.map(item => {
+        const imgEl = item.querySelector('img');
+        return imgEl?.getAttribute('src') || imgEl?.getAttribute('data-src') || '';
+      });
+    }
+
+    /** Get alt text for a gallery item */
+    function getAlt(index: number): string {
+      return items[index]?.querySelector('img')?.alt || '';
+    }
+
+    function open(index: number) {
+      const srcs = getSrcs();
+      if (!srcs[index]) return;
+      currentIndex = index;
+      img.src = srcs[currentIndex];
+      img.alt = getAlt(currentIndex);
+      if (caption) caption.textContent = getAlt(currentIndex);
+      lightbox.setAttribute('aria-hidden', 'false');
+      lightbox.setAttribute('aria-modal', 'true');
+      document.body.style.overflow = 'hidden';
+      closeBtn?.focus();
+    }
+
+    function close() {
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightbox.removeAttribute('aria-modal');
+      document.body.style.overflow = '';
+      triggerEl?.focus();
+    }
+
+    function navigate(dir: number) {
+      const srcs = getSrcs();
+      currentIndex = (currentIndex + dir + srcs.length) % srcs.length;
+      img.src = srcs[currentIndex];
+      img.alt = getAlt(currentIndex);
+      if (caption) caption.textContent = getAlt(currentIndex);
+    }
+
+    // Attach click handlers to each gallery thumbnail
+    items.forEach((item, i) => {
+      item.addEventListener('click', () => {
+        triggerEl = item;
+        open(i);
+      }, { signal });
+    });
+
+    // Close button
+    closeBtn?.addEventListener('click', close, { signal });
+
+    // Prev / Next buttons
+    prevBtn?.addEventListener('click', () => navigate(-1), { signal });
+    nextBtn?.addEventListener('click', () => navigate(1), { signal });
+
+    // Click on backdrop (outside image) closes lightbox
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) close();
+    }, { signal });
+
+    // Keyboard: Escape to close, arrow keys to navigate
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.getAttribute('aria-hidden') !== 'false') return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'ArrowLeft') { navigate(-1); return; }
+      if (e.key === 'ArrowRight') { navigate(1); return; }
+
+      // Focus trap: Tab/Shift+Tab cycle within lightbox
+      if (e.key === 'Tab') {
+        const focusable = Array.from(
+          lightbox.querySelectorAll<HTMLElement>('button, [href], [tabindex]:not([tabindex="-1"])')
+        ).filter(el => el.offsetParent !== null);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    }, { signal });
+  }
+
+  document.addEventListener('astro:page-load', initLightbox);
+</script>
