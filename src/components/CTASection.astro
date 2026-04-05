@@ -77,4 +77,42 @@ const shouldRender = enabled !== false && text && buttonText && buttonHref;
   .cta-section-btn:active {
     transform: translateY(0) scale(0.98);
   }
+
+  /* Dark variant — high-impact, full-section treatment */
+  [data-variant="dark"].cta-section {
+    background: color-mix(in oklch, var(--bg) 90%, black);
+    color: var(--surface);
+    padding: var(--section-pad, 4rem) 0;
+  }
+
+  [data-variant="dark"] .cta-section-inner {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    [data-variant="dark"] .cta-section-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  [data-variant="dark"] .cta-section-text {
+    font-size: var(--title-size, 1.5rem);
+    max-width: 40ch;
+  }
+
+  [data-variant="dark"] .cta-section-btn {
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    background: var(--accent);
+    color: var(--bg, var(--background));
+  }
+
+  [data-variant="dark"] .cta-section-btn:hover {
+    box-shadow: var(--shadow-glow);
+  }
 </style>
