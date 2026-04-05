@@ -86,7 +86,7 @@ function stars(count: number): string {
           {enrichedItems.map((t) => t._url ? (
             <a class="review-card review-card--linked" href={t._url} target="_blank" rel="noopener">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -105,7 +105,7 @@ function stars(count: number): string {
           ) : (
             <div class="review-card">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -126,7 +126,7 @@ function stars(count: number): string {
           {enrichedItems.map((t) => t._url ? (
             <a class="review-card review-card--linked" href={t._url} target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -145,7 +145,7 @@ function stars(count: number): string {
           ) : (
             <div class="review-card" aria-hidden="true">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating)}</div>
+              <div class="review-stars">{stars(t.rating ?? 0)}</div>
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>

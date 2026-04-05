@@ -353,6 +353,12 @@ export const trustbarSchema = z.object({
 // team.json
 // ---------------------------------------------------------------------------
 
+const teamHoursDaySchema = z.object({
+  day: z.string(),
+  open: z.string().nullable(),
+  close: z.string().nullable(),
+});
+
 export const teamMemberSchema = z.object({
   name: z.string(),
   brandName: z.string().optional(),
@@ -361,7 +367,14 @@ export const teamMemberSchema = z.object({
   photo: z.string().optional(),
   bookingUrl: z.string().optional(),
   bookingLabel: z.string().optional(),
-  hours: z.string().optional(),
+  hours: z.union([z.string(), z.array(teamHoursDaySchema)]).optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
+  pricing: z.array(z.object({
+    service: z.string(),
+    price: z.number(),
+    duration: z.string().optional(),
+  })).optional(),
   specialties: z.array(z.string()).optional(),
   order: z.number().optional(),
 }).loose();
@@ -462,10 +475,19 @@ export const processSchema = z.object({
   steps: z.array(processStepSchema),
 }).loose();
 
-/** differentiator.json — competitive advantages */
+/** differentiator.json — competitive advantages (us vs them panels) */
+const diffPanelSchema = z.object({
+  title: z.string().optional(),
+  features: z.array(z.string()),
+  image: z.string().optional(),
+  accent: z.boolean().optional(),
+}).loose();
+
 export const differentiatorSchema = z.object({
   heading: z.string().optional(),
   eyebrow: z.string().optional(),
+  us: diffPanelSchema.optional(),
+  them: diffPanelSchema.optional(),
   items: z.array(z.record(z.string(), z.unknown())).optional(),
 }).loose();
 

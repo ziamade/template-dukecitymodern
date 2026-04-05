@@ -26,10 +26,10 @@ const defaultSteps = [
 const rawSteps = processData?.steps?.length > 0 ? processData.steps : defaultSteps;
 
 // Normalize step data: ensure 2-digit number format
-const steps = rawSteps.map((step: any, idx: number) => ({
+const steps = rawSteps.map((step, idx) => ({
   number: step.number ? String(step.number).padStart(2, '0') : String(idx + 1).padStart(2, '0'),
   title: step.title,
-  description: step.description || step.desc || '',
+  description: step.description || '',
 }));
 ---
 {steps.length > 0 && (
@@ -41,7 +41,7 @@ const steps = rawSteps.map((step: any, idx: number) => ({
       </div>
 
       <div class="process-grid stagger-parent">
-        {steps.map((step: any, idx: number) => (
+        {steps.map((step, idx) => (
           <div class="process-step reveal-up">
             <div class="process-step-card">
               <span class="process-step-watermark" aria-hidden="true">{step.number}</span>

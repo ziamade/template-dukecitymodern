@@ -11,12 +11,12 @@ interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'cards');
 
-const rawItems = (teamData.items || []) as any[];
+const rawItems = teamData.items || [];
 const members = resolveTeamMembers(rawItems as TeamMemberRaw[]);
 
 // Build a lookup for raw team data (pricing, hours, phone — fields not in resolved members)
-function findRaw(name: string): Record<string, any> {
-  return rawItems.find((i: any) => i.name === name) || {};
+function findRaw(name: string): Record<string, unknown> {
+  return (rawItems.find((i) => i.name === name) || {}) as Record<string, unknown>;
 }
 
 const solo = members.length === 1;
