@@ -2,41 +2,36 @@
 // src/components/Hero.astro
 // v4 rewrite: 4 hero styles (split, overlay, video, minimal)
 // driven by theme.layout.heroStyle
-import client from '../data/client.json';
-import hero from '../data/hero.json';
-import contact from '../data/contact.json';
-import location from '../data/location.json';
-import theme from '../data/theme.json';
+import { client, hero, contact, location, theme, testimonials } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
-const heroStyle = (theme as any).layout?.heroStyle || 'split';
-const heroVideo = (hero as any)?.heroVideo || '';
-const heroImage = (hero as any)?.heroImage || '';
-const fallbackImage = (hero as any)?.fallbackImage || '';
-const heroTagline = (hero as any)?.heroTagline || client.name;
-const heroSubtitle = (hero as any)?.heroSubtitle || '';
-const marqueeItems = (theme as any)?.marqueeItems || [];
+const heroStyle = theme.layout?.heroStyle || 'split';
+const heroVideo = hero?.heroVideo || '';
+const heroImage = hero?.heroImage || '';
+const fallbackImage = hero?.fallbackImage || '';
+const heroTagline = hero?.heroTagline || client.name;
+const heroSubtitle = hero?.heroSubtitle || '';
+const marqueeItems = theme?.marqueeItems || [];
 
 // Hero stats from testimonials.json (aggregateRating removed from schema per Google self-serving rule)
-import testimonials from '../data/testimonials.json';
-const ratingValue = (testimonials as any)?.averageRating ? String((testimonials as any).averageRating) : '';
-const reviewCount = (testimonials as any)?.reviewCount ? String((testimonials as any).reviewCount) : '';
-const foundingYear = parseInt((client as any).foundingYear || '0', 10);
+const ratingValue = testimonials?.averageRating ? String(testimonials.averageRating) : '';
+const reviewCount = testimonials?.reviewCount ? String(testimonials.reviewCount) : '';
+const foundingYear = parseInt(String(client.foundingYear || '0'), 10);
 const hasHeroStats = !!(ratingValue || reviewCount || (foundingYear > 1900));
 
 // Location badge
-const serviceArea = (client as any).serviceArea || '';
-const city = (location as any)?.city || '';
-const state = (location as any)?.state || '';
+const serviceArea = client.serviceArea || '';
+const city = location?.city || '';
+const state = location?.state || '';
 const badgeText = serviceArea || (city ? `Serving ${city}${state ? ` & ${state}` : ''}` : '');
 
 // Contact for CTAs
-const phone = (contact as any)?.phoneForTel || (contact as any)?.phone || '';
+const phone = contact?.phoneForTel || contact?.phone || '';
 const phoneClean = phone.replace(/\D/g, '');
 
 // Hero CTA: use prop from index.astro (data-driven), hero.json, or contact fallback
 const { heroCta, variant } = Astro.props as { heroCta?: { text: string; href: string }; variant?: string | number };
-const heroCTAData = (hero as any)?.cta;
+const heroCTAData = hero?.cta;
 const primaryHref = heroCta?.href || heroCTAData?.href || (phoneClean ? `sms:+1${phoneClean}` : '#contact');
 const primaryText = heroCta?.text || heroCTAData?.text || (phoneClean ? 'Text Us' : 'Get in Touch');
 const secondaryHref = '#services';
@@ -144,9 +139,9 @@ const secondaryText = 'Our Services';
           <span class="badge-text">Loading hours...</span>
         </div>
         {location?.city && (
-          <a href={(location as any).mapLink || '#'} class="hero-location">
+          <a href={location.mapLink || '#'} class="hero-location">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span>{(location as any).address ? `${(location as any).address}, ` : ''}{location.city}{(location as any).state ? `, ${(location as any).state}` : ''}{(location as any).zip ? ` ${(location as any).zip}` : ''}</span>
+            <span>{location.address ? `${location.address}, ` : ''}{location.city}{location.state ? `, ${location.state}` : ''}{location.zip ? ` ${location.zip}` : ''}</span>
           </a>
         )}
       </div>

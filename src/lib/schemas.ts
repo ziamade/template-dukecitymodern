@@ -134,8 +134,9 @@ export const themeSchema = z.object({
   industry: z.string().optional(),
   layout: layoutTokensSchema.optional(),
   marqueeItems: z.array(z.string()).optional(),
-  // Fields accessed by components via (theme as any).nav / .cta / .heroCta / .actionBar
-  nav: z.record(z.string(), z.string()).optional(),
+  // Fields accessed by components via theme.nav / .cta / .heroCta / .actionBar
+  // nav may contain nested objects (e.g. { labels: { hero: "Home" } })
+  nav: z.record(z.string(), z.unknown()).optional(),
   cta: ctaOverrideSchema.optional(),
   heroCta: ctaOverrideSchema.optional(),
   actionBar: actionBarSchema.optional(),

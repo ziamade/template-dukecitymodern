@@ -2,30 +2,27 @@
 // src/components/ScrollMoment.astro
 // Personality-specific "wow" section break between sections.
 // Editorial: image band + pull quote. Glass: stat takeover. Bold: massive statement.
-import testimonials from '../data/testimonials.json';
-import client from '../data/client.json';
-import hero from '../data/hero.json';
-import theme from '../data/theme.json';
+import { testimonials, client, hero, theme } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
-const depth = (theme as any).layout?.depth || '';
+const depth = theme.layout?.depth || '';
 const items = testimonials?.items || [];
 
 // Best testimonial: first 5-star, or highest rated
 const bestReview = items.length > 0
-  ? items.reduce((best: any, t: any) => (!best || t.rating > best.rating || (t.rating === best.rating && t.text.length > best.text.length)) ? t : best, null)
+  ? items.reduce((best: typeof items[number] | null, t) => (!best || (t.rating || 0) > (best.rating || 0) || ((t.rating || 0) === (best.rating || 0) && t.text.length > best.text.length)) ? t : best, null)
   : null;
 
 // Stats from testimonials.json (aggregateRating removed from schema per Google self-serving rule)
-const ratingValue = (testimonials as any)?.averageRating ? String((testimonials as any).averageRating) : '';
-const reviewCount = (testimonials as any)?.reviewCount ? String((testimonials as any).reviewCount) : '';
-const foundingYear = parseInt((client as any).foundingYear || '0', 10);
+const ratingValue = testimonials?.averageRating ? String(testimonials.averageRating) : '';
+const reviewCount = testimonials?.reviewCount ? String(testimonials.reviewCount) : '';
+const foundingYear = parseInt(String(client.foundingYear || '0'), 10);
 const hasStats = !!(ratingValue || reviewCount || foundingYear > 1900);
 
 // Statement text
 const statement = foundingYear > 1900
   ? `Trusted Since ${foundingYear}`
-  : (hero as any)?.heroTagline || client.name;
+  : hero?.heroTagline || client.name;
 
 // Only render if we have data for the active personality
 const canRender = depth && (
@@ -38,9 +35,9 @@ const canRender = depth && (
   <section class={`scroll-moment scroll-moment--${depth}`}>
     {depth === 'editorial' && bestReview && (
       <>
-        {(hero as any)?.heroImage && (
+        {hero?.heroImage && (
           <div class="scroll-moment-bg">
-            <OptimizedImg src={(hero as any).heroImage} alt="" width={1600} height={900} loading="lazy" />
+            <OptimizedImg src={hero.heroImage} alt="" width={1600} height={900} loading="lazy" />
           </div>
         )}
         <div class="scroll-moment-overlay">

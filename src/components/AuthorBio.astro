@@ -3,20 +3,16 @@
 // Rich author biography section with photo and social links.
 // Replaces AboutMap for author/publisher sites (no map, no address).
 // Reads from about.json + client.json.
-import client from '../data/client.json';
-import about from '../data/about.json';
-import brand from '../data/brand.json';
-import type { Brand } from '../lib/types';
+import { client, about, brand } from '../lib/data';
 import BrandName from './BrandName.astro';
 import OptimizedImg from './OptimizedImg.astro';
 import { brandify } from '../lib/brandify';
 
-const typedBrand = brand as unknown as Brand;
-const authorPhoto = (client as any).authorPhoto || (client as any).logoUrl || '';
+const authorPhoto = client.authorPhoto || client.logoUrl || '';
 const authorName = client.name || '';
-const heading = (about as any)?.heading || 'About the Author';
-const text = (about as any)?.text || '';
-const socials = (client as any).socials || {};
+const heading = about?.heading || 'About the Author';
+const text = about?.text || '';
+const socials = client.socials || {};
 
 interface Props { variant?: string | number; }
 
@@ -55,7 +51,7 @@ if (socials.website) socialLinks.push({ name: 'Website', url: socials.website, i
         <h2 class="author-heading">{heading}</h2>
 
         {text && (
-          <div class="author-text" set:html={brandify(text, authorName, typedBrand)} />
+          <div class="author-text" set:html={brandify(text, authorName, brand)} />
         )}
 
         {/* Social links */}

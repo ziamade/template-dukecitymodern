@@ -3,6 +3,7 @@
 // Displays individual team members (barbers, stylists, attorneys, etc.)
 // with photos, bios, pricing, individual hours, and booking CTAs.
 // Variants: cards (default), compact.
+import { team as teamData } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 import { resolveTeamMembers } from '../lib/team';
 import type { TeamMemberRaw } from '../lib/team';
@@ -10,13 +11,17 @@ interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'cards');
 
-const teamFiles = import.meta.glob<{ default: any }>('../data/team.json', { eager: true });
-const teamData = Object.values(teamFiles)[0]?.default || { items: [] };
-const members = resolveTeamMembers(teamData.items as TeamMemberRaw[]);
+const rawItems = (teamData.items || []) as any[];
+const members = resolveTeamMembers(rawItems as TeamMemberRaw[]);
+
+// Build a lookup for raw team data (pricing, hours, phone — fields not in resolved members)
+function findRaw(name: string): Record<string, any> {
+  return rawItems.find((i: any) => i.name === name) || {};
+}
 
 const solo = members.length === 1;
-const eyebrow = (teamData as any).eyebrow || (solo ? 'About' : 'Our Team');
-const title = (teamData as any).title || (solo ? 'Meet the Owner' : 'Meet Your Team');
+const eyebrow = teamData.eyebrow || (solo ? 'About' : 'Our Team');
+const title = teamData.title || (solo ? 'Meet the Owner' : 'Meet Your Team');
 ---
 {members.length > 0 && (
   <section class="team-section section" data-variant={variant} id="team" data-solo={solo ? '' : undefined}>
@@ -29,7 +34,7 @@ const title = (teamData as any).title || (solo ? 'Meet the Owner' : 'Meet Your T
       {variant === 'cards' && (
         <div class="team-grid stagger-parent">
           {members.map((member: any) => {
-            const raw = teamData.items.find((i: any) => i.name === member.name) || {};
+            const raw = findRaw(member.name);
             const pricing = raw.pricing || [];
             const hours = raw.hours || [];
             const phone = raw.phone || '';

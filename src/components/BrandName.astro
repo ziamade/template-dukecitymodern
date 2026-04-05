@@ -3,17 +3,14 @@
 // Renders the business name with branded font/color treatment.
 // If nameTreatment is defined in brand.json, renders styled parts.
 // Falls back to plain text with .brand-name class when no treatment.
-import brand from '../data/brand.json';
-import client from '../data/client.json';
-import type { Brand, NameTreatment } from '../lib/types';
+import { brand, client } from '../lib/data';
 
 interface Props {
   size?: 'hero' | 'header' | 'footer' | 'inline';
 }
 
 const { size = 'inline' } = Astro.props;
-const typedBrand = brand as unknown as Brand;
-const treatment: NameTreatment | undefined = typedBrand.nameTreatment;
+const treatment = brand.nameTreatment;
 const layout = treatment?.layout || 'inline';
 ---
 {treatment && treatment.parts.length > 0 ? (

@@ -2,27 +2,26 @@
 // src/components/TrustStats.astro
 // Trust bar stats variant — animated counters for key business metrics.
 // Rendered when theme.json trust section variant is "stats".
-import client from '../data/client.json';
-import testimonials from '../data/testimonials.json';
+import { client, testimonials } from '../lib/data';
 
-const foundingYear = parseInt((client as any).foundingYear || '0', 10);
+const foundingYear = parseInt(String(client.foundingYear || '0'), 10);
 const hasFoundingYear = foundingYear > 1900;
 
 const reviews = testimonials?.items || [];
-const reviewCount = (testimonials as any)?.reviewCount
-  || (testimonials as any)?.totalReviewCount
-  || (testimonials as any)?.totalReviews
+const reviewCount = testimonials?.reviewCount
+  || testimonials?.totalReviewCount
+  || testimonials?.totalReviews
   || reviews.length;
-const avgRating = (testimonials as any)?.averageRating
-  ? String((testimonials as any).averageRating)
+const avgRating = testimonials?.averageRating
+  ? String(testimonials.averageRating)
   : reviews.length > 0
-    ? (reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
+    ? (reviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
     : '0';
 const hasRating = parseFloat(avgRating) > 0;
 const hasReviews = reviewCount > 0;
 
-const license = (client as any).license || '';
-const insured = (client as any).insured === true;
+const license = client.license || '';
+const insured = client.insured === true;
 const hasLicense = !!(license || insured);
 
 const hasStats = hasFoundingYear || hasRating || hasReviews;

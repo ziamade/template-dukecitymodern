@@ -6,8 +6,10 @@
 
 // process.json is optional: loaded via import.meta.glob so the build
 // succeeds without it. When absent, the component uses sensible defaults.
-const processFiles = import.meta.glob<{ default: any }>('../data/process.json', { eager: true });
-const processData: any = Object.values(processFiles)[0]?.default ?? null;
+import { processSchema } from '../lib/schemas';
+const processFiles = import.meta.glob('../data/process.json', { eager: true });
+const rawProcess = (Object.values(processFiles)[0] as Record<string, unknown>)?.default ?? null;
+const processData = rawProcess ? processSchema.parse(rawProcess) : null;
 
 const heading = processData?.heading || 'How It Works';
 const eyebrow = processData?.eyebrow || 'Our Process';

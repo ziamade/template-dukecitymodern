@@ -2,28 +2,25 @@
 // src/components/QuoteForm.astro
 // Two-column contact form: info sidebar + glass card form
 // PW Tint pattern with Web3Forms action and honeypot spam prevention
-import contact from '../data/contact.json';
-import location from '../data/location.json';
-import hours from '../data/hours.json';
-import client from '../data/client.json';
+import { contact, location, hours, client } from '../lib/data';
 import { formatPhone } from '../lib/utils';
 
-const slug = (client as any).slug || '';
+const slug = client.slug || '';
 const CONTACT_API = 'https://ziamade.com/api/contact';
 
-const phoneForTel = (contact as any).phoneForTel || '';
-const email = (contact as any).email || '';
-const address = (location as any).address || '';
-const city = (location as any).city || '';
-const state = (location as any).state || '';
-const zip = (location as any).zip || '';
+const phoneForTel = contact.phoneForTel || '';
+const email = contact.email || '';
+const address = location.address || '';
+const city = location.city || '';
+const state = location.state || '';
+const zip = location.zip || '';
 const fullAddress = [address, city, state, zip].filter(Boolean).join(', ');
 
 // Summarize hours for the sidebar
-const hoursData = (hours as any)?.days || [];
+const hoursData = hours?.days || [];
 function summarizeHours(): string {
   if (!hoursData.length) return '';
-  const openDays = hoursData.filter((d: any) => d.open);
+  const openDays = hoursData.filter((d) => d.open);
   if (!openDays.length) return '';
   const first = openDays[0];
   const last = openDays[openDays.length - 1];

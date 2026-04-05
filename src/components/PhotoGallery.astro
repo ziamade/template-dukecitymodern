@@ -4,8 +4,7 @@
 // Variants: masonry (default), scroll (horizontal scroll row).
 // If beholdFeedId is set in gallery.json, loads the live Instagram widget.
 // Falls back to the static grid if Behold fails or no feed ID configured.
-import galleryRaw from '../data/gallery.json';
-const gallery = galleryRaw as any;
+import { gallery } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
 interface Props { variant?: string | number; }
@@ -33,7 +32,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     {/* ── Horizontal scroll variant ─────────────────────────────────── */}
     {variant === 'scroll' && hasGallery && (
       <div class="gallery-scroll container" id="gallery-static">
-        {images.map((img: any, i: number) => (
+        {images.map((img, i) => (
           <button
             class="gallery-scroll-item gallery-thumb"
             data-index={i}
@@ -69,7 +68,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
         id={variant === 'scroll' ? undefined : 'gallery-static'}
         style={beholdFeedId ? 'display:none' : undefined}
       >
-        {images.map((img: any, i: number) => (
+        {images.map((img, i) => (
           <button
             class="gallery-item gallery-thumb"
             data-tilt="3"

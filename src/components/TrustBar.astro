@@ -2,8 +2,7 @@
 // src/components/TrustBar.astro
 // PW Tint trust bar pattern: horizontal flex, large number/value + label,
 // vertical dividers, data-driven from trustbar.json, .reveal-up with stagger.
-const tbFiles = import.meta.glob<{ default: any }>('../data/trustbar.json', { eager: true });
-const trustbar: any = Object.values(tbFiles)[0]?.default || { items: [] };
+import { trustbar } from '../lib/data';
 
 const items = trustbar?.items || [];
 const hasItems = items.length > 0;
@@ -12,7 +11,7 @@ const hasItems = items.length > 0;
   <section class="trustbar-section" id="trust">
     <div class="container">
       <div class="trustbar stagger-parent">
-        {items.map((item: any, i: number) => (
+        {items.map((item, i) => (
           <>
             {i > 0 && <span class="trustbar-divider" aria-hidden="true" />}
             <div class="trustbar-item reveal-up">

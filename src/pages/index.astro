@@ -34,16 +34,8 @@ import AuthorBio from '../components/AuthorBio.astro';
 
 import { resolveNavLabels, resolveCta, resolveHeroCta } from '../lib/section-registry';
 
-import contact from '../data/contact.json';
-import location from '../data/location.json';
-import testimonials from '../data/testimonials.json';
-import theme from '../data/theme.json';
-
-interface SectionEntry {
-  id: string;
-  variant?: string | number;
-  component?: string;
-}
+import { contact, location, testimonials, theme } from '../lib/data';
+import type { SectionEntry } from '../lib/types';
 
 const hasReviews = testimonials?.items?.length > 0;
 
@@ -93,7 +85,7 @@ function resolveComponent(entry: SectionEntry): any {
 }
 
 // Resolve sections from theme data
-function resolveSections(themeData: any): SectionEntry[] {
+function resolveSections(themeData: typeof theme): SectionEntry[] {
   if (themeData.sections?.length > 0) return themeData.sections;
   const order = themeData.sectionOrder?.length > 0
     ? themeData.sectionOrder
@@ -104,12 +96,12 @@ function resolveSections(themeData: any): SectionEntry[] {
 const sections = resolveSections(theme);
 
 // Nav, CTA, and hero CTA — all data-driven from theme.json
-const themeNav = (theme as any).nav || {};
-const themeCta = (theme as any).cta || {};
-const themeHeroCta = (theme as any).heroCta || {};
-const themeActionBar = (theme as any).actionBar || {};
+const themeNav = theme.nav || {};
+const themeCta = theme.cta || {};
+const themeHeroCta = theme.heroCta || {};
+const themeActionBar = theme.actionBar || {};
 
-const sectionLabels = resolveNavLabels(themeNav.labels);
+const sectionLabels = resolveNavLabels(themeNav.labels as Record<string, string> | undefined);
 const cta = resolveCta(themeCta);
 const heroCta = resolveHeroCta(themeHeroCta);
 
@@ -124,8 +116,8 @@ function actionIcon(name: string): string {
   return (actionIcons[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
 }
 
-// Visual depth: dark section and dividers
-const layout = (theme as any).layout || {};
+// Visual depth: dark section and dividers (some layout tokens are free-form, not in schema)
+const layout = (theme.layout || {}) as Record<string, string>;
 const depth = layout.depth || '';
 const darkSection = layout.darkSection || '';
 const useEditorialDividers = depth === 'editorial';
@@ -136,8 +128,8 @@ const defaultActionBarLinks = [
   { href: location.mapLink || '#', icon: actionIcon('navigation'), text: 'Directions' },
   { href: cta.href, icon: actionIcon('mail'), text: cta.text },
 ];
-const actionBarLinks = themeActionBar.links || defaultActionBarLinks;
-const showActionBar = themeActionBar.hidden !== true;
+const actionBarLinks = (themeActionBar as Record<string, unknown>).links || defaultActionBarLinks;
+const showActionBar = (themeActionBar as Record<string, unknown>).hidden !== true;
 ---
 <BaseLayout>
   <StickyHeader navLinks={navLinks} ctaText={cta.text} ctaHref={cta.href} />

@@ -3,15 +3,17 @@
 // PW Tint side-by-side comparison panels ("Us" vs "Them")
 // Panels slide in from opposite sides, "or" divider on desktop
 // Renders nothing if no differentiator data exists
-import client from '../data/client.json';
+import { client } from '../lib/data';
+import { differentiatorSchema } from '../lib/schemas';
 
 // Use import.meta.glob to avoid build errors when file doesn't exist
 const diffFiles = import.meta.glob('../data/differentiator.json', { eager: true });
-const diffData: any = (Object.values(diffFiles)[0] as any)?.default ?? null;
+const rawDiff = (Object.values(diffFiles)[0] as Record<string, unknown>)?.default ?? null;
+const diffData = rawDiff ? differentiatorSchema.parse(rawDiff) : null;
 
 // If no data file, render nothing (template below is wrapped in diffData check)
 
-const businessName = (client as any).name || 'Us';
+const businessName = client.name || 'Us';
 
 // Expected data shape:
 // {
