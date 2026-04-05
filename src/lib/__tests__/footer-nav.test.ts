@@ -46,7 +46,9 @@ describe('Footer navLinks prop', () => {
     expect(footerSrc).toContain('text-decoration: none');
   });
 
-  it('desktop grid is 4-column to accommodate nav links', () => {
+  it('desktop grid defaults to 3-column and expands to 4 with nav links via :has()', () => {
+    expect(footerSrc).toContain('grid-template-columns: 1.5fr 1fr 1fr');
+    expect(footerSrc).toContain(':has(.footer-nav-col)');
     expect(footerSrc).toContain('grid-template-columns: 1.5fr 1fr 1fr 1fr');
   });
 });

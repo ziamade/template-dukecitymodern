@@ -3,14 +3,14 @@
 // DCD Luxury footer — 4-column grid with brand, nav links, contact, service area
 // Social icons with glow hover, divider glow line, ambient orb
 import { client, contact, location, about } from '../lib/data';
+import { formatPhone } from '../lib/utils';
+import OptimizedImg from './OptimizedImg.astro';
+import BrandName from './BrandName.astro';
 
 interface Props {
   navLinks?: Array<{ href: string; text: string }>;
 }
 const { navLinks = [] } = Astro.props;
-import { formatPhone } from '../lib/utils';
-import OptimizedImg from './OptimizedImg.astro';
-import BrandName from './BrandName.astro';
 
 const logoUrl = client.logoUrl || '';
 const phoneForTel = contact.phoneForTel || '';
@@ -198,8 +198,11 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
 
   @media (min-width: 768px) {
     .footer-grid {
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      grid-template-columns: 1.5fr 1fr 1fr;
       gap: 2.5rem;
+    }
+    .footer-grid:has(.footer-nav-col) {
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
     }
   }
 
@@ -297,6 +300,11 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
     color: var(--accent);
   }
 
+  .footer-nav-list a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   /* ── Service area cities ────────────────────────────────────────── */
   .footer-cities {
     display: flex;
@@ -357,6 +365,11 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
     border-color: var(--accent);
     transform: translateY(-2px);
     box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .social-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   /* ── Bottom bar ─────────────────────────────────────────────────── */

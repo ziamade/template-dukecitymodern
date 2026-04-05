@@ -78,6 +78,11 @@ const shouldRender = enabled !== false && text && buttonText && buttonHref;
     transform: translateY(0) scale(0.98);
   }
 
+  .cta-section-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   /* Dark variant — high-impact, full-section treatment */
   [data-variant="dark"].cta-section {
     background: color-mix(in oklch, var(--bg) 90%, black);
@@ -91,13 +96,6 @@ const shouldRender = enabled !== false && text && buttonText && buttonHref;
     align-items: center;
     gap: 2rem;
     text-align: center;
-  }
-
-  @media (min-width: 768px) {
-    [data-variant="dark"] .cta-section-inner {
-      flex-direction: column;
-      text-align: center;
-    }
   }
 
   [data-variant="dark"] .cta-section-text {
