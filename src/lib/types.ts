@@ -1,253 +1,107 @@
-export interface Client {
-  name: string;
-  foundingYear: number | null;
-  license: string;
-  industry: string;
-  delivery: Record<string, string>;
-  socials: { facebook: string; instagram: string; google: string; yelp: string };
-  domain: string;
-  logoUrl?: string;
-  orderUrl?: string;
-  serviceArea?: string;
-  insured?: boolean;
-}
+/**
+ * TypeScript types for all data shapes.
+ *
+ * Derived from Zod schemas in ./schemas.ts via z.infer<>.
+ * This replaces the previous hand-maintained interfaces and fixes
+ * mismatches between the declared types and actual JSON data.
+ *
+ * Backward-compatible: all previously exported type names are preserved.
+ */
+import type { z } from 'astro/zod';
+import type {
+  clientSchema,
+  colorPaletteSchema,
+  namePartSchema,
+  nameTreatmentSchema,
+  brandSchema,
+  contactSchema,
+  locationSchema,
+  hoursDaySchema,
+  hoursSchema,
+  seoSchema,
+  layoutTokensSchema,
+  sectionEntrySchema,
+  themeSchema,
+  alertSchema,
+  heroSchema,
+  testimonialSchema,
+  testimonialsSchema,
+  faqItemSchema,
+  faqSchema,
+  galleryImageSchema,
+  gallerySchema,
+  menuItemSchema,
+  menuCategorySchema,
+  menuSchema,
+  aboutSchema,
+  projectSchema,
+  projectsSchema,
+  productPricingSchema,
+  productSchema,
+  teamMemberSchema,
+  teamSchema,
+  tourStepSchema,
+  tourSchema,
+  trustbarItemSchema,
+  trustbarSchema,
+  ctaSchema,
+  bookSchema,
+  analyticsSchema,
+  googleLinksSchema,
+  attributesSchema,
+  sourcesSchema,
+  previewSchema,
+  processStepSchema,
+  processSchema,
+  differentiatorSchema,
+} from './schemas';
 
-export interface ColorPalette {
-  bg: string;
-  surface: string;
-  surfaceAlt: string;
-  text: string;
-  textMuted: string;
-  accent: string;
-  accentDim: string;
-  accentGlow: string;
-  border: string;
-  borderSubtle?: string;
-}
+// ---------------------------------------------------------------------------
+// Inferred types — derived from Zod schemas (single source of truth)
+// ---------------------------------------------------------------------------
 
-export interface NamePart {
-  text: string;
-  font: 'name' | 'heading' | 'body';
-  color: 'accent' | 'primary' | 'text' | 'textMuted' | 'gradient';
-}
-
-export interface NameTreatment {
-  parts: NamePart[];
-  layout: 'inline' | 'stacked';
-}
-
-export interface Brand {
-  palette: ColorPalette;
-  nameFont: string;
-  headingFont: string;
-  bodyFont: string;
-  monoFont?: string;
-  nameTreatment?: NameTreatment;
-}
-
-export interface Contact {
-  email: string;
-  phoneForTel: string;
-}
-
-export interface Location {
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-  mapLink: string;
-  lat?: number;
-  lng?: number;
-}
-
-export interface HoursDay {
-  day: string;
-  open: string | null;
-  close: string | null;
-}
-
-export interface Hours {
-  days: HoursDay[];
-}
-
-export interface SEO {
-  pageTitle: string;
-  metaDescription: string;
-  ogTitle: string;
-  ogDescription: string;
-  ogImage: string;
-  canonicalUrl: string;
-}
-
-export interface LayoutTokens {
-  cardRadius?: 'sharp' | 'soft' | 'round';
-  sectionGap?: 'tight' | 'normal' | 'spacious';
-  buttonStyle?: 'rounded' | 'pill' | 'square';
-  headerStyle?: 'solid' | 'glass' | 'transparent';
-  cardStyle?: 'bordered' | 'shadow' | 'flat' | 'elevated' | 'luxury';
-  typographyScale?: 'compact' | 'standard' | 'editorial' | 'display';
-  imageStyle?: 'rounded' | 'sharp' | 'masked';
-  sectionPattern?: 'none' | 'alternating' | 'gradient' | 'wave';
-  headerPosition?: 'sticky' | 'static' | 'hidden-on-scroll';
-  motionIntensity?: 'none' | 'subtle' | 'standard' | 'dramatic';
-  atmosphereLevel?: 'none' | 'minimal' | 'rich' | 'cinematic';
-  heroStyle?: 'split' | 'overlay' | 'video' | 'minimal';
-  buttonVariant?: 'solid' | 'ghost' | 'tactile';
-  dividerStyle?: 'line' | 'glow' | 'fade' | 'none';
-  logoSize?: 'sm' | 'md' | 'lg';
-  shadowStyle?: 'subtle' | 'standard' | 'dramatic';
-  hoverIntensity?: 'none' | 'subtle' | 'standard';
-  gradientStyle?: 'none' | 'subtle' | 'accent-tint';
-  overlayDarkness?: 'light' | 'medium' | 'heavy';
-  glassOpacity?: 'subtle' | 'standard' | 'heavy';
-  borderWeight?: 'none' | 'subtle' | 'standard';
-}
-
-export interface SectionEntry {
-  id: string;
-  variant?: string | number;
-}
-
-export interface Theme {
-  sectionOrder?: string[];
-  heroVariant?: number;
-  accentStyle?: string;
-  faviconShape?: string;
-  industry: string;
-  sections?: SectionEntry[];
-  layout?: LayoutTokens;
-  marqueeItems?: string[];
-}
-
-export interface Alert {
-  enabled: boolean;
-  text: string;
-}
-
-export interface Hero {
-  heroImage: string;
-  heroTagline: string;
-  heroSubtitle: string;
-  fallbackImage?: string;
-  videoUrl?: string;
-  videoPoster?: string;
-}
-
-export interface Testimonial {
-  text: string;
-  author: string;
-  initials: string;
-  role: string;
-  rating: number;
-  source: string;
-  url: string;
-}
-
-export interface Testimonials {
-  items: Testimonial[];
-  reviewCount?: number;
-}
-
-export interface FaqItem {
-  question: string;
-  answer: string;
-  source?: string;
-}
-
-export interface Faq {
-  items: FaqItem[];
-}
-
-export interface GalleryImage {
-  url: string;
-  alt: string;
-  fallbackUrl: string;
-}
-
-export interface Gallery {
-  beholdFeedId?: string;
-  images: GalleryImage[];
-}
-
-export interface MenuItem {
-  name: string;
-  description?: string;
-  price?: string;
-  featured?: boolean;
-  photo?: string | null;
-}
-
-export interface MenuCategory {
-  name: string;
-  items: MenuItem[];
-}
-
-export interface Menu {
-  categories: MenuCategory[];
-}
-
-export interface About {
-  heading: string;
-  text: string;
-}
-
-export interface Project {
-  title: string;
-  description: string;
-  before: string;
-  after: string;
-  during?: string;
-  service: string;
-}
-
-export interface Projects {
-  projects: Project[];
-}
-
-export interface ProductPricing {
-  label: string;
-  price: number;
-  note?: string;
-}
-
-export interface Product {
-  name: string;
-  subtitle?: string;
-  detail?: string;
-  badge?: string;
-  image?: string;
-  featured?: boolean;
-  order?: number;
-  specs?: Record<string, string>;
-  tags?: string[];
-  pricing?: ProductPricing[];
-}
-
-export interface TeamMember {
-  name: string;
-  brandName?: string;
-  title?: string;
-  bio?: string;
-  photo?: string;
-  bookingUrl?: string;
-  bookingLabel?: string;
-  hours?: string;
-  specialties?: string[];
-  order?: number;
-}
-
-export interface Team {
-  items: TeamMember[];
-}
-
-export interface TourStep {
-  target: string;
-  title: string;
-  body: string;
-}
-
-export interface TourData {
-  steps: TourStep[];
-  businessName: string;
-}
+export type Client = z.infer<typeof clientSchema>;
+export type ColorPalette = z.infer<typeof colorPaletteSchema>;
+export type NamePart = z.infer<typeof namePartSchema>;
+export type NameTreatment = z.infer<typeof nameTreatmentSchema>;
+export type Brand = z.infer<typeof brandSchema>;
+export type Contact = z.infer<typeof contactSchema>;
+export type Location = z.infer<typeof locationSchema>;
+export type HoursDay = z.infer<typeof hoursDaySchema>;
+export type Hours = z.infer<typeof hoursSchema>;
+export type SEO = z.infer<typeof seoSchema>;
+export type LayoutTokens = z.infer<typeof layoutTokensSchema>;
+export type SectionEntry = z.infer<typeof sectionEntrySchema>;
+export type Theme = z.infer<typeof themeSchema>;
+export type Alert = z.infer<typeof alertSchema>;
+export type Hero = z.infer<typeof heroSchema>;
+export type Testimonial = z.infer<typeof testimonialSchema>;
+export type Testimonials = z.infer<typeof testimonialsSchema>;
+export type FaqItem = z.infer<typeof faqItemSchema>;
+export type Faq = z.infer<typeof faqSchema>;
+export type GalleryImage = z.infer<typeof galleryImageSchema>;
+export type Gallery = z.infer<typeof gallerySchema>;
+export type MenuItem = z.infer<typeof menuItemSchema>;
+export type MenuCategory = z.infer<typeof menuCategorySchema>;
+export type Menu = z.infer<typeof menuSchema>;
+export type About = z.infer<typeof aboutSchema>;
+export type Project = z.infer<typeof projectSchema>;
+export type Projects = z.infer<typeof projectsSchema>;
+export type ProductPricing = z.infer<typeof productPricingSchema>;
+export type Product = z.infer<typeof productSchema>;
+export type TeamMember = z.infer<typeof teamMemberSchema>;
+export type Team = z.infer<typeof teamSchema>;
+export type TourStep = z.infer<typeof tourStepSchema>;
+export type TourData = z.infer<typeof tourSchema>;
+export type TrustbarItem = z.infer<typeof trustbarItemSchema>;
+export type Trustbar = z.infer<typeof trustbarSchema>;
+export type CTA = z.infer<typeof ctaSchema>;
+export type Book = z.infer<typeof bookSchema>;
+export type Analytics = z.infer<typeof analyticsSchema>;
+export type GoogleLinks = z.infer<typeof googleLinksSchema>;
+export type Attributes = z.infer<typeof attributesSchema>;
+export type Sources = z.infer<typeof sourcesSchema>;
+export type PreviewData = z.infer<typeof previewSchema>;
+export type ProcessStep = z.infer<typeof processStepSchema>;
+export type Process = z.infer<typeof processSchema>;
+export type Differentiator = z.infer<typeof differentiatorSchema>;
