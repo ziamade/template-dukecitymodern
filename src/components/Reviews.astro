@@ -455,6 +455,14 @@ function stars(count: number): string {
     height: 18px;
   }
 
+  /* ── Focus-visible states ───────────────────────────────────────── */
+
+  .reviews-count a:focus-visible,
+  .reviews-cta-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   /* ── Reduced motion ──────────────────────────────────────────────── */
 
   @media (prefers-reduced-motion: reduce) {

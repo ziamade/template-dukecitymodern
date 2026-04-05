@@ -622,6 +622,15 @@ const splitRemaining = featured.length > 0
     line-height: 1.4;
   }
 
+  /* ── Focus-visible states ───────────────────────────────────────── */
+
+  .services-list-item:focus-visible,
+  .service-icon-card:focus-visible,
+  .service-compact-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   /* ── Reduced motion ────────────────────────────────────────────── */
 
   @media (prefers-reduced-motion: reduce) {
