@@ -1,179 +1,358 @@
-# Duke City Modern — 11ty Template
+# template-dukecitymodern — Astro v4 Website Template
 
-## Project Ethos
+## What This Is
 
-This is a reusable 11ty website template by **Duke City Digital** for local business clients. The aesthetic is **"High Desert Modern"** — Southwest-inspired warmth with clean, modern design. Every decision prioritizes:
-
-- **Local business first** — designed for service businesses, not SaaS
-- **CMS-editable** — clients can update content without touching code
-- **Performance** — static HTML, optimized images, minimal JS
-- **Accessibility** — semantic HTML, ARIA attributes, keyboard navigation
+Astro 6.x static-site template for ZiaMade client sites. Produces single-page local business websites with data-driven section rendering, CSS custom properties theming, and GSAP animations. Client repos hold data only; this template is fetched at build time.
 
 ## Architecture
 
-| Layer | Technology |
-|-------|-----------|
-| Generator | Eleventy 3.x (11ty) |
-| Templates | Nunjucks (.html with `{% %}` syntax) |
-| Styling | LESS → PostCSS (autoprefixer + cssnano) |
-| JavaScript | esbuild (bundling + minification) |
-| CMS | Decap CMS (admin/config.yml) + Pages CMS (.pages.yml) |
-| Images | Sharp plugin (`{% getUrl %}` shortcode) |
-| Hosting | Cloudflare Pages (GitHub Actions + Wrangler) |
+| Layer | Tool |
+|-------|------|
+| Framework | Astro 6.x (`output: 'static'`) |
+| Styling | Pure CSS with custom properties (no preprocessor) |
+| Fonts | Self-hosted woff2 in `public/fonts/`, `@font-face` generated at build time |
+| Animations | GSAP + ScrollTrigger + Lenis smooth scroll |
+| Images | Astro Image (`astro:assets`), Sharp for AVIF/WebP |
+| CMS | Pages CMS (pagescms.org, Git-based, `.pages.yml`) |
+| Hosting | Cloudflare Pages (Direct Upload via GitHub Actions + Wrangler) |
+| Analytics | Umami (optional, via `analytics.json`) |
+| Tour | driver.js (optional, via `tour.json`) |
+
+### Data-Only Client Repos
+
+Client repos contain only data files (`src/data/*.json`, `src/content/`, `src/assets/images/`). On push, their GitHub Actions workflow:
+
+1. Checks out this template at a pinned version tag from `.template-version`
+2. Copies client data into the template
+3. Builds with `astro build`
+4. Deploys to Cloudflare Pages via `wrangler pages deploy`
+
+Never edit components in a client repo build directory. Template fixes go in this repo.
 
 ### Directory Structure
 
 ```
 src/
-├── _data/           # Global data (JSON + client.js)
-├── _includes/
-│   ├── layouts/     # base.html (main template)
-│   ├── sections/    # header.html, footer.html
-│   └── components/  # Reusable partials
-├── admin/           # Decap CMS config
-├── assets/
-│   ├── less/        # root.less, critical.less, local.less
-│   ├── js/          # nav.js, script.js, dark.js
-│   ├── images/      # Site images
-│   ├── svgs/        # Icons
-│   ├── fonts/       # Local font files
-│   └── favicons/    # Favicon set
-├── config/          # Build config (processors, filters, plugins)
-├── content/         # Markdown content (services)
-└── index.html       # Homepage
+  components/        # 32 Astro components (sections + layout)
+  data/              # JSON data files (27 files)
+  layouts/           # BaseLayout.astro (theme CSS injection, meta, scripts)
+  lib/               # brand.ts, fonts.ts, images.ts, preview.ts, types.ts, etc.
+  pages/             # index.astro (data-driven section renderer)
+  scripts/           # animation-controller.ts (GSAP orchestrator)
+  styles/            # tokens.css, base.css, layout.css, components.css, atmosphere.css, animations.css, brand-name.css, menu.css
+public/
+  fonts/             # Self-hosted woff2 font files
+  scripts/           # Vanilla JS (open-now, gallery-hint, gallery-lightbox, gallery-slider, menu-scroll, driver.js)
+  styles/            # driver.css
+tests/visual/        # Playwright visual regression (fixtures x viewports)
 ```
 
-## Data Schemas
+## Data Files
 
-All CMS-editable data lives in `src/_data/`. Update the JSON, and the site rebuilds.
+All data lives in `src/data/`. Files are plain JSON imported at build time. Optional files use `import.meta.glob` with eager loading (not `fs.existsSync`).
 
-### client.js (code-only, not CMS-editable)
-```js
-{ name, foundingYear, license, socials: { facebook, instagram, google }, domain }
+| File | Required | Contents |
+|------|----------|----------|
+| `client.json` | Yes | Business name, industry, slug, foundingYear, license, socials, domain, logoUrl, orderUrl, serviceArea |
+| `brand.json` | Yes | Single color palette (`palette.*`), nameFont, headingFont, bodyFont, monoFont, nameTreatment |
+| `theme.json` | Yes | Section order + variants, layout tokens, nav labels, CTA overrides, heroCta, actionBar, accentStyle, marqueeItems |
+| `contact.json` | Yes | email, phoneForTel |
+| `location.json` | Yes | address, city, state, zip, country, mapLink, lat, lng |
+| `hero.json` | Yes | heroImage, heroTagline, heroSubtitle, fallbackImage, videoUrl, videoPoster |
+| `seo.json` | Yes | pageTitle, metaDescription, ogTitle, ogDescription, ogImage, canonicalUrl |
+| `schema.json` | Yes | Full JSON-LD structured data (injected as `<script type="application/ld+json">`) |
+| `hours.json` | Yes | days[]: day, open, close (null = closed) |
+| `testimonials.json` | Yes | items[]: text, author, initials, role, rating, source, url; reviewCount |
+| `trustbar.json` | Yes | items[]: number, label |
+| `faq.json` | Yes | items[]: question, answer, source |
+| `about.json` | Yes | heading, text |
+| `cta.json` | Yes | enabled, text, buttonText, buttonHref |
+| `alert.json` | Yes | enabled, text, startDate, endDate (date-gated via `lib/alert.ts`) |
+| `gallery.json` | Yes | beholdFeedId (optional), images[]: url, alt, fallbackUrl |
+| `menu.json` | Yes | categories[]: name, items[]: name, description, price, featured, photo |
+| `projects.json` | Yes | projects[]: title, description, before, after, during, service |
+| `team.json` | Yes | items[]: name, brandName, title, bio, photo, bookingUrl, bookingLabel, hours, specialties, order |
+| `analytics.json` | Yes | umamiWebsiteId (empty string = disabled), umamiScriptUrl |
+| `book.json` | Yes | title, subtitle, description, blurb, coverImage, backCoverImage, purchaseUrl, formats, publishDate, publisher, isbn |
+| `attributes.json` | Yes | Places API attributes (serviceFlags, restaurant, atmosphere, etc.) |
+| `google-links.json` | Yes | directions, writeReview, allReviews, photos, place |
+| `_sources.json` | Internal | Source attribution for data fields (not rendered) |
+| `_template-manifest.json` | Internal | Machine-readable list of all valid layout tokens, section IDs, and component overrides |
+| `preview.json` | Optional | businessName, slug. Present = preview mode (disclaimer bar, noindex) |
+| `tour.json` | Optional | steps[]: target, title, body; businessName. Enables driver.js guided tour overlay |
+
+Services: `src/content/services/*.md` (frontmatter: title, description, beforeImage, afterImage, startingPrice, order)
+
+Products: `src/content/products/*.md` (frontmatter: name, subtitle, detail, badge, image, featured, order, tags, pricing[])
+
+## Section System
+
+### How It Works
+
+`index.astro` reads `theme.json` sections array and renders matching components via a registry lookup:
+
+```
+theme.json sections[] -> resolveComponent(id, variant) -> Astro component
 ```
 
-### contact.json
+Resolution order: explicit `component` override > variant override > default component for section ID.
+
+### Section Registry
+
+| Section ID | Default Component | Variant Overrides | Data Source |
+|------------|-------------------|-------------------|-------------|
+| `hero` | Hero | split, overlay, video, minimal | `hero.json` |
+| `trust` | TrustBar | stats -> TrustStats | `trustbar.json` |
+| `services` | ServiceCards | cards, icon-grid, compact, split | `content/services/*.md` |
+| `products` | Products | -- | `content/products/*.md` |
+| `projects` | ProjectGallery | -- | `projects.json` |
+| `process` | ProcessSteps | -- | (hardcoded steps) |
+| `gallery` | PhotoGallery | masonry, scroll | `gallery.json` + optional Behold feed |
+| `menu` | MenuSection | -- | `menu.json` |
+| `reviews` | Reviews | scroll | `testimonials.json` (skipped if items empty) |
+| `faq` | FAQ | -- | `faq.json` |
+| `contact` | QuoteForm | order-visit -> OrderVisit | `contact.json` |
+| `about` | AboutMap | author-bio -> AuthorBio | `about.json`, `location.json` |
+| `hours` | HoursDisplay | -- | `hours.json` |
+| `beforeAfter` | BeforeAfter | -- | content collection |
+| `differentiator` | Differentiator | -- | content collection |
+| `marquee` | Marquee | -- | `theme.json` marqueeItems |
+| `team` | Team | -- | `team.json` |
+| `cta` | CTASection | -- | `cta.json` |
+| `book` | BookShowcase | -- | `book.json` |
+
+### Fallback Section Order
+
+If `theme.json` has no `sections` array, falls back to `sectionOrder[]`, then to:
+`hero, trust, services, projects, process, reviews, faq, contact, about`
+
+### Adding a Section
+
+1. Create `src/components/NewSection.astro`
+2. Import it in `index.astro` and add to `componentMap`
+3. Add the section ID to `defaultComponentMap` in `index.astro`
+4. Add to `DEFAULT_COMPONENTS` and `DEFAULT_NAV_LABELS` in `src/lib/section-registry.ts`
+5. Add the section ID to `_template-manifest.json` capabilities.sectionIds
+6. Add to `theme.json` sections array in the desired position
+
+## Brand/Theme System
+
+### Single Palette (v4)
+
+No light/dark toggle. One palette per site, defined in `brand.json`:
+
+```
+palette: { bg, surface, surfaceAlt, text, textMuted, accent, accentDim, accentGlow, border, borderSubtle? }
+```
+
+`lib/brand.ts` generates CSS custom properties injected as inline `<style>` in `<head>`:
+- `paletteToCSS()` -- maps palette fields to `--bg`, `--surface`, `--text`, `--accent`, etc.
+- `generateThemeCSS()` -- palette vars + font-family vars (`--font-name`, `--font-heading`, `--font-body`, `--font-mono`)
+- `generateLayoutCSS()` -- maps layout tokens to CSS vars (`--card-radius`, `--section-gap`, `--btn-radius`, etc.)
+
+### Font System
+
+Fonts are self-hosted woff2 files in `public/fonts/`. The registry in `src/lib/fonts.ts` maps font family names to file paths. `buildFontFaceCSS(brand)` emits `@font-face` declarations for nameFont, headingFont, bodyFont. ~40 fonts available (Google variable, Google static, Fontshare variable).
+
+### Layout Tokens
+
+`theme.json` layout object controls visual design. Applied as `data-*` attributes on `<body>` and/or CSS custom properties:
+
+| Token | Values | Effect |
+|-------|--------|--------|
+| `heroStyle` | split, overlay, video, minimal | Hero component variant |
+| `headerStyle` | solid, glass, transparent | Header background treatment |
+| `headerPosition` | sticky, static, hidden-on-scroll | Header scroll behavior |
+| `cardStyle` | bordered, shadow, flat, elevated, luxury | Card visual treatment |
+| `cardRadius` | sharp, soft, round | `--card-radius` |
+| `buttonStyle` | rounded, pill, square | `--btn-radius` |
+| `buttonVariant` | solid, ghost, tactile | Button fill style |
+| `sectionPattern` | none, alternating, gradient, wave | Background rhythm |
+| `sectionGap` | tight, normal, spacious | `--section-gap` |
+| `atmosphereLevel` | none, minimal, rich, cinematic | Noise overlay + ambient effects |
+| `motionIntensity` | none, subtle, standard, dramatic | GSAP animation strength |
+| `dividerStyle` | line, glow, fade, none | Section dividers |
+| `typographyScale` | compact, standard, editorial, display | `--font-size-base/h1/h2` |
+| `imageStyle` | rounded, sharp, masked | `--img-radius` |
+| `shadowStyle` | subtle, standard, dramatic | `--shadow-card` |
+| `hoverIntensity` | none, subtle, standard | `--hover-scale`, `--hover-shadow` |
+| `overlayDarkness` | light, medium, heavy | `--overlay-darkness` |
+| `glassOpacity` | subtle, standard, heavy | `--glass-opacity` |
+| `borderWeight` | none, subtle, standard | `--border-weight` |
+
+All valid values are documented in `src/data/_template-manifest.json`.
+
+### Name Treatment
+
+`brand.json` supports `nameTreatment` for styled business name rendering:
 ```json
-{ "email": "string", "phoneForTel": "555-555-5555" }
+{ "parts": [{ "text": "Duke", "font": "name", "color": "accent" }], "layout": "inline" | "stacked" }
+```
+Rendered by `BrandName.astro`.
+
+## Component List
+
+| Component | Purpose |
+|-----------|---------|
+| `AboutMap.astro` | About section with embedded Google Maps link |
+| `AuthorBio.astro` | Author about variant (for book/author sites) |
+| `BeforeAfter.astro` | Before/after image comparison cards |
+| `BookShowcase.astro` | Book display with cover, description, purchase CTA |
+| `BrandName.astro` | Styled business name using `nameTreatment` from brand.json |
+| `CTASection.astro` | Call-to-action band with heading, text, and button |
+| `Differentiator.astro` | Unique selling points / competitive advantages |
+| `Divider.astro` | Section divider (wave, curve, gentle variants) |
+| `FAQ.astro` | Accordion FAQ section |
+| `FloatingCTA.astro` | Fixed-position floating CTA button |
+| `Footer.astro` | Site footer with contact info, hours, socials, legal |
+| `Hero.astro` | Hero section (split, overlay, video, minimal variants) |
+| `HoursDisplay.astro` | Business hours grid |
+| `Marquee.astro` | Scrolling text marquee band |
+| `MenuSection.astro` | Restaurant menu with categories, items, featured badges |
+| `OptimizedImg.astro` | Image wrapper using Astro Image with fallback |
+| `OrderVisit.astro` | Contact variant for order/visit businesses (restaurants) |
+| `PhotoGallery.astro` | Photo gallery with lightbox + optional Behold Instagram feed |
+| `ProcessSteps.astro` | Step-by-step process visualization |
+| `Products.astro` | Product cards with pricing tiers, specs, tags |
+| `ProjectGallery.astro` | Before/after project slider gallery |
+| `QuoteForm.astro` | Contact form (default contact variant) |
+| `Reviews.astro` | Customer testimonial cards with star ratings |
+| `ScrollMoment.astro` | Scroll-triggered visual moment (inserted after reviews) |
+| `ServiceCards.astro` | Service cards with before/after hover, starting prices |
+| `StickyActionBar.astro` | Mobile sticky action bar (call, directions, CTA) |
+| `StickyHeader.astro` | Navigation header with glass/solid/transparent styles |
+| `Team.astro` | Team member cards with booking links |
+| `TourOverlay.astro` | driver.js guided tour overlay (preview sites only) |
+| `TrustBar.astro` | Trust badges / stat items |
+| `TrustStats.astro` | Trust section variant with large stat numbers |
+
+## CSS Architecture
+
+No preprocessor. Eight CSS files imported in `BaseLayout.astro`:
+
+| File | Purpose |
+|------|---------|
+| `tokens.css` | Design tokens, CSS custom property defaults, dark/light surface scales |
+| `base.css` | Reset, typography, global element styles |
+| `layout.css` | Grid, section spacing, container widths |
+| `components.css` | Shared component styles (buttons, cards, badges, forms) |
+| `atmosphere.css` | Noise overlay, ambient effects, section mood styles |
+| `animations.css` | GSAP-triggered animation classes (reveal, stagger, tilt, parallax) |
+| `brand-name.css` | BrandName component styles (shared across header + footer) |
+| `menu.css` | MenuSection styles (shared, kept separate for size) |
+
+Section-specific CSS is scoped inside each component's `<style>` tag.
+
+## Preview System
+
+### preview.json
+
+When present in `src/data/`, the site is in preview mode:
+- Red fallback disclaimer bar rendered at top (visible by default via inline CSS)
+- `<meta name="robots" content="noindex, nofollow">` injected
+- OG title prefixed with "PREVIEW - "
+- Disclaimer includes "Request Removal" link to `ziamade.com/request-removal/<slug>`
+
+### Proxy Overlay Interaction
+
+When served via the ziamade.com proxy, the proxy injects CSS that hides the fallback disclaimer:
+```css
+#zm-fallback-disclaimer { display: none !important }
+```
+If accessed directly (not via proxy), the disclaimer stays visible as a legal safeguard.
+
+### tour.json
+
+Optional. When present, `TourOverlay.astro` renders a driver.js guided tour. Steps target CSS selectors and show title/body popups.
+
+## Deploy Flow
+
+### Template Repo (this repo)
+
+`.github/workflows/deploy.yml` builds and deploys the template itself as a demo site:
+1. `npm ci` + `npm run build` (Astro static build to `dist/`)
+2. `wrangler pages deploy dist` to Cloudflare Pages
+3. Slack notification on failure
+
+### Client Repos
+
+Client repos have their own deploy workflow that:
+1. Checks out the client repo (data only)
+2. Fetches this template at the version in `.template-version`
+3. Copies client `src/data/`, `src/content/`, `src/assets/` into the template
+4. Runs `npm ci && npm run build`
+5. Deploys `dist/` to CF Pages via `wrangler pages deploy`
+
+### Version Pinning
+
+`.template-version` in client repos pins to a git tag (e.g., `v4.0.0`). Bumping all clients:
+```bash
+npx tsx packages/pipeline/scripts/propagate-template.ts v4.1.0
 ```
 
-### location.json
-```json
-{ "address": "string", "city": "string", "state": "XX", "zip": "00000", "country": "US", "mapLink": "URL" }
-```
+### Required Secrets (org-level)
 
-### hours.json
-```json
-{ "hoursWeekdays": "Mon–Fri: 9–5", "hoursWeekend": "Sat–Sun: Closed" }
-```
+| Secret | Purpose |
+|--------|---------|
+| `CLOUDFLARE_API_TOKEN` | CF API token with Pages permissions |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
+| `SLACK_WEBHOOK_URL` | Failure notifications |
 
-### brand.json
-```json
-{ "primary": "#ec5b13", "primaryLight": "#f47a3e", "secondary": "#7a8d81", "secondaryLight": "#95a89d",
-  "accent": "#d9b382", "headerColor": "#221610", "bodyTextColor": "#3a3a3a", "bodyTextColorWhite": "#f8f6f6",
-  "offWhite": "#f8f6f6", "cream": "#f0eae0", "dark": "#221610", "medium": "#2c1a10",
-  "accentDark": "#3a2a1e", "silver": "#a89f95" }
-```
-Injected as inline CSS variables in `base.html` — overrides `root.less` defaults. No recompile needed.
+## CMS Integration
 
-### hero.json
-```json
-{ "heroImage": "/assets/images/...", "heroTagline": "string", "heroSubtitle": "string" }
-```
+Pages CMS (pagescms.org) provides a Git-based editing UI. Config is `.pages.yml` at repo root.
 
-### alert.json
-```json
-{ "enabled": bool, "text": "string", "startDate": "YYYY-MM-DD", "endDate": "YYYY-MM-DD" }
-```
+### What Clients Can Edit
 
-### testimonials.json
-```json
-{ "items": [{ "text": "...", "author": "Name", "initials": "XX", "role": "Verified Customer", "rating": 5, "source": "Google", "url": "#" }] }
-```
+Alert banner, contact info, location, hours, hero (image + text), about text, brand colors + fonts, testimonials, FAQ, photo gallery, menu (restaurants), trust bar stats, projects (before/after), services (markdown collection), products (markdown collection).
 
-### trustbar.json
-```json
-{ "items": [{ "number": "15+", "label": "Years Local" }] }
-```
+### What Clients Cannot Edit
 
-### Service Cards (src/content/services/*.md)
-```yaml
----
-title: "Service Name"
-description: "Short description"
-beforeImage: "/assets/images/..."
-afterImage: "/assets/images/..."  # optional, enables hover effect
-order: 1
----
-```
+`theme.json`, `schema.json`, `seo.json`, `analytics.json`, `_sources.json`, `_template-manifest.json`, `attributes.json`. These are set by the pipeline or agent skills.
 
-## CMS Workflow
+### Adding a CMS Field
 
-- **Local dev**: `npm start` runs both Eleventy dev server and `decap-server`
-- **Admin panel**: Navigate to `/admin/` to use Decap CMS
-- **Pages CMS**: Configured in `.pages.yml` for GitHub-based editing
-- **Adding a new CMS field**: Update the JSON file → update `src/admin/config.yml` → update `.pages.yml` → update the template that uses it
+1. Add the field to the JSON data file
+2. Add the field definition to `.pages.yml` under the matching content entry
+3. Update the component that reads the field
+4. Update `src/lib/types.ts` if the field affects typed interfaces
 
-## Brand Guidelines — "High Desert Modern"
-
-### Colors
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `--primary` | `#ec5b13` | Terracotta — CTAs, active states, links |
-| `--primaryLight` | `#f47a3e` | Hover states |
-| `--secondary` | `#7a8d81` | Sage — secondary elements |
-| `--accent` | `#d9b382` | Sand — subtle highlights |
-| `--off-white` | `#f8f6f6` | Light backgrounds |
-| `--midnight` / `--dark` | `#221610` | Dark backgrounds |
-| `--cream` | `#f0eae0` | Warm neutral |
-
-### Typography
-- **Font**: Public Sans (300–900 weights via Google Fonts)
-- **Headers**: `var(--headerFont)` — Public Sans, bold/black weight
-- **Body**: `var(--bodyFont)` — Public Sans, regular weight
-- **Sizing**: CSS clamp() for responsive scaling
-
-### Design Patterns
-- Glass-effect header: `backdrop-filter: blur(8px)`
-- Rounded cards with subtle borders
-- Dark gradient overlays on hero images
-- Warm dark mode (brown-based, not blue-based)
-
-### Tone
-Warm, direct, community-rooted. Avoid corporate jargon. Write for neighbors, not shareholders.
-
-## Build Commands
+## Key Commands
 
 | Command | Purpose |
 |---------|---------|
-| `npm start` | Dev server + CMS proxy |
-| `npm run build` | Production build |
+| `npm run dev` | Astro dev server at `http://localhost:4321` |
+| `npm run build` | Production build to `dist/` |
 | `npm run preview` | Preview production build locally |
+| `npm run check` | Astro type checking |
+| `npm run test` | Vitest unit tests |
 
-## Deployment (Cloudflare Pages)
+Visual regression tests (separate package):
+```bash
+cd tests/visual && npx playwright test
+```
 
-Sites deploy via GitHub Actions using `cloudflare/wrangler-action@v3` (direct upload, no CF Git integration).
+## Common Issues
 
-| Workflow | Trigger | Target |
-|----------|---------|--------|
-| `deploy-preview.yml` | Auto on push to `main` | Preview (`preview.<slug>.pages.dev`) |
-| `deploy-production.yml` | Manual (`workflow_dispatch`) | Production (`<slug>.pages.dev`) |
+**Image paths**: Data files reference images as `/assets/images/...`. The `resolveImage()` function in `lib/images.ts` maps these to `/src/assets/images/...` for Astro's image pipeline. External URLs (`http...`) bypass the resolver and render as plain `<img>`.
 
-**Secrets** (org-level on `chilefix`, inherited by all repos):
-- `CLOUDFLARE_API_TOKEN` — scoped to `Cloudflare Pages:Edit` only
-- `CLOUDFLARE_ACCOUNT_ID`
+**Optional data files**: `tour.json` and `preview.json` are loaded via `import.meta.glob('../data/<file>.json', { eager: true })`, not direct import. This prevents build failures when the file is absent. Never use `fs.existsSync` or `import.meta.url` for optional files -- the path resolves incorrectly during Astro build.
 
-**If switching to custom subdomains** (e.g., `client.chilefixdigital.com`):
-1. Add the custom domain in CF Pages dashboard or via `wrangler pages project ...`
-2. Update `client.domain` in `src/_data/client.js` to the new URL (affects sitemap, canonical tags)
-3. Set up DNS CNAME: `client.chilefixdigital.com` → `<slug>.pages.dev`
-4. No workflow changes needed, only the domain and DNS config
+**Empty data arrays**: Components like Reviews check `testimonials.items.length > 0` before rendering. Empty arrays cause the section to be skipped, not crash.
+
+**Font not loading**: Ensure the font family name in `brand.json` exactly matches a key in `src/lib/fonts.ts` `FONT_REGISTRY`. Unregistered fonts fall back to system fonts silently.
+
+**Content collections missing**: `src/content/services/` and `src/content/products/` directories may not exist in all client repos. Components handle this gracefully.
+
+**postinstall script**: `npm ci` copies `driver.js` files from `node_modules` to `public/scripts/` and `public/styles/`. If driver.js tour doesn't work after install, check this ran.
+
+**header-scroll.js**: Referenced in BaseLayout as `<script is:inline src="/scripts/header-scroll.js">` but lives in the StickyHeader component's inline script block, not as a separate public file. This is a known reference -- the file is generated during build.
 
 ## Coding Conventions
 
-- Use CSS variables from `root.less` — never hardcode colors
-- Use LESS nesting, keep selectors 3 levels deep max
-- Nunjucks: use `{% block %}` inheritance from `base.html`
-- CodeStitch utility classes: `.cs-topper`, `.cs-title`, `.cs-text`, `.cs-button-solid`
-- Section comment format: `<!-- ====== Section Name ====== -->`
-- Image paths: use `{% getUrl %}` shortcode for optimized images
+- Use CSS custom properties from `tokens.css` -- never hardcode colors
+- Section CSS is scoped in component `<style>` tags (not global stylesheets)
+- All data access is via static JSON imports (no runtime API calls)
+- TypeScript types for all data shapes live in `src/lib/types.ts`
+- Image references in data files: `/assets/images/...` (root-relative, no `/src` prefix)
+- No industry detection logic in components -- all decisions come from `theme.json`
