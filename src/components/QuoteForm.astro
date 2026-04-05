@@ -427,12 +427,12 @@ try {
 
   /* ── Error / success ────────────────────────────────────────────── */
   .form-error {
-    color: #dc2626;
+    color: var(--status-error);
     font-size: 0.875rem;
     padding: 0.5rem 0.75rem;
     border-radius: var(--radius, 12px);
-    background: rgba(220, 38, 38, 0.08);
-    border: 1px solid rgba(220, 38, 38, 0.2);
+    background: color-mix(in srgb, var(--status-error) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--status-error) 20%, transparent);
   }
 
   .form-error:empty,
@@ -457,7 +457,7 @@ try {
     width: 56px;
     height: 56px;
     margin: 0 auto 1rem;
-    color: #16a34a;
+    color: var(--status-success);
   }
 
   .success-icon svg {

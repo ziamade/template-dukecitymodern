@@ -340,7 +340,7 @@ const secondaryText = 'Our Services';
   }
 
   :global(.open-badge.open) {
-    background: #16a34a;
+    background: var(--status-success);
     color: #fff;
     border: none;
   }
@@ -351,14 +351,14 @@ const secondaryText = 'Our Services';
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #4ade80;
+    background: var(--status-success);
     animation: pulse-dot 2s ease-in-out infinite;
   }
 
   :global(.open-badge.open-24-7) {
-    background: rgba(22, 163, 74, 0.15);
-    color: #4ade80;
-    border: 1px solid rgba(74, 222, 128, 0.3);
+    background: color-mix(in srgb, var(--status-success) 15%, transparent);
+    color: var(--status-success);
+    border: 1px solid color-mix(in srgb, var(--status-success) 30%, transparent);
     font-size: 1rem;
     padding: 0.5rem 1rem;
   }
@@ -369,7 +369,7 @@ const secondaryText = 'Our Services';
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #4ade80;
+    background: var(--status-success);
     animation: pulse-dot 2s ease-in-out infinite;
   }
 

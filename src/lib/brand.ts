@@ -39,6 +39,12 @@ export function paletteToCSS(palette: ColorPalette): string {
   vars.push(`  --surface-glass: rgba(255, 255, 255, 0.03);`);
   vars.push(`  --surface-glass-hover: rgba(255, 255, 255, 0.06);`);
 
+  // Semantic status tokens (palette-independent defaults, overridable via brand.json)
+  vars.push(`  --status-success: #16a34a;`);
+  vars.push(`  --status-error: #dc2626;`);
+  vars.push(`  --status-warning: #f59e0b;`);
+  vars.push(`  --star-color: #f5a623;`);
+
   return vars.join('\n');
 }
 
