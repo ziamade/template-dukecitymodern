@@ -30,10 +30,10 @@
       "trust": ["TrustBar", "TrustStats"]
     },
     "maxSections": 16,
-    "maxServices": 12,
+    "maxServices": 6,
     "maxGalleryImages": 20,
     "maxMarqueeItems": 10,
-    "paletteFields": ["bg", "surface", "surfaceAlt", "text", "textMuted", "accent", "accentDim", "accentGlow", "border"],
+    "paletteFields": ["bg", "surface", "surfaceAlt", "text", "textMuted", "accent", "accentDim", "accentGlow", "border", "borderSubtle"],
     "fontSlots": ["nameFont", "headingFont", "bodyFont", "monoFont"],
     "optionalDataFiles": ["preview.json", "tour.json", "process.json"]
   }
