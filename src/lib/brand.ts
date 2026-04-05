@@ -31,6 +31,36 @@ function isLightColor(hex: string): boolean {
 }
 
 /**
+ * WCAG 2.1 relative luminance from a hex color.
+ * https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+ */
+function getRelativeLuminance(hex: string): number {
+  const h = hex.replace('#', '');
+  const full = h.length === 3
+    ? h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
+    : h;
+  const r = parseInt(full.slice(0, 2), 16) / 255;
+  const g = parseInt(full.slice(2, 4), 16) / 255;
+  const b = parseInt(full.slice(4, 6), 16) / 255;
+
+  const linearize = (c: number) => c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+
+  return 0.2126 * linearize(r) + 0.7152 * linearize(g) + 0.0722 * linearize(b);
+}
+
+/**
+ * WCAG 2.1 contrast ratio between two hex colors.
+ * Returns a value between 1 and 21.
+ */
+export function getContrastRatio(hex1: string, hex2: string): number {
+  const lum1 = getRelativeLuminance(hex1);
+  const lum2 = getRelativeLuminance(hex2);
+  const lighter = Math.max(lum1, lum2);
+  const darker = Math.min(lum1, lum2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
  * Generate CSS custom properties from a single color palette.
  * v4: Single palette, no light/dark toggle.
  */
@@ -82,6 +112,17 @@ export function generateThemeCSS(brand: Brand): string {
   const monoFont = brand.monoFont
     ? `'${cssSafe(brand.monoFont)}', 'JetBrains Mono', monospace`
     : `'JetBrains Mono', 'SF Mono', monospace`;
+
+  // Build-time WCAG AA contrast check
+  if (/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(brand.palette.accent) &&
+      /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(brand.palette.bg)) {
+    const ratio = getContrastRatio(brand.palette.accent, brand.palette.bg);
+    if (ratio < 4.5) {
+      console.warn(
+        `[brand] Low contrast: accent (${brand.palette.accent}) on bg (${brand.palette.bg}) = ${ratio.toFixed(1)}:1. WCAG AA requires 4.5:1.`
+      );
+    }
+  }
 
   return `
 :root {

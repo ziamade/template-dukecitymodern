@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { paletteToCSS } from '../brand';
+import { paletteToCSS, getContrastRatio } from '../brand';
 
 // Minimal palettes for testing glass surface detection.
 // These satisfy the ColorPalette shape from schemas.ts.
@@ -91,5 +91,29 @@ describe('paletteToCSS', () => {
     expect(css).toContain('--surface:');
     expect(css).toContain('--accent:');
     expect(css).toContain('--text:');
+  });
+});
+
+describe('getContrastRatio', () => {
+  it('returns 21:1 for black on white', () => {
+    const ratio = getContrastRatio('#000000', '#ffffff');
+    expect(ratio).toBeCloseTo(21, 0);
+  });
+
+  it('returns 1:1 for same color', () => {
+    const ratio = getContrastRatio('#ff0000', '#ff0000');
+    expect(ratio).toBeCloseTo(1, 1);
+  });
+
+  it('correctly computes mid-range contrast', () => {
+    // #e8a87c (warm accent) on #0a0a0a (dark bg) — high contrast
+    const ratio = getContrastRatio('#e8a87c', '#0a0a0a');
+    expect(ratio).toBeGreaterThan(4.5);
+  });
+
+  it('detects low contrast', () => {
+    // #333333 on #222222 — very low contrast
+    const ratio = getContrastRatio('#333333', '#222222');
+    expect(ratio).toBeLessThan(4.5);
   });
 });
