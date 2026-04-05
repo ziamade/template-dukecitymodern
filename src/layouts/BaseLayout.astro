@@ -136,14 +136,10 @@ const depth = layout.depth || '';
   )}
   <script type="application/json" id="hours-data" set:html={hoursJson}></script>
   <script src="../scripts/animation-controller.ts"></script>
-  <script is:inline src="/scripts/header-scroll.js"></script>
   <script is:inline src="/scripts/open-now.js"></script>
   <script is:inline src="/scripts/menu-scroll.js"></script>
   {hasGallery && (
-    <>
-      <script is:inline src="/scripts/gallery-hint.js"></script>
-      <script is:inline src="/scripts/gallery-lightbox.js"></script>
-    </>
+    <script is:inline src="/scripts/gallery-hint.js"></script>
   )}
   {hasProjects && (
     <script is:inline src="/scripts/gallery-slider.js"></script>

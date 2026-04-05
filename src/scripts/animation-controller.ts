@@ -118,16 +118,23 @@ function initStaggerAnimations(): void {
   });
 }
 
-/** Animated number counters for .counter elements with data-target */
+/** Animated number counters for elements with data-count-to attribute */
 function initCounters(): void {
-  document.querySelectorAll<HTMLElement>('.counter').forEach((el) => {
-    const target = parseInt(el.dataset.target || '0', 10);
+  document.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {
+    const raw = el.dataset.countTo || '0';
+    const target = parseFloat(raw);
     if (!target) return;
+
+    const suffix = el.dataset.countSuffix || '';
+    const delay = parseFloat(el.dataset.countDelay || '0') / 1000;
+    const isDecimal = raw.includes('.');
+    const decimals = isDecimal ? (raw.split('.')[1]?.length || 1) : 0;
 
     const obj = { val: 0 };
     gsap.to(obj, {
       val: target,
       duration: 2,
+      delay,
       ease: 'expo.out',
       scrollTrigger: {
         trigger: el,
@@ -135,7 +142,10 @@ function initCounters(): void {
         once: true,
       },
       onUpdate: () => {
-        el.textContent = Math.round(obj.val).toLocaleString();
+        const display = isDecimal
+          ? obj.val.toFixed(decimals)
+          : Math.round(obj.val).toLocaleString();
+        el.textContent = display + suffix;
       },
     });
   });

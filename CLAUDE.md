@@ -78,6 +78,7 @@ All data lives in `src/data/`. Files are plain JSON imported at build time. Opti
 | `google-links.json` | Yes | directions, writeReview, allReviews, photos, place |
 | `_sources.json` | Internal | Source attribution for data fields (not rendered) |
 | `_template-manifest.json` | Internal | Machine-readable list of all valid layout tokens, section IDs, and component overrides |
+| `process.json` | Optional | steps[]: title, description, icon. Custom process steps (falls back to hardcoded defaults) |
 | `preview.json` | Optional | businessName, slug. Present = preview mode (disclaimer bar, noindex) |
 | `tour.json` | Optional | steps[]: target, title, body; businessName. Enables driver.js guided tour overlay |
 | `process.json` | Optional | heading, eyebrow, steps[]: number, title, description |
@@ -107,7 +108,7 @@ Resolution order: explicit `component` override > variant override > default com
 | `services` | ServiceCards | cards, icon-grid, compact, split | `content/services/*.md` |
 | `products` | Products | -- | `content/products/*.md` |
 | `projects` | ProjectGallery | -- | `projects.json` |
-| `process` | ProcessSteps | -- | `process.json` (optional, hardcoded fallback) |
+| `process` | ProcessSteps | -- | `process.json` (optional, falls back to hardcoded steps) |
 | `gallery` | PhotoGallery | masonry, scroll | `gallery.json` + optional Behold feed |
 | `menu` | MenuSection | -- | `menu.json` |
 | `reviews` | Reviews | scroll | `testimonials.json` (skipped if items empty) |

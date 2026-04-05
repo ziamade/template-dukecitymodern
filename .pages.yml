@@ -380,6 +380,39 @@ content:
             required: false
             description: "Which service this project belongs to. Shown as a tag on the card."
 
+  # ── Process Steps ──────────────────────────────────────────────────────────
+  - name: process
+    label: Process Steps
+    type: file
+    path: src/data/process.json
+    format: json
+    fields:
+      - name: heading
+        label: Heading
+        type: string
+        description: "Section heading. Default: How It Works"
+      - name: eyebrow
+        label: Eyebrow
+        type: string
+        description: "Small label above the heading. Default: Our Process"
+      - name: steps
+        label: Steps
+        type: object
+        list:
+          collapsible:
+            summary: "{{number}} — {{title}}"
+        fields:
+          - name: number
+            label: Step Number
+            type: string
+            description: "Display number for the step. Example: 01"
+          - name: title
+            label: Title
+            type: string
+          - name: description
+            label: Description
+            type: string
+
   # ── Services ───────────────────────────────────────────────────────────────
   - name: services
     label: "Services (max 6)"
