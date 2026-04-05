@@ -133,6 +133,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
           <line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
+      <span class="sr-only" aria-live="polite" id="lightbox-announcer"></span>
       <div class="lightbox-img-wrap">
         <button class="lightbox-prev" aria-label="Previous image">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -152,6 +153,19 @@ const beholdFeedId = gallery?.beholdFeedId || '';
 )}
 
 <style>
+  /* Screen reader only — visible to assistive tech, invisible visually */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* ── Gallery section ────────────────────────────────────────────── */
   .gallery-section {
     padding: var(--section-pad, 4rem) 0;
@@ -483,6 +497,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     const closeBtn = lightbox.querySelector('.lightbox-close') as HTMLElement;
     const prevBtn = lightbox.querySelector('.lightbox-prev') as HTMLElement;
     const nextBtn = lightbox.querySelector('.lightbox-next') as HTMLElement;
+    const announcer = lightbox.querySelector('#lightbox-announcer') as HTMLElement;
 
     // Use .gallery-thumb which is shared by both masonry (.gallery-item) and scroll (.gallery-scroll-item) variants
     const items = Array.from(document.querySelectorAll('.gallery-thumb')) as HTMLElement[];
@@ -504,6 +519,12 @@ const beholdFeedId = gallery?.beholdFeedId || '';
       return items[index]?.querySelector('img')?.alt || '';
     }
 
+    function announce(index: number) {
+      if (announcer) {
+        announcer.textContent = `Image ${index + 1} of ${items.length}: ${getAlt(index)}`;
+      }
+    }
+
     function open(index: number) {
       const srcs = getSrcs();
       if (!srcs[index]) return;
@@ -511,6 +532,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
       img.src = srcs[currentIndex];
       img.alt = getAlt(currentIndex);
       if (caption) caption.textContent = getAlt(currentIndex);
+      announce(currentIndex);
       lightbox.setAttribute('aria-hidden', 'false');
       lightbox.setAttribute('aria-modal', 'true');
       document.body.style.overflow = 'hidden';
@@ -530,6 +552,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
       img.src = srcs[currentIndex];
       img.alt = getAlt(currentIndex);
       if (caption) caption.textContent = getAlt(currentIndex);
+      announce(currentIndex);
     }
 
     // Attach click handlers to each gallery thumbnail
