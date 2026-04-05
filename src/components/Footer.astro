@@ -243,7 +243,7 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
   .footer-contact-list a {
     color: var(--textMuted);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color var(--duration-fast) ease;
   }
 
   .footer-contact-list a:hover {
@@ -273,7 +273,7 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
     padding: 0.25rem 0.75rem;
     border: 1px solid var(--borderSubtle, var(--border));
     border-radius: var(--radius, 12px);
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition: border-color var(--duration-fast) ease, color var(--duration-fast) ease;
   }
 
   .footer-city:hover {
@@ -341,7 +341,7 @@ const activeSocials = Object.entries(socials).filter(([, url]) => !!url);
     color: var(--textMuted);
     opacity: 0.4;
     text-decoration: none;
-    transition: opacity 0.2s ease, color 0.2s ease;
+    transition: opacity var(--duration-fast) ease, color var(--duration-fast) ease;
   }
 
   .footer-ziamade:hover {

@@ -202,7 +202,7 @@ const logoSize = theme.layout?.logoSize || 'md';
     height: 2px;
     background: var(--accent);
     border-radius: 1px;
-    transition: width 0.3s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+    transition: width var(--duration-normal) var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
   }
 
   .header-nav-link:hover::after {

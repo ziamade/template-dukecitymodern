@@ -126,6 +126,8 @@
   --duration-normal: 0.4s;
   --duration-slow: 0.8s;
   --duration-glacial: 1.4s;
+  --duration-enter: 0.4s;
+  --duration-exit: 0.2s;
 
   /* Shorthand transitions */
   --transition-fast: 150ms ease;

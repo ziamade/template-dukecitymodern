@@ -330,7 +330,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity var(--duration-normal) ease, visibility var(--duration-normal) ease;
   }
 
   .gallery-lightbox[aria-hidden="false"] {
@@ -352,7 +352,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     align-items: center;
     justify-content: center;
     z-index: 2;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition: color var(--duration-fast) ease, transform var(--duration-fast) ease;
   }
 
   .lightbox-close:hover {
@@ -392,7 +392,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition: color var(--duration-fast) ease, transform var(--duration-fast) ease;
   }
 
   .lightbox-prev:hover,
