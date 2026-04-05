@@ -8,21 +8,17 @@ import hero from '../data/hero.json';
 import theme from '../data/theme.json';
 import OptimizedImg from './OptimizedImg.astro';
 
-const schemaFiles = import.meta.glob<{ default: any }>('../data/schema.json', { eager: true });
-const schema: any = Object.values(schemaFiles)[0]?.default || {};
-
 const depth = (theme as any).layout?.depth || '';
 const items = testimonials?.items || [];
-const aggregateRating = schema?.aggregateRating;
 
 // Best testimonial: first 5-star, or highest rated
 const bestReview = items.length > 0
   ? items.reduce((best: any, t: any) => (!best || t.rating > best.rating || (t.rating === best.rating && t.text.length > best.text.length)) ? t : best, null)
   : null;
 
-// Stats
-const ratingValue = aggregateRating?.ratingValue ? String(aggregateRating.ratingValue) : '';
-const reviewCount = aggregateRating?.reviewCount ? String(aggregateRating.reviewCount) : '';
+// Stats from testimonials.json (aggregateRating removed from schema per Google self-serving rule)
+const ratingValue = (testimonials as any)?.averageRating ? String((testimonials as any).averageRating) : '';
+const reviewCount = (testimonials as any)?.reviewCount ? String((testimonials as any).reviewCount) : '';
 const foundingYear = parseInt((client as any).foundingYear || '0', 10);
 const hasStats = !!(ratingValue || reviewCount || foundingYear > 1900);
 
