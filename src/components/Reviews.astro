@@ -15,6 +15,11 @@ const items = [...(testimonials?.items || [])].sort(
   (a, b) => (b.rating || 0) - (a.rating || 0)
 );
 
+// Data-driven section headings and star visibility
+const sectionEyebrow = testimonials?.sectionEyebrow || 'Featured Reviews';
+const sectionTitle = testimonials?.sectionTitle || 'What Our Customers Say';
+const showStars = testimonials?.showStars !== false; // default true
+
 // Real review count from Google, NOT items.length
 const reviewCount = testimonials?.reviewCount
   || testimonials?.totalReviewCount
@@ -63,8 +68,8 @@ function stars(count: number): string {
   <section class="reviews-section section" id="reviews" data-tour="reviews">
     <div class="container">
       <div class="section-heading reveal-up">
-        <span class="section-eyebrow">Featured Reviews</span>
-        <h2 class="section-title">What Our Customers Say</h2>
+        <span class="section-eyebrow">{sectionEyebrow}</span>
+        <h2 class="section-title">{sectionTitle}</h2>
         {(reviewCount || averageRating) && (
           <p class="section-subtitle reviews-meta">
             {averageRating && <span class="reviews-rating">{averageRating} <span class="reviews-meta-stars">{stars(Math.round(Number(averageRating)))}</span></span>}
@@ -86,7 +91,7 @@ function stars(count: number): string {
           {enrichedItems.map((t) => t._url ? (
             <a class="review-card review-card--linked" href={t._url} target="_blank" rel="noopener">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating ?? 0)}</div>
+              {showStars && <div class="review-stars">{stars(t.rating ?? 0)}</div>}
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -105,7 +110,7 @@ function stars(count: number): string {
           ) : (
             <div class="review-card">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating ?? 0)}</div>
+              {showStars && <div class="review-stars">{stars(t.rating ?? 0)}</div>}
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -126,7 +131,7 @@ function stars(count: number): string {
           {enrichedItems.map((t) => t._url ? (
             <a class="review-card review-card--linked" href={t._url} target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating ?? 0)}</div>
+              {showStars && <div class="review-stars">{stars(t.rating ?? 0)}</div>}
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
@@ -145,7 +150,7 @@ function stars(count: number): string {
           ) : (
             <div class="review-card" aria-hidden="true">
               <div class="review-accent-border" />
-              <div class="review-stars">{stars(t.rating ?? 0)}</div>
+              {showStars && <div class="review-stars">{stars(t.rating ?? 0)}</div>}
               <details class="review-text-wrap">
                 <summary class="review-text">{t.text}</summary>
                 <p class="review-text-full">{t.text}</p>
