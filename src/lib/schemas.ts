@@ -90,7 +90,7 @@ export const brandSchema = z.object({
   nameFont: fontName,
   headingFont: fontName,
   bodyFont: fontName,
-  monoFont: fontName.optional(),
+  monoFont: fontName.nullish(),
   nameTreatment: nameTreatmentSchema.optional(),
 }).loose();
 
@@ -181,8 +181,8 @@ export const locationSchema = z.object({
   zip: z.string(),
   country: z.string(),
   mapLink: z.string(),
-  lat: z.number().optional(),
-  lng: z.number().optional(),
+  lat: z.number().nullish(),
+  lng: z.number().nullish(),
 }).loose();
 
 // ---------------------------------------------------------------------------
@@ -225,8 +225,8 @@ export const jsonLdSchema = z.record(z.string(), z.unknown());
 
 export const hoursDaySchema = z.object({
   day: z.string(),
-  open: z.string().nullable(),
-  close: z.string().nullable(),
+  open: z.string().nullish(),
+  close: z.string().nullish(),
 }).loose();
 
 export const hoursSchema = z.object({
@@ -373,8 +373,8 @@ export const trustbarSchema = z.object({
 
 const teamHoursDaySchema = z.object({
   day: z.string(),
-  open: z.string().nullable(),
-  close: z.string().nullable(),
+  open: z.string().nullish(),
+  close: z.string().nullish(),
 });
 
 export const teamMemberSchema = z.object({
