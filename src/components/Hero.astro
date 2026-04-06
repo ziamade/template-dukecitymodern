@@ -34,8 +34,16 @@ const { heroCta, variant } = Astro.props as { heroCta?: { text: string; href: st
 const heroCTAData = hero?.cta;
 const primaryHref = heroCta?.href || heroCTAData?.href || (phoneClean ? `sms:+1${phoneClean}` : '#contact');
 const primaryText = heroCta?.text || heroCTAData?.text || (phoneClean ? 'Text Us' : 'Get in Touch');
-const secondaryHref = '#services';
-const secondaryText = 'Our Services';
+
+// Secondary CTA: prefer hero.json secondaryCta, otherwise default based on
+// whether the site actually has a Services section. Author / book / one-page
+// sites without services should fall back to "Contact" instead of linking to
+// a #services anchor that doesn't exist.
+const heroSecondaryCta = (hero as { secondaryCta?: { text?: string; href?: string } } | undefined)?.secondaryCta;
+const sectionOrder: string[] = Array.isArray(theme?.sectionOrder) ? theme.sectionOrder : [];
+const hasServicesSection = sectionOrder.includes('services');
+const secondaryHref = heroSecondaryCta?.href || (hasServicesSection ? '#services' : '#contact');
+const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Services' : 'Contact');
 ---
 <section
   class:list={['hero', `hero--${heroStyle}`]}
