@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { resolveComponent, resolveNavLabels, resolveCta, resolveHeroCta } from '../lib/section-registry';
+import {
+  resolveComponent,
+  resolveNavLabels,
+  resolveCta,
+  resolveHeroCta,
+} from '../lib/section-registry';
 
 describe('resolveComponent', () => {
   it('returns the default component for a section id', () => {
@@ -7,6 +12,33 @@ describe('resolveComponent', () => {
     expect(resolveComponent('reviews')).toBe('Reviews');
     expect(resolveComponent('about')).toBe('AboutMap');
     expect(resolveComponent('contact')).toBe('QuoteForm');
+  });
+
+  it('resolves all 19 default section IDs', () => {
+    const expected: Record<string, string> = {
+      hero: 'Hero',
+      trust: 'TrustBar',
+      services: 'ServiceCards',
+      projects: 'ProjectGallery',
+      process: 'ProcessSteps',
+      gallery: 'PhotoGallery',
+      menu: 'MenuSection',
+      reviews: 'Reviews',
+      faq: 'FAQ',
+      contact: 'QuoteForm',
+      about: 'AboutMap',
+      hours: 'HoursDisplay',
+      beforeAfter: 'BeforeAfter',
+      differentiator: 'Differentiator',
+      marquee: 'Marquee',
+      team: 'Team',
+      products: 'Products',
+      cta: 'CTASection',
+      book: 'BookShowcase',
+    };
+    for (const [id, component] of Object.entries(expected)) {
+      expect(resolveComponent(id)).toBe(component);
+    }
   });
 
   it('component override in SectionEntry takes precedence', () => {
@@ -24,6 +56,16 @@ describe('resolveComponent', () => {
 
   it('trust default resolves to TrustBar', () => {
     expect(resolveComponent('trust')).toBe('TrustBar');
+  });
+
+  it('ignores unknown variant and returns default', () => {
+    expect(resolveComponent('trust', 'nonexistent')).toBe('TrustBar');
+    expect(resolveComponent('contact', 'nonexistent')).toBe('QuoteForm');
+  });
+
+  it('handles numeric variant by stringifying', () => {
+    // variant can be string | number per the signature
+    expect(resolveComponent('trust', 0)).toBe('TrustBar');
   });
 });
 
@@ -47,6 +89,23 @@ describe('resolveNavLabels', () => {
     const labels = resolveNavLabels({ hero: 'Hero', trust: 'Trust' });
     expect(labels.hero).toBe('');
     expect(labels.trust).toBe('');
+  });
+
+  it('all NAV_EXCLUDED sections stay empty even with overrides', () => {
+    const excluded = ['hero', 'trust', 'process', 'beforeAfter', 'differentiator', 'marquee', 'cta'];
+    const overrides = Object.fromEntries(excluded.map(k => [k, 'Should Not Appear']));
+    const labels = resolveNavLabels(overrides);
+    for (const key of excluded) {
+      expect(labels[key]).toBe('');
+    }
+  });
+
+  it('navigable sections have non-empty default labels', () => {
+    const labels = resolveNavLabels();
+    const navigable = ['services', 'projects', 'gallery', 'menu', 'reviews', 'faq', 'contact', 'about', 'hours', 'team', 'products', 'book'];
+    for (const key of navigable) {
+      expect(labels[key]).not.toBe('');
+    }
   });
 });
 
