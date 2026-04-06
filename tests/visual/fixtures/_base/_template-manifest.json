@@ -1,11 +1,12 @@
 {
   "version": "4.0.0",
-  "description": "Template capability manifest",
+  "description": "Template capability manifest — agent skills read this to validate their output stays within what the template can render.",
   "capabilities": {
     "heroStyles": ["split", "overlay", "video", "minimal"],
     "atmosphereLevels": ["none", "minimal", "rich", "cinematic"],
     "motionIntensities": ["none", "subtle", "standard", "dramatic"],
     "cardStyles": ["bordered", "shadow", "flat", "elevated", "luxury"],
+    "serviceVariants": ["cards", "icon-grid", "compact", "split"],
     "buttonVariants": ["solid", "ghost", "tactile"],
     "dividerStyles": ["line", "glow", "fade", "none"],
     "cardRadii": ["sharp", "soft", "round"],
@@ -17,12 +18,31 @@
     "imageStyles": ["rounded", "sharp", "masked"],
     "sectionPatterns": ["none", "alternating", "gradient", "wave"],
     "accentStyles": ["border", "underline", "tint"],
-    "sectionIds": ["hero","trust","services","projects","beforeAfter","process","gallery","menu","reviews","faq","contact","about","hours","marquee","differentiator"],
-    "maxSections": 15,
-    "maxServices": 12,
-    "maxGalleryImages": 20,
-    "maxMarqueeItems": 10,
-    "paletteFields": ["bg","surface","surfaceAlt","text","textMuted","accent","accentDim","accentGlow","border"],
-    "fontSlots": ["nameFont","headingFont","bodyFont","monoFont"]
+    "sectionIds": [
+      "hero", "trust", "services", "projects", "beforeAfter",
+      "process", "gallery", "menu", "reviews", "faq",
+      "contact", "about", "hours", "marquee", "differentiator", "cta",
+      "team", "products", "book"
+    ],
+    "componentOverrides": {
+      "contact": ["QuoteForm", "OrderVisit"],
+      "about": ["AboutMap", "AuthorBio"],
+      "trust": ["TrustBar", "TrustStats"]
+    },
+    "sectionVariants": {
+      "hero": ["split", "overlay", "video", "minimal"],
+      "services": ["cards", "icon-grid", "compact", "split"],
+      "gallery": ["masonry", "scroll"],
+      "reviews": ["scroll"]
+    },
+    "maxSections": 16,
+    "maxServices": 6,
+    "advisoryLimits": {
+      "maxGalleryImages": 20,
+      "maxMarqueeItems": 10
+    },
+    "paletteFields": ["bg", "surface", "surfaceAlt", "text", "textMuted", "accent", "accentDim", "accentGlow", "border", "borderSubtle"],
+    "fontSlots": ["nameFont", "headingFont", "bodyFont", "monoFont"],
+    "optionalDataFiles": ["preview.json", "tour.json", "process.json"]
   }
 }
