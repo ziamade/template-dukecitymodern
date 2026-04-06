@@ -300,6 +300,59 @@ npx tsx packages/pipeline/scripts/propagate-template.ts v4.1.0
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
 | `SLACK_WEBHOOK_URL` | Failure notifications |
 
+## Versioning
+
+### Standard
+
+This template uses semver with `0.x` indicating beta. The version was reset to `0.1.0` in April 2026 after a period of inconsistent tagging (v1.x → v5.0.0 → v4.x). All prior version numbers are legacy and should be ignored.
+
+| Change Type | Version Bump | Example |
+|-------------|-------------|---------|
+| Bug fix, CSS tweak, copy change | PATCH (`0.1.x`) | Fix FloatingCTA logic |
+| New section, variant, data file, layout token | MINOR (`0.x.0`) | Add process.json support |
+| Breaking data contract, removed sections, renamed fields | MAJOR (`1.0.0`) | Graduate out of beta |
+
+### Single Source of Truth
+
+- `package.json` version is **canonical**
+- `_template-manifest.json` version must match (synced automatically by `npm version` lifecycle hook)
+- Git tag must match with `v` prefix (e.g., `v0.2.0`)
+- CI will fail if `package.json` and `_template-manifest.json` versions diverge
+
+### How to Release
+
+Use `npm version` — it updates `package.json`, syncs the manifest, commits, and tags in one step:
+
+```bash
+npm version patch -m "release: v%s — <summary>"   # 0.1.0 → 0.1.1
+npm version minor -m "release: v%s — <summary>"   # 0.1.1 → 0.2.0
+npm version major -m "release: v%s — <summary>"   # 0.x.x → 1.0.0
+```
+
+Then push with tags and propagate to clients:
+
+```bash
+git push --follow-tags
+npx tsx packages/pipeline/scripts/propagate-template.ts v0.2.0
+```
+
+### Rules
+
+- **Never** let `package.json` version and git tags diverge
+- **Never** skip versions (no `v0.2.0` → `v0.5.0`)
+- **Never** delete tags that clients are pinned to until migration is confirmed
+- **Never** use informal version labels in docs when the actual tag differs
+- Pre-release tags (`v0.x.0-rc.N`) are allowed for multi-phase work but must never be propagated to clients
+
+### Client Migration
+
+Most client repos are currently pinned to `v4.0.3` in `.template-version`. When migrating clients to the new versioning scheme:
+
+1. Verify the template builds successfully at the target tag
+2. Update `.template-version` in each client repo
+3. Confirm all client builds pass
+4. Only after all clients are migrated, clean up legacy tags (see issue #64)
+
 ## CMS Integration
 
 Pages CMS (pagescms.org) provides a Git-based editing UI. Config is `.pages.yml` at repo root.
