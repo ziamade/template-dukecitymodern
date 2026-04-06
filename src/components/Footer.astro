@@ -2,7 +2,7 @@
 // src/components/Footer.astro
 // DCD Luxury footer — 4-column grid with brand, nav links, contact, service area
 // Social icons with glow hover, divider glow line, ambient orb
-import { client, contact, location, about } from '../lib/data';
+import { client, contact, location, hero } from '../lib/data';
 import { formatPhone } from '../lib/utils';
 import OptimizedImg from './OptimizedImg.astro';
 import BrandName from './BrandName.astro';
@@ -20,7 +20,7 @@ const city = location.city || '';
 const state = location.state || '';
 const zip = location.zip || '';
 
-const tagline = about?.heading || about?.text?.slice(0, 120) || '';
+const tagline = hero?.heroSubtitle || '';
 
 // Parse service area cities from comma-separated string
 const serviceAreaRaw = client.serviceArea || '';
