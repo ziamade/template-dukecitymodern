@@ -146,10 +146,12 @@ npx playwright test
 
 ## Versioning
 
-Tags follow semver (`v1.0.0`, `v1.1.0`, etc.). Client repos pin to a version via `.template-version`. Bumping all client repos:
+Tags follow semver starting at `v0.1.0` (`0.x` = beta). Release with `npm version patch|minor|major` — the lifecycle hook syncs `_template-manifest.json` automatically. See `CLAUDE.md` for full versioning rules.
+
+Client repos pin to a version via `.template-version`. Bumping all client repos:
 
 ```bash
-npx tsx packages/pipeline/scripts/propagate-template.ts v1.1.0
+npx tsx packages/pipeline/scripts/propagate-template.ts v0.2.0
 ```
 
 ## Client Repo Secrets

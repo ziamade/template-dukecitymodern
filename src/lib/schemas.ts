@@ -533,7 +533,11 @@ export const productSchema = z.object({
 }).loose();
 
 /** _template-manifest.json — machine-readable list of valid tokens/IDs */
-export const templateManifestSchema = z.record(z.string(), z.unknown());
+export const templateManifestSchema = z.object({
+  version: z.string(),
+  description: z.string(),
+  capabilities: z.record(z.string(), z.unknown()),
+}).loose();
 
 // ---------------------------------------------------------------------------
 // Convenience: all schemas in one object
