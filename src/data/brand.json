@@ -16,8 +16,8 @@
   "bodyFont": "Hanken Grotesk",
   "nameTreatment": {
     "parts": [
-      { "text": "Pete's", "font": "name", "color": "accent" },
-      { "text": " Mobile Window Tinting", "font": "body", "color": "textMuted" }
+      { "text": "Your", "font": "name", "color": "accent" },
+      { "text": " Business Name", "font": "body", "color": "textMuted" }
     ],
     "layout": "inline"
   }
