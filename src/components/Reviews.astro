@@ -51,13 +51,7 @@ const enrichedItems = items.map((t) => ({ ...t, _url: cardUrl(t) }));
 // Keep for backward compat with meta subtitle link
 const allReviewsUrl = googleReviewsUrl;
 
-// Load source icons
-const sourceIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', {
-  query: '?raw', import: 'default', eager: true
-});
-function sourceIcon(name: string): string {
-  return (sourceIcons[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
-}
+import { getIcon } from '../lib/icons';
 
 // Star rendering helper
 function stars(count: number): string {
@@ -103,7 +97,7 @@ function stars(count: number): string {
                   {t.role && <span class="review-role">{t.role}</span>}
                 </div>
                 <span class="review-badge">
-                  <span class="review-badge-icon" aria-hidden="true" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+                  <span class="review-badge-icon" aria-hidden="true" set:html={getIcon(t.source?.toLowerCase() || 'star')} />
                 </span>
               </div>
             </a>
@@ -122,7 +116,7 @@ function stars(count: number): string {
                   {t.role && <span class="review-role">{t.role}</span>}
                 </div>
                 <span class="review-badge">
-                  <span class="review-badge-icon" aria-hidden="true" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+                  <span class="review-badge-icon" aria-hidden="true" set:html={getIcon(t.source?.toLowerCase() || 'star')} />
                 </span>
               </div>
             </div>
@@ -143,7 +137,7 @@ function stars(count: number): string {
                   {t.role && <span class="review-role">{t.role}</span>}
                 </div>
                 <span class="review-badge">
-                  <span class="review-badge-icon" aria-hidden="true" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+                  <span class="review-badge-icon" aria-hidden="true" set:html={getIcon(t.source?.toLowerCase() || 'star')} />
                 </span>
               </div>
             </a>
@@ -162,7 +156,7 @@ function stars(count: number): string {
                   {t.role && <span class="review-role">{t.role}</span>}
                 </div>
                 <span class="review-badge">
-                  <span class="review-badge-icon" aria-hidden="true" set:html={sourceIcon(t.source?.toLowerCase() || 'star')} />
+                  <span class="review-badge-icon" aria-hidden="true" set:html={getIcon(t.source?.toLowerCase() || 'star')} />
                 </span>
               </div>
             </div>
@@ -174,13 +168,13 @@ function stars(count: number): string {
         <div class="reviews-ctas reveal-up">
           {hasGoogleReviews && googleReviewsUrl && (
             <a href={googleReviewsUrl} class="reviews-cta-btn" target="_blank" rel="noopener">
-              <span class="reviews-cta-icon" aria-hidden="true" set:html={sourceIcon('google')} />
+              <span class="reviews-cta-icon" aria-hidden="true" set:html={getIcon('google')} />
               {reviewCount ? `See our ${reviewCount}+ reviews on Google` : 'See our reviews on Google'}
             </a>
           )}
           {hasYelpReviews && yelpUrl && (
             <a href={yelpUrl} class="reviews-cta-btn" target="_blank" rel="noopener">
-              <span class="reviews-cta-icon" aria-hidden="true" set:html={sourceIcon('yelp')} />
+              <span class="reviews-cta-icon" aria-hidden="true" set:html={getIcon('yelp')} />
               See our reviews on Yelp
             </a>
           )}

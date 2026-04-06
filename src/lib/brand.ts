@@ -9,43 +9,42 @@ function cssSafe(val: string): string {
   return val.replace(/[{}<>;"'\\]/g, '');
 }
 
+/** Parse a hex color to [r, g, b] (0-255). Returns null for non-hex inputs. */
+function parseHex(hex: string): [number, number, number] | null {
+  const match = hex.match(/^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/);
+  if (!match) return null;
+  const h = match[1];
+  const full = h.length === 3
+    ? h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
+    : h;
+  return [
+    parseInt(full.slice(0, 2), 16),
+    parseInt(full.slice(2, 4), 16),
+    parseInt(full.slice(4, 6), 16),
+  ];
+}
+
 /**
  * Determine if a hex color is "light" using perceived brightness.
  * Used to flip glass surface base color for light vs dark palettes.
  */
 function isLightColor(hex: string): boolean {
-  // Only handle hex colors; non-hex (rgb(...), named colors) default to dark
-  const match = hex.match(/^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/);
-  if (!match) return false;
-
-  const h = match[1];
-  const full = h.length === 3
-    ? h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
-    : h;
-  const r = parseInt(full.slice(0, 2), 16);
-  const g = parseInt(full.slice(2, 4), 16);
-  const b = parseInt(full.slice(4, 6), 16);
+  const rgb = parseHex(hex);
+  if (!rgb) return false;
   // ITU-R BT.601 luma
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.5;
+  return (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 > 0.5;
 }
 
 /**
  * WCAG 2.1 relative luminance from a hex color.
  * https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+ * Returns NaN for non-hex inputs.
  */
 function getRelativeLuminance(hex: string): number {
-  const h = hex.replace('#', '');
-  const full = h.length === 3
-    ? h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
-    : h;
-  const r = parseInt(full.slice(0, 2), 16) / 255;
-  const g = parseInt(full.slice(2, 4), 16) / 255;
-  const b = parseInt(full.slice(4, 6), 16) / 255;
-
+  const rgb = parseHex(hex);
+  if (!rgb) return NaN;
   const linearize = (c: number) => c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-
-  return 0.2126 * linearize(r) + 0.7152 * linearize(g) + 0.0722 * linearize(b);
+  return 0.2126 * linearize(rgb[0] / 255) + 0.7152 * linearize(rgb[1] / 255) + 0.0722 * linearize(rgb[2] / 255);
 }
 
 /**
@@ -167,6 +166,11 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
       h1: 'clamp(1.75rem, 1.25rem + 2vw, 2.75rem)',
       h2: 'clamp(1.25rem, 1rem + 1vw, 1.75rem)',
     },
+    standard: {
+      base: 'clamp(1rem, 0.95rem + 0.25vw, 1.125rem)',
+      h1: 'clamp(2rem, 1.5rem + 2.5vw, 3.25rem)',
+      h2: 'clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem)',
+    },
     editorial: {
       base: 'clamp(1.05rem, 1rem + 0.3vw, 1.25rem)',
       h1: 'clamp(2.25rem, 1.75rem + 3vw, 4rem)',
@@ -210,41 +214,35 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
     standard: '2px',
   };
 
+  // Simple tokens: one layout key → one CSS var
+  const SIMPLE_TOKENS: Array<{ key: string; map: Record<string, string>; cssVar: string }> = [
+    { key: 'cardRadius',      map: RADIUS_MAP,       cssVar: '--card-radius' },
+    { key: 'sectionGap',      map: GAP_MAP,          cssVar: '--section-gap' },
+    { key: 'buttonStyle',     map: BUTTON_MAP,       cssVar: '--btn-radius' },
+    { key: 'imageStyle',      map: IMG_RADIUS_MAP,   cssVar: '--img-radius' },
+    { key: 'shadowStyle',     map: SHADOW_MAP,       cssVar: '--shadow-card' },
+    { key: 'overlayDarkness', map: OVERLAY_MAP,      cssVar: '--overlay-darkness' },
+    { key: 'glassOpacity',    map: GLASS_MAP,        cssVar: '--glass-opacity' },
+    { key: 'borderWeight',    map: BORDER_WEIGHT_MAP,cssVar: '--border-weight' },
+  ];
+
   const vars: string[] = [];
 
-  if (layout.cardRadius && RADIUS_MAP[layout.cardRadius]) {
-    vars.push(`  --card-radius: ${RADIUS_MAP[layout.cardRadius]};`);
+  for (const { key, map, cssVar } of SIMPLE_TOKENS) {
+    const val = map[layout[key]];
+    if (val) vars.push(`  ${cssVar}: ${val};`);
   }
-  if (layout.sectionGap && GAP_MAP[layout.sectionGap]) {
-    vars.push(`  --section-gap: ${GAP_MAP[layout.sectionGap]};`);
-  }
-  if (layout.buttonStyle && BUTTON_MAP[layout.buttonStyle]) {
-    vars.push(`  --btn-radius: ${BUTTON_MAP[layout.buttonStyle]};`);
-  }
-  if (layout.imageStyle && IMG_RADIUS_MAP[layout.imageStyle]) {
-    vars.push(`  --img-radius: ${IMG_RADIUS_MAP[layout.imageStyle]};`);
-  }
+
+  // Multi-var tokens: one layout key → multiple CSS vars
   if (layout.typographyScale && TYPO_SCALE[layout.typographyScale]) {
     const scale = TYPO_SCALE[layout.typographyScale];
     vars.push(`  --font-size-base: ${scale.base};`);
     vars.push(`  --font-size-h1: ${scale.h1};`);
     vars.push(`  --font-size-h2: ${scale.h2};`);
   }
-  if (layout.shadowStyle && SHADOW_MAP[layout.shadowStyle]) {
-    vars.push(`  --shadow-card: ${SHADOW_MAP[layout.shadowStyle]};`);
-  }
   if (layout.hoverIntensity && HOVER_SCALE_MAP[layout.hoverIntensity]) {
     vars.push(`  --hover-scale: ${HOVER_SCALE_MAP[layout.hoverIntensity]};`);
     vars.push(`  --hover-shadow: ${HOVER_SHADOW_MAP[layout.hoverIntensity]};`);
-  }
-  if (layout.overlayDarkness && OVERLAY_MAP[layout.overlayDarkness]) {
-    vars.push(`  --overlay-darkness: ${OVERLAY_MAP[layout.overlayDarkness]};`);
-  }
-  if (layout.glassOpacity && GLASS_MAP[layout.glassOpacity]) {
-    vars.push(`  --glass-opacity: ${GLASS_MAP[layout.glassOpacity]};`);
-  }
-  if (layout.borderWeight && BORDER_WEIGHT_MAP[layout.borderWeight]) {
-    vars.push(`  --border-weight: ${BORDER_WEIGHT_MAP[layout.borderWeight]};`);
   }
 
   return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';
