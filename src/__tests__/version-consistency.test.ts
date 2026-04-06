@@ -8,12 +8,22 @@ describe('version consistency', () => {
   const manifest = JSON.parse(
     readFileSync(resolve(root, 'src/data/_template-manifest.json'), 'utf8'),
   );
+  const fixture = JSON.parse(
+    readFileSync(
+      resolve(root, 'tests/visual/fixtures/_base/_template-manifest.json'),
+      'utf8',
+    ),
+  );
 
   it('package.json and _template-manifest.json versions match', () => {
     expect(manifest.version).toBe(pkg.version);
   });
 
+  it('test fixture manifest version matches', () => {
+    expect(fixture.version).toBe(pkg.version);
+  });
+
   it('version is valid semver', () => {
-    expect(pkg.version).toMatch(/^\d+\.\d+\.\d+$/);
+    expect(pkg.version).toMatch(/^\d+\.\d+\.\d+(-[\w.]+)?$/);
   });
 });

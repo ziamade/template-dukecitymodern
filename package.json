@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
-    "version": "node -e \"const fs=require('fs');const f='src/data/_template-manifest.json';const s=fs.readFileSync(f,'utf8');const v=require('./package.json').version;fs.writeFileSync(f,s.replace(/\\\"version\\\":\\s*\\\"[^\\\"]*\\\"/,'\\\"version\\\": \\\"'+v+'\\\"'))\" && git add src/data/_template-manifest.json",
+    "version": "node -e \"const fs=require('fs');const v=require('./package.json').version;['src/data/_template-manifest.json','tests/visual/fixtures/_base/_template-manifest.json'].forEach(f=>{const s=fs.readFileSync(f,'utf8');fs.writeFileSync(f,s.replace(/\\\"version\\\":\\s*\\\"[^\\\"]*\\\"/,'\\\"version\\\": \\\"'+v+'\\\"'))})\" && git add src/data/_template-manifest.json tests/visual/fixtures/_base/_template-manifest.json",
     "postinstall": "node -e \"const fs=require('fs');const p=require('path');const src='node_modules/driver.js/dist/';const scripts='public/scripts/';const styles='public/styles/';fs.mkdirSync(scripts,{recursive:true});fs.mkdirSync(styles,{recursive:true});fs.copyFileSync(p.join(src,'driver.js.mjs'),p.join(scripts,'driver.js.mjs'));fs.copyFileSync(p.join(src,'driver.css'),p.join(styles,'driver.css'));\""
   },
   "dependencies": {
