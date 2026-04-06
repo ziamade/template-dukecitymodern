@@ -32,7 +32,7 @@ import CTASection from '../components/CTASection.astro';
 import BookShowcase from '../components/BookShowcase.astro';
 import AuthorBio from '../components/AuthorBio.astro';
 
-import { resolveNavLabels, resolveCta, resolveHeroCta } from '../lib/section-registry';
+import { DEFAULT_COMPONENTS, VARIANT_OVERRIDES, resolveNavLabels, resolveCta, resolveHeroCta } from '../lib/section-registry';
 
 import { contact, location, testimonials, theme } from '../lib/data';
 import type { SectionEntry } from '../lib/types';
@@ -48,25 +48,7 @@ const componentMap: Record<string, any> = {
   Team, Products, CTASection, BookShowcase, AuthorBio,
 };
 
-// Default component for each section ID
-const defaultComponentMap: Record<string, string> = {
-  hero: 'Hero', trust: 'TrustBar', services: 'ServiceCards',
-  projects: 'ProjectGallery', process: 'ProcessSteps',
-  gallery: 'PhotoGallery', menu: 'MenuSection', reviews: 'Reviews',
-  faq: 'FAQ', contact: 'QuoteForm', about: 'AboutMap',
-  hours: 'HoursDisplay', beforeAfter: 'BeforeAfter',
-  differentiator: 'Differentiator', marquee: 'Marquee',
-  team: 'Team', products: 'Products', cta: 'CTASection',
-  book: 'BookShowcase',
-};
-
-// Variant overrides (e.g., trust:stats → TrustStats)
-const variantOverrides: Record<string, Record<string, string>> = {
-  trust: { stats: 'TrustStats' },
-  contact: { 'order-visit': 'OrderVisit' },
-  about: { 'author-bio': 'AuthorBio' },
-};
-
+// Resolve section entry to an actual Astro component using the shared registry
 function resolveComponent(entry: SectionEntry): any {
   // Explicit component override from theme data
   if (entry.component && componentMap[entry.component]) {
@@ -74,13 +56,13 @@ function resolveComponent(entry: SectionEntry): any {
   }
   // Variant-based override
   if (entry.variant !== undefined) {
-    const overrides = variantOverrides[entry.id];
-    if (overrides && String(entry.variant) in overrides) {
+    const overrides = VARIANT_OVERRIDES[entry.id];
+    if (overrides?.[String(entry.variant)]) {
       return componentMap[overrides[String(entry.variant)]];
     }
   }
   // Default
-  const name = defaultComponentMap[entry.id];
+  const name = DEFAULT_COMPONENTS[entry.id];
   return name ? componentMap[name] : null;
 }
 
@@ -110,11 +92,7 @@ const navLinks = sections
   .filter(s => s.id !== 'reviews' || hasReviews)
   .map(s => ({ href: `#${s.id}`, text: sectionLabels[s.id] }));
 
-// Load SVG icons for action bar
-const actionIcons = import.meta.glob('/src/assets/svgs/icons/*.svg', { query: '?raw', import: 'default', eager: true });
-function actionIcon(name: string): string {
-  return (actionIcons[`/src/assets/svgs/icons/${name}.svg`] as string) || '';
-}
+import { getIcon } from '../lib/icons';
 
 // Visual depth: dark section and dividers (some layout tokens are free-form, not in schema)
 const layout = (theme.layout || {}) as Record<string, string>;
@@ -124,12 +102,12 @@ const useEditorialDividers = depth === 'editorial';
 
 // Action bar — data-driven with sensible defaults
 const defaultActionBarLinks = [
-  { href: `tel:${contact.phoneForTel || ''}`, icon: actionIcon('phone'), text: 'Call' },
-  { href: location.mapLink || '#', icon: actionIcon('navigation'), text: 'Directions' },
-  { href: cta.href, icon: actionIcon('mail'), text: cta.text },
+  { href: `tel:${contact.phoneForTel || ''}`, icon: getIcon('phone'), text: 'Call' },
+  { href: location.mapLink || '#', icon: getIcon('navigation'), text: 'Directions' },
+  { href: cta.href, icon: getIcon('mail'), text: cta.text },
 ];
-const actionBarLinks = ((themeActionBar as Record<string, unknown>).links || defaultActionBarLinks) as Array<{ href: string; icon: string; text: string }>;
-const showActionBar = (themeActionBar as Record<string, unknown>).hidden !== true;
+const actionBarLinks = themeActionBar.links || defaultActionBarLinks;
+const showActionBar = themeActionBar.hidden !== true;
 ---
 <BaseLayout>
   <StickyHeader navLinks={navLinks} ctaText={cta.text} ctaHref={cta.href} />

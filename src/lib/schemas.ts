@@ -138,10 +138,12 @@ const ctaOverrideSchema = z.object({
 }).loose();
 
 const actionBarSchema = z.object({
-  enabled: z.boolean().optional(),
-  call: z.boolean().optional(),
-  directions: z.boolean().optional(),
-  cta: z.boolean().optional(),
+  hidden: z.boolean().optional(),
+  links: z.array(z.object({
+    href: z.string(),
+    icon: z.string(),
+    text: z.string(),
+  })).optional(),
 }).loose();
 
 export const themeSchema = z.object({
@@ -539,38 +541,3 @@ export const templateManifestSchema = z.object({
   capabilities: z.record(z.string(), z.unknown()),
 }).loose();
 
-// ---------------------------------------------------------------------------
-// Convenience: all schemas in one object
-// ---------------------------------------------------------------------------
-
-export const schemas = {
-  client: clientSchema,
-  brand: brandSchema,
-  theme: themeSchema,
-  contact: contactSchema,
-  location: locationSchema,
-  hero: heroSchema,
-  seo: seoSchema,
-  schemaJson: jsonLdSchema,
-  hours: hoursSchema,
-  testimonials: testimonialsSchema,
-  faq: faqSchema,
-  about: aboutSchema,
-  gallery: gallerySchema,
-  menu: menuSchema,
-  projects: projectsSchema,
-  alert: alertSchema,
-  analytics: analyticsSchema,
-  trustbar: trustbarSchema,
-  team: teamSchema,
-  cta: ctaSchema,
-  book: bookSchema,
-  attributes: attributesSchema,
-  googleLinks: googleLinksSchema,
-  sources: sourcesSchema,
-  templateManifest: templateManifestSchema,
-  preview: previewSchema,
-  tour: tourSchema,
-  process: processSchema,
-  differentiator: differentiatorSchema,
-} as const;

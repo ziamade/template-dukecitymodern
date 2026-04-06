@@ -4,7 +4,7 @@
  */
 
 /** Default component name for each section ID */
-const DEFAULT_COMPONENTS: Record<string, string> = {
+export const DEFAULT_COMPONENTS: Record<string, string> = {
   hero: 'Hero',
   trust: 'TrustBar',
   services: 'ServiceCards',
@@ -27,7 +27,7 @@ const DEFAULT_COMPONENTS: Record<string, string> = {
 };
 
 /** Component variant overrides (variant string → component name) */
-const VARIANT_OVERRIDES: Record<string, Record<string, string>> = {
+export const VARIANT_OVERRIDES: Record<string, Record<string, string>> = {
   trust: { stats: 'TrustStats' },
   contact: { 'order-visit': 'OrderVisit' },
   about: { 'author-bio': 'AuthorBio' },
