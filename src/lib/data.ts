@@ -4,11 +4,16 @@
  * Every required JSON data file is imported here, validated through its
  * Zod schema, and re-exported as a properly typed constant.
  *
+ * Validation is non-fatal: if a schema fails, the raw data is used
+ * as-is and a warning is logged. Client data varies widely across
+ * sites, so strict validation must never block a build.
+ *
  * Optional data files (tour.json, preview.json, process.json,
  * differentiator.json) are NOT imported here — they use import.meta.glob
  * in components. Their schemas are exported from ./schemas.ts for inline
  * validation.
  */
+import type { ZodSchema } from 'astro/zod';
 import {
   clientSchema,
   brandSchema,
@@ -64,29 +69,39 @@ import rawGoogleLinks from '../data/google-links.json';
 import rawSources from '../data/_sources.json';
 import rawTemplateManifest from '../data/_template-manifest.json';
 
+/** Validate with safeParse — warn on failure, never crash the build. */
+function validate<T>(schema: ZodSchema<T>, raw: unknown, name: string): T {
+  const result = schema.safeParse(raw);
+  if (!result.success) {
+    console.warn(`[data] ${name} failed validation (using raw data):`, JSON.stringify(result.error.issues));
+    return raw as T;
+  }
+  return result.data;
+}
+
 // Validated + typed exports
-export const client = clientSchema.parse(rawClient);
-export const brand = brandSchema.parse(rawBrand);
-export const theme = themeSchema.parse(rawTheme);
-export const contact = contactSchema.parse(rawContact);
-export const location = locationSchema.parse(rawLocation);
-export const hero = heroSchema.parse(rawHero);
-export const seo = seoSchema.parse(rawSeo);
-export const schemaJson = jsonLdSchema.parse(rawSchema);
-export const hours = hoursSchema.parse(rawHours);
-export const testimonials = testimonialsSchema.parse(rawTestimonials);
-export const faq = faqSchema.parse(rawFaq);
-export const about = aboutSchema.parse(rawAbout);
-export const gallery = gallerySchema.parse(rawGallery);
-export const menu = menuSchema.parse(rawMenu);
-export const projects = projectsSchema.parse(rawProjects);
-export const alert = alertSchema.parse(rawAlert);
-export const analytics = analyticsSchema.parse(rawAnalytics);
-export const trustbar = trustbarSchema.parse(rawTrustbar);
-export const team = teamSchema.parse(rawTeam);
-export const cta = ctaSchema.parse(rawCta);
-export const book = bookSchema.parse(rawBook);
-export const attributes = attributesSchema.parse(rawAttributes);
-export const googleLinks = googleLinksSchema.parse(rawGoogleLinks);
-export const sources = sourcesSchema.parse(rawSources);
-export const templateManifest = templateManifestSchema.parse(rawTemplateManifest);
+export const client = validate(clientSchema, rawClient, 'client.json');
+export const brand = validate(brandSchema, rawBrand, 'brand.json');
+export const theme = validate(themeSchema, rawTheme, 'theme.json');
+export const contact = validate(contactSchema, rawContact, 'contact.json');
+export const location = validate(locationSchema, rawLocation, 'location.json');
+export const hero = validate(heroSchema, rawHero, 'hero.json');
+export const seo = validate(seoSchema, rawSeo, 'seo.json');
+export const schemaJson = validate(jsonLdSchema, rawSchema, 'schema.json');
+export const hours = validate(hoursSchema, rawHours, 'hours.json');
+export const testimonials = validate(testimonialsSchema, rawTestimonials, 'testimonials.json');
+export const faq = validate(faqSchema, rawFaq, 'faq.json');
+export const about = validate(aboutSchema, rawAbout, 'about.json');
+export const gallery = validate(gallerySchema, rawGallery, 'gallery.json');
+export const menu = validate(menuSchema, rawMenu, 'menu.json');
+export const projects = validate(projectsSchema, rawProjects, 'projects.json');
+export const alert = validate(alertSchema, rawAlert, 'alert.json');
+export const analytics = validate(analyticsSchema, rawAnalytics, 'analytics.json');
+export const trustbar = validate(trustbarSchema, rawTrustbar, 'trustbar.json');
+export const team = validate(teamSchema, rawTeam, 'team.json');
+export const cta = validate(ctaSchema, rawCta, 'cta.json');
+export const book = validate(bookSchema, rawBook, 'book.json');
+export const attributes = validate(attributesSchema, rawAttributes, 'attributes.json');
+export const googleLinks = validate(googleLinksSchema, rawGoogleLinks, 'google-links.json');
+export const sources = validate(sourcesSchema, rawSources, '_sources.json');
+export const templateManifest = validate(templateManifestSchema, rawTemplateManifest, '_template-manifest.json');
