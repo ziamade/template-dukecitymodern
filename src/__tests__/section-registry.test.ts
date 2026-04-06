@@ -4,8 +4,6 @@ import {
   resolveNavLabels,
   resolveCta,
   resolveHeroCta,
-  DEFAULT_COMPONENTS,
-  VARIANT_OVERRIDES,
 } from '../lib/section-registry';
 
 describe('resolveComponent', () => {
