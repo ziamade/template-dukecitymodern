@@ -8,12 +8,14 @@ import { brandify } from '../lib/brandify';
 const logoUrl = client.logoUrl || '';
 const aboutImage = about.image || '';
 const address = [location.address, location.city, location.state, location.zip].filter(Boolean).join(', ');
+const headingText = about.heading || 'About';
+const headingHasName = client.name && headingText.toLowerCase().includes(client.name.toLowerCase());
 ---
 <section class="about-section section" id="about">
   <div class="container about-grid">
     {about?.text && (
       <div class="about-text">
-        <h2>{about.heading || 'About'} <BrandName size="inline" /></h2>
+        <h2>{headingText}{!headingHasName && <>{' '}<BrandName size="inline" /></>}</h2>
         <p class="about-text-content" set:html={brandify(about.text, client.name, brand)} />
       </div>
     )}
