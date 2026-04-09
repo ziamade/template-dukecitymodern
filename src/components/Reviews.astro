@@ -14,7 +14,7 @@ const reviewCount = testimonials?.reviewCount
 const averageRating = testimonials?.averageRating || null;
 
 // Resolve Google reviews URL: allReviewsUrl > googleLinks > client social
-let allReviewsUrl = (testimonials as any)?.allReviewsUrl || '';
+let allReviewsUrl = testimonials?.allReviewsUrl || '';
 if (!allReviewsUrl && googleLinks?.allReviews) allReviewsUrl = googleLinks.allReviews;
 if (!allReviewsUrl && client.socials?.google) allReviewsUrl = client.socials.google;
 
@@ -26,7 +26,7 @@ function stars(count: number): string {
 const hasData = (reviewCount && reviewCount > 0) || (averageRating && averageRating > 0);
 ---
 {hasData && (
-  <section class="reviews-section section" id="reviews" data-tour="reviews">
+  <section class="reviews-section section" id="reviews" data-tour="reviews" aria-label="Customer Reviews">
     <div class="container">
       <div class="reviews-banner reveal-up">
         {averageRating && (

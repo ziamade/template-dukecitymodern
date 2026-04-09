@@ -193,27 +193,25 @@ content:
         type: string
         description: "Descriptive text below the main heading."
 
-  # ── Testimonials ──────────────────────────────────────────────────────────
+  # ── Testimonials (aggregate only — Google Places ToS compliance) ──────────
   - name: testimonials
     label: Customer Reviews
     type: file
     path: src/data/testimonials.json
     format: json
     fields:
-      - name: items
-        label: Reviews
-        type: object
-        list:
-          collapsible:
-            summary: "{{author}} ({{rating}} stars)"
-        fields:
-          - { name: text, label: Review Text, type: text }
-          - { name: author, label: Author Name, type: string }
-          - { name: initials, label: Initials, type: string, description: "Two letters shown in avatar circle" }
-          - { name: role, label: Role, type: string, default: "Verified Customer" }
-          - { name: rating, label: Rating, type: number, default: 5 }
-          - { name: source, label: Source, type: string, default: "Google" }
-          - { name: url, label: Review URL, type: string, required: false }
+      - name: reviewCount
+        label: Google Review Count
+        type: number
+        description: "Total number of Google reviews. Updated from Google automatically."
+      - name: averageRating
+        label: Google Rating
+        type: number
+        description: "Average star rating from Google. Updated automatically."
+      - name: allReviewsUrl
+        label: Google Reviews Link
+        type: string
+        description: "Link to all Google reviews. Leave empty to hide the link."
 
   # ── About Section ─────────────────────────────────────────────────────────
   - name: about
