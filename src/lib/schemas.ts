@@ -251,10 +251,11 @@ export const testimonialSchema = z.object({
 }).loose();
 
 export const testimonialsSchema = z.object({
-  items: z.array(testimonialSchema),
-  reviewCount: z.number().optional(),
-  averageRating: z.number().optional(),
-  // Accessed by TrustStats and Reviews as fallback names
+  items: z.array(testimonialSchema).optional(),
+  reviewCount: z.number().nullable().optional(),
+  averageRating: z.number().nullable().optional(),
+  allReviewsUrl: z.string().optional().default(''),
+  // Legacy field names (backward compat)
   totalReviewCount: z.number().optional(),
   totalReviews: z.number().optional(),
 }).loose();

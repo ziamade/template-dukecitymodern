@@ -7,16 +7,13 @@ import { client, testimonials } from '../lib/data';
 const foundingYear = parseInt(String(client.foundingYear || '0'), 10);
 const hasFoundingYear = foundingYear > 1900;
 
-const reviews = testimonials?.items || [];
 const reviewCount = testimonials?.reviewCount
   || testimonials?.totalReviewCount
   || testimonials?.totalReviews
-  || reviews.length;
+  || 0;
 const avgRating = testimonials?.averageRating
   ? String(testimonials.averageRating)
-  : reviews.length > 0
-    ? (reviews.reduce((sum: number, r) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
-    : '0';
+  : '0';
 const hasRating = parseFloat(avgRating) > 0;
 const hasReviews = reviewCount > 0;
 

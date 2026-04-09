@@ -62,7 +62,7 @@ All data lives in `src/data/`. Files are plain JSON imported at build time. Opti
 | `seo.json` | Yes | pageTitle, metaDescription, ogTitle, ogDescription, ogImage, canonicalUrl |
 | `schema.json` | Yes | Full JSON-LD structured data (injected as `<script type="application/ld+json">`) |
 | `hours.json` | Yes | days[]: day, open, close (null = closed) |
-| `testimonials.json` | Yes | items[]: text, author, initials, role, rating, source, url; reviewCount |
+| `testimonials.json` | Yes | reviewCount, averageRating, allReviewsUrl (aggregate only — no individual review text per Google ToS) |
 | `trustbar.json` | Yes | items[]: number, label |
 | `faq.json` | Yes | items[]: question, answer, source |
 | `about.json` | Yes | heading, text |
@@ -111,7 +111,7 @@ Resolution order: explicit `component` override > variant override > default com
 | `process` | ProcessSteps | -- | `process.json` (optional, falls back to hardcoded steps) |
 | `gallery` | PhotoGallery | masonry, scroll | `gallery.json` + optional Behold feed |
 | `menu` | MenuSection | -- | `menu.json` |
-| `reviews` | Reviews | scroll | `testimonials.json` (skipped if items empty) |
+| `reviews` | Reviews | -- | `testimonials.json` (skipped if reviewCount and averageRating are 0/null) |
 | `faq` | FAQ | -- | `faq.json` |
 | `contact` | QuoteForm | order-visit -> OrderVisit | `contact.json` |
 | `about` | AboutMap | author-bio -> AuthorBio | `about.json`, `location.json` |
@@ -393,7 +393,7 @@ cd tests/visual && npx playwright test
 
 **Optional data files**: `tour.json` and `preview.json` are loaded via `import.meta.glob('../data/<file>.json', { eager: true })`, not direct import. This prevents build failures when the file is absent. Never use `fs.existsSync` or `import.meta.url` for optional files -- the path resolves incorrectly during Astro build.
 
-**Empty data arrays**: Components like Reviews check `testimonials.items.length > 0` before rendering. Empty arrays cause the section to be skipped, not crash.
+**Empty data arrays**: Components check data presence before rendering (e.g., Reviews checks `reviewCount > 0 || averageRating > 0`). Missing or empty data causes the section to be skipped, not crash.
 
 **Font not loading**: Ensure the font family name in `brand.json` exactly matches a key in `src/lib/fonts.ts` `FONT_REGISTRY`. Unregistered fonts fall back to system fonts silently.
 

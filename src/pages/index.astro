@@ -37,7 +37,7 @@ import { DEFAULT_COMPONENTS, VARIANT_OVERRIDES, resolveNavLabels, resolveCta, re
 import { contact, location, testimonials, theme } from '../lib/data';
 import type { SectionEntry } from '../lib/types';
 
-const hasReviews = (testimonials?.items?.length ?? 0) > 0;
+const hasReviews = (testimonials?.reviewCount ?? 0) > 0 || (testimonials?.averageRating ?? 0) > 0;
 
 // Component lookup by name string
 const componentMap: Record<string, any> = {
