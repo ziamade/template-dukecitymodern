@@ -1,0 +1,738 @@
+---
+// src/components/PhotoGallery.astro
+// Gallery with optional Behold Instagram feed + static photo fallback.
+// Variants: masonry (default), scroll (horizontal scroll row).
+// If beholdFeedId is set in gallery.json, loads the live Instagram widget.
+// Falls back to the static grid if Behold fails or no feed ID configured.
+import { gallery } from '../lib/data';
+import OptimizedImg from './OptimizedImg.astro';
+
+interface Props { variant?: string | number; }
+const { variant: variantProp } = Astro.props;
+const variant = String(variantProp || 'masonry');
+
+type GalleryImg = { url: string; alt: string; fallbackUrl?: string; image?: string; fallback?: string; [k: string]: unknown };
+const allGalleryImages: GalleryImg[] = (gallery?.images || (gallery as any)?.items || []) as GalleryImg[];
+// Exclude facility photos — they render in the dedicated Facility section
+const images = allGalleryImages.filter((img: any) => img.category !== 'facility');
+const hasGallery = images.length > 0;
+const beholdFeedId = gallery?.beholdFeedId || '';
+---
+
+{(hasGallery || beholdFeedId) && (
+  <section class="gallery-section section" id="gallery">
+    <div class="container">
+      <h2 class="section-heading">Photos</h2>
+    </div>
+
+    {/* ── Behold Instagram widget ──────────────────────────────────── */}
+    {beholdFeedId && (
+      <div class="behold-wrap container" id="gallery-behold">
+        <behold-widget feed-id={beholdFeedId}></behold-widget>
+      </div>
+    )}
+
+    {/* ── Horizontal scroll variant ─────────────────────────────────── */}
+    {variant === 'scroll' && hasGallery && (
+      <div class="gallery-scroll container" id="gallery-static">
+        {images.map((img, i) => (
+          <button
+            class="gallery-scroll-item gallery-thumb"
+            data-index={i}
+            type="button"
+            aria-label={`View ${img.alt || `photo ${i + 1}`}`}
+          >
+            <OptimizedImg
+              src={img.url || img.image || ''}
+              alt={img.alt || ''}
+              width={600}
+              height={400}
+              fallback={img.fallbackUrl || img.fallback || ''}
+              class="gallery-img"
+            />
+            <div class="gallery-overlay">
+              <span class="gallery-caption">{img.alt || ''}</span>
+              <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </div>
+          </button>
+        ))}
+      </div>
+    )}
+
+    {/* ── Static masonry grid (fallback when Behold active, primary otherwise) */}
+    {variant !== 'scroll' && variant !== 'category-grid' && hasGallery && (
+      <div
+        class="gallery-grid stagger-parent container"
+        id={variant === 'scroll' ? undefined : 'gallery-static'}
+        style={beholdFeedId ? 'display:none' : undefined}
+      >
+        {images.map((img, i) => (
+          <button
+            class="gallery-item gallery-thumb"
+            data-tilt="3"
+            data-index={i}
+            type="button"
+            aria-label={`View ${img.alt || `photo ${i + 1}`}`}
+          >
+            <OptimizedImg
+              src={img.url || img.image || ''}
+              alt={img.alt || ''}
+              width={800}
+              height={600}
+              fallback={img.fallbackUrl || img.fallback || ''}
+              class="gallery-img"
+            />
+            <div class="gallery-overlay">
+              <span class="gallery-caption">{img.alt || ''}</span>
+              <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                <line x1="11" y1="8" x2="11" y2="14"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </div>
+          </button>
+        ))}
+      </div>
+    )}
+
+
+    {/* -- Category-grid variant (filterable by category tabs) ------- */}
+    {variant === 'category-grid' && hasGallery && (() => {
+      const categorized = images.filter((img: any) => img.category);
+      const uncategorized = images.filter((img: any) => !img.category);
+      const allFiltered = [...categorized, ...uncategorized];
+      const categories = [...new Set(categorized.map((img: any) => img.category))] as string[];
+
+      return (
+        <div class="gallery-categories container" id="gallery-static">
+          {categories.length > 1 && (
+            <div class="gallery-filter-tabs" role="tablist" aria-label="Filter by category">
+              <button class="gallery-tab active" role="tab" aria-selected="true" data-filter="all">All</button>
+              {categories.map((cat: string) => (
+                <button class="gallery-tab" role="tab" aria-selected="false" data-filter={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </button>
+              ))}
+            </div>
+          )}
+          <div class="gallery-grid gallery-grid--category stagger-parent">
+            {allFiltered.map((img: any, i: number) => (
+              <button
+                class="gallery-item gallery-thumb"
+                data-category={img.category || 'uncategorized'}
+                data-index={i}
+                type="button"
+                aria-label={`View ${img.alt || 'gallery image'}`}
+              >
+                <OptimizedImg
+                  src={img.url || img.image || ''}
+                  alt={img.alt || ''}
+                  width={800}
+                  height={600}
+                  fallback={img.fallbackUrl || img.fallback || ''}
+                  class="gallery-img"
+                />
+                <div class="gallery-overlay">
+                  <span class="gallery-caption">{img.alt || ''}</span>
+                  <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    <line x1="11" y1="8" x2="11" y2="14"/>
+                    <line x1="8" y1="11" x2="14" y2="11"/>
+                  </svg>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    })()}
+
+    {/* ── Behold loader + fallback script ──────────────────────────── */}
+    {beholdFeedId && (
+      <script is:inline>
+        (function() {
+          var s = document.createElement('script');
+          s.type = 'module';
+          s.src = 'https://w.behold.so/widget.js';
+          document.head.appendChild(s);
+
+          // If Behold hasn't rendered after 5s, show static fallback
+          setTimeout(function() {
+            var widget = document.querySelector('behold-widget');
+            var fallback = document.getElementById('gallery-static');
+            if (!widget || !fallback) return;
+            var shadow = widget.shadowRoot;
+            var rendered = shadow && shadow.children.length > 1;
+            if (!rendered) {
+              var wrap = document.getElementById('gallery-behold');
+              if (wrap) wrap.style.display = 'none';
+              fallback.style.removeProperty('display');
+            }
+          }, 5000);
+        })();
+      </script>
+    )}
+
+    <!-- Lightbox markup (driven by inline script below) -->
+    <div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true" role="dialog" aria-label="Image lightbox">
+      <button class="lightbox-close" aria-label="Close lightbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <span class="sr-only" aria-live="polite" id="lightbox-announcer"></span>
+      <div class="lightbox-img-wrap">
+        <button class="lightbox-prev" aria-label="Previous image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <img class="lightbox-img" src="" alt="" />
+        <button class="lightbox-next" aria-label="Next image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+      <p class="lightbox-caption"></p>
+    </div>
+  </section>
+)}
+
+<style>
+  /* Screen reader only — visible to assistive tech, invisible visually */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ── Gallery section ────────────────────────────────────────────── */
+  .gallery-section {
+    padding: var(--section-pad, 4rem) 0;
+    overflow: hidden;
+  }
+
+  /* ── Behold Instagram widget ───────────────────────────────────── */
+  .behold-wrap {
+    margin-bottom: 2rem;
+  }
+
+  /* ── Horizontal scroll variant ─────────────────────────────────── */
+  .gallery-scroll {
+    display: flex;
+    gap: var(--gap, 1rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+
+  .gallery-scroll-item {
+    flex: 0 0 auto;
+    width: min(400px, 75vw);
+    aspect-ratio: 3 / 2;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--card-radius, var(--radius-lg, 12px));
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--accent) 10%, var(--border));
+    padding: 0;
+    background: var(--surface);
+    scroll-snap-align: start;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .gallery-scroll-item :global(picture) {
+    display: contents;
+  }
+
+  .gallery-scroll-item :global(.gallery-img),
+  .gallery-scroll-item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .gallery-scroll-item:hover :global(.gallery-img),
+  .gallery-scroll-item:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .gallery-scroll-item .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 40%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .gallery-scroll-item:hover .gallery-overlay,
+  .gallery-scroll-item:focus-visible .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-scroll-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Uniform grid ─────────────────────────────────────────────── */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--gap, 1rem);
+  }
+
+  /* ── Gallery item ───────────────────────────────────────────────── */
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg, 20px);
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--accent) 10%, var(--border));
+    padding: 0;
+    background: var(--surface);
+    display: block;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .gallery-item :global(picture) {
+    display: contents;
+  }
+
+  .gallery-item :global(.gallery-img),
+  .gallery-item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .gallery-item:hover :global(.gallery-img),
+  .gallery-item:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  /* ── Hover overlay ──────────────────────────────────────────────── */
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.2) 40%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .gallery-item:hover .gallery-overlay,
+  .gallery-item:focus-visible .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-caption {
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.4;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+
+  .gallery-zoom-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 24px;
+    height: 24px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .gallery-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Lightbox ───────────────────────────────────────────────────── */
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-normal) ease, visibility var(--duration-normal) ease;
+  }
+
+  .gallery-lightbox[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: color var(--duration-fast) ease, transform var(--duration-fast) ease;
+  }
+
+  .lightbox-close:hover {
+    color: #fff;
+    transform: scale(1.1);
+  }
+
+  .lightbox-close svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .lightbox-img-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 90vw;
+    max-height: 80vh;
+  }
+
+  .lightbox-img {
+    max-width: 80vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius, 12px);
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color var(--duration-fast) ease, transform var(--duration-fast) ease;
+  }
+
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    color: #fff;
+    transform: scale(1.15);
+  }
+
+  .lightbox-prev svg,
+  .lightbox-next svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .lightbox-caption {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+
+  /* -- Category-grid variant ---------------------------------------- */
+  .gallery-filter-tabs {
+    display: flex;
+    gap: var(--gap-sm, 0.5rem);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--gap-lg, 2rem);
+  }
+  .gallery-tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--btn-radius, 2rem);
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    font-family: var(--font-body);
+    color: var(--textMuted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .gallery-tab:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .gallery-tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .gallery-tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .gallery-grid--category .gallery-item[data-hidden="true"] {
+    display: none;
+  }
+
+  /* ── Responsive ─────────────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .gallery-item {
+      grid-column: span 1;
+    }
+
+    /* Disable tilt on mobile via removing the attribute */
+    .gallery-item {
+      border-radius: var(--radius, 12px);
+    }
+
+    .gallery-overlay {
+      /* Always slightly visible on mobile for discoverability */
+      opacity: 0.6;
+    }
+
+    .lightbox-prev,
+    .lightbox-next {
+      width: 36px;
+      height: 36px;
+    }
+
+    .lightbox-prev svg,
+    .lightbox-next svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  /* Tablet: handled by auto-fit grid */
+
+  /* ── Focus-visible states for lightbox controls ─────────────────── */
+
+  .lightbox-close:focus-visible,
+  .lightbox-prev:focus-visible,
+  .lightbox-next:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Reduced motion ─────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-item :global(.gallery-img),
+    .gallery-item :global(img) {
+      transition: none;
+    }
+
+    .gallery-overlay {
+      transition: none;
+    }
+
+    .gallery-lightbox {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  let controller: AbortController | null = null;
+
+  function initLightbox() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const lightbox = document.querySelector('.gallery-lightbox') as HTMLElement;
+    if (!lightbox) return;
+
+    const img = lightbox.querySelector('.lightbox-img') as HTMLImageElement;
+    const caption = lightbox.querySelector('.lightbox-caption') as HTMLElement;
+    const closeBtn = lightbox.querySelector('.lightbox-close') as HTMLElement;
+    const prevBtn = lightbox.querySelector('.lightbox-prev') as HTMLElement;
+    const nextBtn = lightbox.querySelector('.lightbox-next') as HTMLElement;
+    const announcer = lightbox.querySelector('#lightbox-announcer') as HTMLElement;
+
+    // Use .gallery-thumb which is shared by both masonry (.gallery-item) and scroll (.gallery-scroll-item) variants
+    const items = Array.from(document.querySelectorAll('.gallery-thumb')) as HTMLElement[];
+    if (!items.length) return;
+
+    let currentIndex = 0;
+    let triggerEl: HTMLElement | null = null;
+
+    /** Collect image srcs from gallery thumbnails */
+    function getSrcs(): string[] {
+      return items.map(item => {
+        const imgEl = item.querySelector('img');
+        return imgEl?.getAttribute('src') || imgEl?.getAttribute('data-src') || '';
+      });
+    }
+
+    /** Get alt text for a gallery item */
+    function getAlt(index: number): string {
+      return items[index]?.querySelector('img')?.alt || '';
+    }
+
+    function announce(index: number) {
+      if (announcer) {
+        const alt = getAlt(index);
+        announcer.textContent = alt
+          ? `Image ${index + 1} of ${items.length}: ${alt}`
+          : `Image ${index + 1} of ${items.length}`;
+      }
+    }
+
+    function open(index: number) {
+      const srcs = getSrcs();
+      if (!srcs[index]) return;
+      currentIndex = index;
+      img.src = srcs[currentIndex];
+      img.alt = getAlt(currentIndex);
+      if (caption) caption.textContent = getAlt(currentIndex);
+      announce(currentIndex);
+      lightbox.setAttribute('aria-hidden', 'false');
+      lightbox.setAttribute('aria-modal', 'true');
+      document.body.style.overflow = 'hidden';
+      closeBtn?.focus();
+    }
+
+    function close() {
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightbox.removeAttribute('aria-modal');
+      document.body.style.overflow = '';
+      triggerEl?.focus();
+    }
+
+    function navigate(dir: number) {
+      const srcs = getSrcs();
+      currentIndex = (currentIndex + dir + srcs.length) % srcs.length;
+      img.src = srcs[currentIndex];
+      img.alt = getAlt(currentIndex);
+      if (caption) caption.textContent = getAlt(currentIndex);
+      announce(currentIndex);
+    }
+
+    // Attach click handlers to each gallery thumbnail
+    items.forEach((item, i) => {
+      item.addEventListener('click', () => {
+        triggerEl = item;
+        open(i);
+      }, { signal });
+    });
+
+    // Close button
+    closeBtn?.addEventListener('click', close, { signal });
+
+    // Prev / Next buttons
+    prevBtn?.addEventListener('click', () => navigate(-1), { signal });
+    nextBtn?.addEventListener('click', () => navigate(1), { signal });
+
+    // Click on backdrop (outside image) closes lightbox
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) close();
+    }, { signal });
+
+    // Keyboard: Escape to close, arrow keys to navigate
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.getAttribute('aria-hidden') !== 'false') return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'ArrowLeft') { navigate(-1); return; }
+      if (e.key === 'ArrowRight') { navigate(1); return; }
+
+      // Focus trap: Tab/Shift+Tab cycle within lightbox
+      if (e.key === 'Tab') {
+        const focusable = Array.from(
+          lightbox.querySelectorAll<HTMLElement>('button, [href], [tabindex]:not([tabindex="-1"])')
+        ).filter(el => el.offsetParent !== null);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    }, { signal });
+  }
+
+  document.addEventListener('astro:page-load', initLightbox);
+  document.addEventListener('astro:page-load', initCategoryFilter);
+
+  function initCategoryFilter() {
+    const tabContainer = document.querySelector('.gallery-filter-tabs');
+    if (!tabContainer) return;
+    const tabs = tabContainer.querySelectorAll('.gallery-tab');
+    const thumbs = document.querySelectorAll('.gallery-grid--category .gallery-item');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const filter = tab.dataset.filter;
+        tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        thumbs.forEach(thumb => {
+          if (filter === 'all' || thumb.dataset.category === filter) {
+            thumb.removeAttribute('data-hidden');
+          } else {
+            thumb.setAttribute('data-hidden', 'true');
+          }
+        });
+      });
+    });
+  }
+  initCategoryFilter();
+
+</script>
