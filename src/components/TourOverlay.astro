@@ -230,7 +230,10 @@ const { tour } = Astro.props;
 
   .tour-trigger {
     position: fixed;
-    bottom: 5.5rem;
+    /* Float above the preview overlay bar when it's open.
+       --zm-overlay-bottom-height is set dynamically by overlay.ts.
+       Falls back to 5.5rem (normal position) when no overlay is active. */
+    bottom: max(5.5rem, calc(var(--zm-overlay-bottom-height, 0px) + 1.25rem));
     right: 1.25rem;
     z-index: 899;
     pointer-events: auto;
@@ -261,7 +264,7 @@ const { tour } = Astro.props;
 
   @media (max-width: 640px) {
     .tour-trigger__label { display: none; }
-    .tour-trigger { padding: 0.75rem; bottom: 5rem; }
+    .tour-trigger { padding: 0.75rem; bottom: max(5rem, calc(var(--zm-overlay-bottom-height, 0px) + 1.25rem)); }
   }
 
   @keyframes tourFadeIn {
