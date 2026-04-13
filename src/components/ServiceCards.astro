@@ -145,6 +145,35 @@ const splitRemaining = featured.length > 0
           )}
         </>
       )}
+
+      {variant === 'photo-dominant' && (
+        <div class="services-photo-grid stagger-parent">
+          {services.map((s: any) => (
+            <a href="#contact" class="service-photo-card reveal-up" data-tilt="3">
+              <div class="service-photo-card__image">
+                {(s.beforeImage || s.image) ? (
+                  <OptimizedImg
+                    src={s.beforeImage || s.image}
+                    alt={s.title}
+                    width={800}
+                    height={533}
+                    fallback={s.fallbackImage || ''}
+                  />
+                ) : (
+                  <div class="service-photo-card__placeholder">
+                    <span>{s.title}</span>
+                  </div>
+                )}
+              </div>
+              <div class="service-photo-card__overlay">
+                <h3 class="service-photo-card__title">{s.title}</h3>
+                <p class="service-photo-card__desc">{s.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
     </div>
   </section>
 )}
@@ -622,6 +651,113 @@ const splitRemaining = featured.length > 0
     line-height: 1.4;
   }
 
+
+  /* -- Variant: photo-dominant ---------------------------------------- */
+
+  .services-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--gap-md, 1.5rem);
+  }
+
+  .service-photo-card {
+    position: relative;
+    border-radius: var(--card-radius, var(--radius, 12px));
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--shadow-card);
+    transition: transform var(--duration-normal, 0.4s) var(--ease-out-expo),
+                box-shadow var(--duration-normal, 0.4s) var(--ease-out-expo);
+  }
+
+  .service-photo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    text-decoration: none;
+  }
+
+  .service-photo-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .service-photo-card__image {
+    position: absolute;
+    inset: 0;
+  }
+
+  .service-photo-card__image :global(img),
+  .service-photo-card__image :global(picture img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .service-photo-card:hover .service-photo-card__image :global(img),
+  .service-photo-card:hover .service-photo-card__image :global(picture img) {
+    transform: scale(1.05);
+  }
+
+  .service-photo-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: var(--textMuted);
+  }
+
+  .service-photo-card__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.25rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    backdrop-filter: blur(2px);
+    color: #fff;
+  }
+
+  .service-photo-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+  }
+
+  .service-photo-card__desc {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+  }
+
+  .service-photo-card:hover .service-photo-card__desc {
+    opacity: 1;
+    max-height: 6rem;
+  }
+
+  @media (max-width: 767px) {
+    .services-photo-grid {
+      grid-template-columns: 1fr;
+    }
+    .service-photo-card__desc {
+      opacity: 1;
+      max-height: 6rem;
+    }
+  }
+
   /* ── Focus-visible states ───────────────────────────────────────── */
 
   .services-list-item:focus-visible,
@@ -658,6 +794,16 @@ const splitRemaining = featured.length > 0
     }
     .split-featured-cta::after {
       transition: none;
+    }
+    .service-photo-card {
+      transition: none;
+    }
+    .service-photo-card:hover {
+      transform: none;
+    }
+    .service-photo-card:hover .service-photo-card__image :global(img),
+    .service-photo-card:hover .service-photo-card__image :global(picture img) {
+      transform: none;
     }
   }
 </style>
