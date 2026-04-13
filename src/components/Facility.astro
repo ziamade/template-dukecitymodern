@@ -1,0 +1,81 @@
+---
+/**
+ * Facility — showcases the business's physical space.
+ * Pulls images with category "facility" from gallery.json.
+ * Only renders if 3+ facility photos exist.
+ */
+import { gallery, theme } from '../lib/data';
+import OptimizedImg from './OptimizedImg.astro';
+
+const facilityImages = (gallery?.images || []).filter(
+  (img: any) => img.category === 'facility'
+);
+
+const facilitySection = theme?.sections?.find((s: any) => s.id === 'facility');
+const heading = (facilitySection as any)?.heading || 'Our Shop';
+---
+
+{facilityImages.length >= 3 && (
+  <section class="section facility-section" id="facility">
+    <div class="container">
+      <h2 class="section-heading reveal-up">{heading}</h2>
+      <div class="facility-grid stagger-parent">
+        {facilityImages.map((img: any) => (
+          <div class="facility-card reveal-up">
+            <OptimizedImg
+              src={img.url || img.image || ''}
+              alt={img.alt || 'Our facility'}
+              width={800}
+              height={600}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .facility-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--gap, 1rem);
+  }
+
+  .facility-card {
+    border-radius: var(--card-radius, var(--radius, 12px));
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    box-shadow: var(--shadow-card);
+  }
+
+  .facility-card :global(img),
+  .facility-card :global(picture img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .facility-card:hover :global(img),
+  .facility-card:hover :global(picture img) {
+    transform: scale(1.03);
+  }
+
+  @media (max-width: 480px) {
+    .facility-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .facility-card :global(img),
+    .facility-card :global(picture img) {
+      transition: none;
+    }
+    .facility-card:hover :global(img),
+    .facility-card:hover :global(picture img) {
+      transform: none;
+    }
+  }
+</style>
