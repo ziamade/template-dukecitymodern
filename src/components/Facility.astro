@@ -19,17 +19,20 @@ const heading = (facilitySection as any)?.heading || 'Our Shop';
   <section class="section facility-section" id="facility">
     <div class="container">
       <h2 class="section-heading reveal-up">{heading}</h2>
-      <div class="facility-grid stagger-parent">
-        {facilityImages.map((img: any) => (
-          <div class="facility-card reveal-up">
-            <OptimizedImg
-              src={img.url || img.image || ''}
-              alt={img.alt || 'Our facility'}
-              width={800}
-              height={600}
-            />
-          </div>
-        ))}
+      <div class="facility-scroll-wrap">
+        <div class="facility-grid stagger-parent">
+          {facilityImages.map((img: any) => (
+            <div class="facility-card reveal-up">
+              <OptimizedImg
+                src={img.url || img.image || ''}
+                alt={img.alt || 'Our facility'}
+                width={800}
+                height={600}
+              />
+            </div>
+          ))}
+        </div>
+        <div class="facility-fade" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -50,6 +53,26 @@ const heading = (facilitySection as any)?.heading || 'Our Shop';
     display: none;
   }
 
+  .facility-scroll-wrap {
+    position: relative;
+  }
+
+  .facility-fade {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0.5rem;
+    width: 60px;
+    background: linear-gradient(to left, var(--background, #000) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .facility-scroll-wrap.scrolled-end .facility-fade {
+    opacity: 0;
+  }
+
   .facility-card {
     flex: 0 0 auto;
     width: min(360px, 75vw);
@@ -58,6 +81,7 @@ const heading = (facilitySection as any)?.heading || 'Our Shop';
     aspect-ratio: 4 / 3;
     box-shadow: var(--shadow-card);
     scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 
   .facility-card :global(img),
@@ -77,6 +101,9 @@ const heading = (facilitySection as any)?.heading || 'Our Shop';
     .facility-card {
       width: 85vw;
     }
+    .facility-fade {
+      width: 40px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -90,3 +117,21 @@ const heading = (facilitySection as any)?.heading || 'Our Shop';
     }
   }
 </style>
+
+<script>
+  function initFacilityScroll() {
+    const wraps = document.querySelectorAll('.facility-scroll-wrap');
+    wraps.forEach(wrap => {
+      const scroll = wrap.querySelector('.facility-grid');
+      if (!scroll) return;
+      function checkScroll() {
+        const atEnd = scroll!.scrollLeft + scroll!.clientWidth >= scroll!.scrollWidth - 10;
+        wrap.classList.toggle('scrolled-end', atEnd);
+      }
+      scroll.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    });
+  }
+
+  document.addEventListener('astro:page-load', initFacilityScroll);
+</script>
