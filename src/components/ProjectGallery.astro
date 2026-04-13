@@ -19,7 +19,7 @@ const hasProjects = items.length > 0;
       
       {/* -- Carousel variant ------------------------------------------- */}
       {variantStr === 'carousel' && (
-        <div class="projects-carousel" data-carousel>
+        <div class="projects-carousel" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="Project showcase">
           <div class="projects-carousel__track">
             {items.map((project, i) => (
               <div class={`projects-carousel__slide ${i === 0 ? 'projects-carousel__slide--active' : ''}`} data-slide={i} aria-hidden={i !== 0 ? 'true' : undefined}>
@@ -315,11 +315,17 @@ const hasProjects = items.length > 0;
   }
 
   .projects-carousel__slide {
-    display: none;
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
   }
 
   .projects-carousel__slide--active {
-    display: block;
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .projects-carousel__slide .project-slider-wrap {
@@ -448,6 +454,10 @@ const hasProjects = items.length > 0;
     }
 
     .project-slider-knob {
+      transition: none;
+    }
+
+    .projects-carousel__slide {
       transition: none;
     }
   }
