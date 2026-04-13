@@ -118,6 +118,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
             return (
               <div class="gallery-row">
                 <h3 class="gallery-row__label">{cat.charAt(0).toUpperCase() + cat.slice(1)}</h3>
+                <div class="gallery-row__scroll-wrap">
                 <div class="gallery-row__scroll">
                   {catImages.map((img: any) => {
                     const idx = allVisible.indexOf(img);
@@ -149,6 +150,8 @@ const beholdFeedId = gallery?.beholdFeedId || '';
                     );
                   })}
                 </div>
+                <div class="gallery-row__fade" aria-hidden="true"></div>
+              </div>
               </div>
             );
           })}
@@ -610,12 +613,35 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     outline-offset: 2px;
   }
 
+  .gallery-row__scroll-wrap {
+    position: relative;
+  }
+
+  .gallery-row__fade {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0.5rem;
+    width: 60px;
+    background: linear-gradient(to left, var(--background, #000) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-row__scroll-wrap.scrolled-end .gallery-row__fade {
+    opacity: 0;
+  }
+
   @media (max-width: 767px) {
     .gallery-row__item {
       width: 80vw;
     }
     .gallery-row__item .gallery-overlay {
       opacity: 0.6;
+    }
+    .gallery-row__fade {
+      width: 40px;
     }
   }
 
@@ -809,6 +835,23 @@ const beholdFeedId = gallery?.beholdFeedId || '';
   }
 
   document.addEventListener('astro:page-load', initLightbox);
+  document.addEventListener('astro:page-load', initScrollFades);
+
+  function initScrollFades() {
+    const wraps = document.querySelectorAll('.gallery-row__scroll-wrap');
+    wraps.forEach(wrap => {
+      const scroll = wrap.querySelector('.gallery-row__scroll');
+      if (!scroll) return;
+      function checkScroll() {
+        const atEnd = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 10;
+        wrap.classList.toggle('scrolled-end', atEnd);
+      }
+      scroll.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    });
+  }
+  initScrollFades();
+
 
 
 
