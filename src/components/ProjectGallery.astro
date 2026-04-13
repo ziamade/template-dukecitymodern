@@ -170,6 +170,7 @@ const hasProjects = items.length > 0;
     overflow: hidden;
     cursor: col-resize;
     background: var(--surface);
+    touch-action: none;
   }
 
   /* ── Images: stacked via absolute positioning ───────────────────── */
@@ -517,5 +518,72 @@ const hasProjects = items.length > 0;
     });
   }
 
+  function initSliders() {
+    document.querySelectorAll<HTMLElement>('.project-slider').forEach(slider => {
+      const wrap = slider.querySelector<HTMLElement>('.project-slider-wrap');
+      const handle = slider.querySelector<HTMLElement>('.project-slider-handle');
+      if (!wrap || !handle) return;
+
+      const beforeImg = wrap.querySelector<HTMLElement>('.project-img--before');
+      if (!beforeImg) return;
+
+      let dragging = false;
+
+      function updateSlider(clientX: number) {
+        const rect = wrap!.getBoundingClientRect();
+        let pct = ((clientX - rect.left) / rect.width) * 100;
+        pct = Math.max(0, Math.min(100, pct));
+        beforeImg!.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        handle!.style.left = `${pct}%`;
+        handle!.setAttribute('aria-valuenow', String(Math.round(pct)));
+      }
+
+      // Mouse drag
+      handle.addEventListener('mousedown', (e: MouseEvent) => {
+        e.preventDefault();
+        dragging = true;
+      });
+
+      document.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!dragging) return;
+        updateSlider(e.clientX);
+      });
+
+      document.addEventListener('mouseup', () => {
+        dragging = false;
+      });
+
+      // Touch drag
+      handle.addEventListener('touchstart', (e: TouchEvent) => {
+        e.stopPropagation();
+        dragging = true;
+      }, { passive: true });
+
+      wrap.addEventListener('touchmove', (e: TouchEvent) => {
+        if (!dragging) return;
+        e.preventDefault();
+        e.stopPropagation();
+        updateSlider(e.touches[0].clientX);
+      }, { passive: false });
+
+      wrap.addEventListener('touchend', (e: TouchEvent) => {
+        if (dragging) e.stopPropagation();
+        dragging = false;
+      }, { passive: true });
+
+      // Keyboard: arrow keys move slider 5% per press
+      handle.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault();
+        e.stopPropagation();
+        const currentVal = parseInt(handle.getAttribute('aria-valuenow') || '50');
+        const next = e.key === 'ArrowLeft' ? Math.max(0, currentVal - 5) : Math.min(100, currentVal + 5);
+        const rect = wrap!.getBoundingClientRect();
+        updateSlider(rect.left + (next / 100) * rect.width);
+      });
+    });
+  }
+
   document.addEventListener('astro:page-load', initProjectCarousel);
+  document.addEventListener('astro:page-load', initSliders);
 </script>
