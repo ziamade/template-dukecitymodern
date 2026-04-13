@@ -3,7 +3,9 @@
 // PW Tint side-by-side comparison panels ("Us" vs "Them")
 // Panels slide in from opposite sides, "or" divider on desktop
 // Renders nothing if no differentiator data exists
-import { client } from '../lib/data';
+import { client, brand } from '../lib/data';
+import BrandName from './BrandName.astro';
+import { brandify } from '../lib/brandify';
 import { differentiatorSchema } from '../lib/schemas';
 
 // Use import.meta.glob to avoid build errors when file doesn't exist
@@ -67,7 +69,7 @@ const hasContent = diffData && usPanel.features?.length > 0 && themPanel.feature
             <div class="diff-panel-bg" style={`background-image: url('${encodeURI(usPanel.image || '')}')`}></div>
           )}
           <div class="diff-panel-content">
-            <h3 class="diff-panel-title">{usPanel.title || businessName}</h3>
+            <h3 class="diff-panel-title">{usPanel.title ? usPanel.title : <BrandName size="inline" />}</h3>
             <ul class="diff-list diff-list--us">
               {usPanel.features.map((feat: string) => (
                 <li class="diff-item diff-item--us">
