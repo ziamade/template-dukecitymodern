@@ -2,8 +2,10 @@
 // src/components/Hero.astro
 // v4 rewrite: 5 hero styles (split, split-video, overlay, video, minimal)
 // driven by theme.layout.heroStyle
-import { client, hero, contact, location, theme, testimonials } from '../lib/data';
+import { client, hero, contact, location, theme, testimonials, brand } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
+import BrandName from './BrandName.astro';
+import { brandify } from '../lib/brandify';
 
 const heroStyle = theme.layout?.heroStyle || 'split';
 const heroVideo = hero?.heroVideo || '';
@@ -102,7 +104,7 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
 
       {/* Subtitle */}
       {heroSubtitle && (
-        <p class="hero-subtitle reveal-up">{heroSubtitle}</p>
+        <p class="hero-subtitle reveal-up" set:html={brandify(heroSubtitle, client.name, brand)} />
       )}
 
       {/* Stats row */}
