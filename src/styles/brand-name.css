@@ -16,7 +16,7 @@
 .bn__p--text { color: var(--text); }
 .bn__p--textMuted { color: var(--textMuted); }
 .bn__p--gradient {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: linear-gradient(to right, var(--text, #fff), var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -29,11 +29,12 @@
 .bn--inline { font-size: inherit; }
 
 /* Stacked layout: descriptor drops to a smaller line below */
+.bn--stacked .bn__p--heading,
 .bn--stacked .bn__p--body,
 .bn--stacked .bn__p--textMuted {
   display: block;
-  font-size: 0.45em;
+  font-size: 0.55em;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  margin-top: 0.15em;
+  margin-top: 0.1em;
 }
