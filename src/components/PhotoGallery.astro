@@ -12,7 +12,9 @@ const { variant: variantProp } = Astro.props;
 const variant = String(variantProp || 'masonry');
 
 type GalleryImg = { url: string; alt: string; fallbackUrl?: string; image?: string; fallback?: string; [k: string]: unknown };
-const images: GalleryImg[] = (gallery?.images || (gallery as any)?.items || []) as GalleryImg[];
+const allGalleryImages: GalleryImg[] = (gallery?.images || (gallery as any)?.items || []) as GalleryImg[];
+// Exclude facility photos — they render in the dedicated Facility section
+const images = allGalleryImages.filter((img: any) => img.category !== 'facility');
 const hasGallery = images.length > 0;
 const beholdFeedId = gallery?.beholdFeedId || '';
 ---
@@ -63,7 +65,7 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     )}
 
     {/* ── Static masonry grid (fallback when Behold active, primary otherwise) */}
-    {variant !== 'scroll' && hasGallery && (
+    {variant !== 'scroll' && variant !== 'category-grid' && hasGallery && (
       <div
         class="gallery-grid stagger-parent container"
         id={variant === 'scroll' ? undefined : 'gallery-static'}
@@ -98,6 +100,100 @@ const beholdFeedId = gallery?.beholdFeedId || '';
         ))}
       </div>
     )}
+
+
+    {/* -- Category-grid variant (horizontal rows per category) ------- */}
+    {variant === 'category-grid' && hasGallery && (() => {
+      const categorized = images.filter((img: any) => img.category);
+      const uncategorized = images.filter((img: any) => !img.category);
+      const categories = [...new Set(categorized.map((img: any) => img.category))] as string[];
+      // Build a flat index for lightbox navigation across all rows
+      const allVisible = [...categorized, ...uncategorized];
+      let globalIndex = 0;
+
+      return (
+        <div class="gallery-rows container" id="gallery-static">
+          {categories.map((cat: string) => {
+            const catImages = categorized.filter((img: any) => img.category === cat);
+            return (
+              <div class="gallery-row">
+                <h3 class="gallery-row__label">{cat.charAt(0).toUpperCase() + cat.slice(1)}</h3>
+                <div class="gallery-row__scroll-wrap">
+                <div class="gallery-row__scroll">
+                  {catImages.map((img: any) => {
+                    const idx = allVisible.indexOf(img);
+                    return (
+                      <button
+                        class="gallery-row__item gallery-thumb"
+                        data-index={idx}
+                        type="button"
+                        aria-label={`View ${img.alt || 'gallery image'}`}
+                      >
+                        <OptimizedImg
+                          src={img.url || img.image || ''}
+                          alt={img.alt || ''}
+                          width={600}
+                          height={400}
+                          fallback={img.fallbackUrl || img.fallback || ''}
+                          class="gallery-img"
+                        />
+                        <div class="gallery-overlay">
+                          <span class="gallery-caption">{img.alt || ''}</span>
+                          <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            <line x1="11" y1="8" x2="11" y2="14"/>
+                            <line x1="8" y1="11" x2="14" y2="11"/>
+                          </svg>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div class="gallery-row__fade" aria-hidden="true"></div>
+              </div>
+              </div>
+            );
+          })}
+          {uncategorized.length > 0 && (
+            <div class="gallery-row">
+              <h3 class="gallery-row__label">More</h3>
+              <div class="gallery-row__scroll">
+                {uncategorized.map((img: any) => {
+                  const idx = allVisible.indexOf(img);
+                  return (
+                    <button
+                      class="gallery-row__item gallery-thumb"
+                      data-index={idx}
+                      type="button"
+                      aria-label={`View ${img.alt || 'gallery image'}`}
+                    >
+                      <OptimizedImg
+                        src={img.url || img.image || ''}
+                        alt={img.alt || ''}
+                        width={600}
+                        height={400}
+                        fallback={img.fallbackUrl || img.fallback || ''}
+                        class="gallery-img"
+                      />
+                      <div class="gallery-overlay">
+                        <span class="gallery-caption">{img.alt || ''}</span>
+                        <svg class="gallery-zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="11" cy="11" r="8"/>
+                          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                          <line x1="11" y1="8" x2="11" y2="14"/>
+                          <line x1="8" y1="11" x2="14" y2="11"/>
+                        </svg>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    })()}
 
     {/* ── Behold loader + fallback script ──────────────────────────── */}
     {beholdFeedId && (
@@ -428,6 +524,127 @@ const beholdFeedId = gallery?.beholdFeedId || '';
     text-align: center;
   }
 
+
+  /* -- Category-grid variant (horizontal rows per category) -------- */
+  .gallery-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg, 2rem);
+  }
+
+  .gallery-row__label {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--textMuted);
+    margin: 0 0 var(--gap-sm, 0.5rem);
+  }
+
+  .gallery-row__scroll {
+    display: flex;
+    gap: var(--gap, 1rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+  }
+
+  .gallery-row__scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-row__item {
+    flex: 0 0 auto;
+    width: min(360px, 75vw);
+    aspect-ratio: 3 / 2;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--card-radius, var(--radius-lg, 12px));
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--accent) 10%, var(--border));
+    padding: 0;
+    background: var(--surface);
+    scroll-snap-align: start;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .gallery-row__item :global(picture) {
+    display: contents;
+  }
+
+  .gallery-row__item :global(.gallery-img),
+  .gallery-row__item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .gallery-row__item:hover :global(.gallery-img),
+  .gallery-row__item:hover :global(img) {
+    transform: scale(1.05);
+  }
+
+  .gallery-row__item .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 40%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .gallery-row__item:hover .gallery-overlay,
+  .gallery-row__item:focus-visible .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-row__item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .gallery-row__scroll-wrap {
+    position: relative;
+  }
+
+  .gallery-row__fade {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0.5rem;
+    width: 60px;
+    background: linear-gradient(to left, var(--background, #000) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-row__scroll-wrap.scrolled-end .gallery-row__fade {
+    opacity: 0;
+  }
+
+  @media (max-width: 767px) {
+    .gallery-row__item {
+      width: 80vw;
+    }
+    .gallery-row__item .gallery-overlay {
+      opacity: 0.6;
+    }
+    .gallery-row__fade {
+      width: 40px;
+    }
+  }
+
   /* ── Responsive ─────────────────────────────────────────────────── */
   @media (max-width: 767px) {
     .gallery-grid {
@@ -618,4 +835,24 @@ const beholdFeedId = gallery?.beholdFeedId || '';
   }
 
   document.addEventListener('astro:page-load', initLightbox);
+  document.addEventListener('astro:page-load', initScrollFades);
+
+  function initScrollFades() {
+    const wraps = document.querySelectorAll('.gallery-row__scroll-wrap');
+    wraps.forEach(wrap => {
+      const scroll = wrap.querySelector('.gallery-row__scroll');
+      if (!scroll) return;
+      function checkScroll() {
+        const atEnd = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 10;
+        wrap.classList.toggle('scrolled-end', atEnd);
+      }
+      scroll.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    });
+  }
+  initScrollFades();
+
+
+
+
 </script>

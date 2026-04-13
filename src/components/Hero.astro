@@ -1,9 +1,11 @@
 ---
 // src/components/Hero.astro
-// v4 rewrite: 4 hero styles (split, overlay, video, minimal)
+// v4 rewrite: 5 hero styles (split, split-video, overlay, video, minimal)
 // driven by theme.layout.heroStyle
-import { client, hero, contact, location, theme, testimonials } from '../lib/data';
+import { client, hero, contact, location, theme, testimonials, brand } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
+import BrandName from './BrandName.astro';
+import { brandify } from '../lib/brandify';
 
 const heroStyle = theme.layout?.heroStyle || 'split';
 const heroVideo = hero?.heroVideo || '';
@@ -102,7 +104,7 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
 
       {/* Subtitle */}
       {heroSubtitle && (
-        <p class="hero-subtitle reveal-up">{heroSubtitle}</p>
+        <p class="hero-subtitle reveal-up" set:html={brandify(heroSubtitle, client.name, brand)} />
       )}
 
       {/* Stats row */}
@@ -167,6 +169,24 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
           fetchpriority="high"
           fallback={fallbackImage}
         />
+      </div>
+    )}
+
+    {/* Hero video (split-video variant — video beside text) */}
+    {heroStyle === 'split-video' && heroVideo && (
+      <div class="hero-image hero-split-video reveal-scale">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          poster={heroImage || undefined}
+        >
+          <source
+            src={heroVideo}
+            type={heroVideo.endsWith('.webm') ? 'video/webm' : 'video/mp4'}
+          />
+        </video>
       </div>
     )}
   </div>
@@ -445,6 +465,49 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
     }
 
     .hero--split .hero-image {
+      flex: 2;
+      max-height: 480px;
+      box-shadow:
+        12px 12px 0 color-mix(in srgb, var(--accent) 15%, var(--surface)),
+        0 20px 50px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  /* ===================================================================
+     Split-video variant — same layout as split, video instead of image
+     =================================================================== */
+  .hero--split-video .hero-container {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--bg, var(--background)) 100%);
+  }
+
+  .hero--split-video .hero-split-video {
+    position: relative;
+    border-radius: var(--img-radius, var(--radius, 12px));
+    overflow: hidden;
+    box-shadow:
+      8px 8px 0 color-mix(in srgb, var(--accent) 15%, var(--surface)),
+      0 16px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  .hero--split-video .hero-split-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .hero--split-video .hero-container {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .hero--split-video .hero-content {
+      flex: 3;
+    }
+
+    .hero--split-video .hero-split-video {
       flex: 2;
       max-height: 480px;
       box-shadow:

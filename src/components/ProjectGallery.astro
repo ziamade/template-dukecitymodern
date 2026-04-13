@@ -3,6 +3,10 @@
 import { projects } from '../lib/data';
 import OptimizedImg from './OptimizedImg.astro';
 
+interface Props { variant?: string | number; }
+const { variant: variantProp } = Astro.props;
+const variantStr = String(variantProp || 'grid');
+
 const items = (projects?.projects || []).filter(
   (p) => p.before && p.after
 );
@@ -12,6 +16,70 @@ const hasProjects = items.length > 0;
   <section class="projects-section section" id="projects">
     <div class="container">
       <h2 class="section-heading">Our Work</h2>
+      
+      {/* -- Carousel variant ------------------------------------------- */}
+      {variantStr === 'carousel' && (
+        <div class="projects-carousel" data-carousel>
+          <div class="projects-carousel__track">
+            {items.map((project, i) => (
+              <div class={`projects-carousel__slide ${i === 0 ? 'projects-carousel__slide--active' : ''}`} data-slide={i} aria-hidden={i !== 0 ? 'true' : undefined}>
+                <div class="project-slider" data-index={i}>
+                  <div class="project-slider-wrap">
+                    <OptimizedImg
+                      src={project.after}
+                      alt={`${project.title} - after`}
+                      class="project-img project-img--after"
+                      width={900}
+                      height={600}
+                    />
+                    <OptimizedImg
+                      src={project.before}
+                      alt={`${project.title} - before`}
+                      class="project-img project-img--before"
+                      width={900}
+                      height={600}
+                    />
+                    <div class="project-slider-handle" aria-label="Drag to compare before and after" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+                      <div class="project-slider-line"></div>
+                      <div class="project-slider-knob">
+                        <span class="project-slider-arrows">&lsaquo; &rsaquo;</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="project-slider-labels">
+                    <span class="project-label project-label--before">Before</span>
+                    <span class="project-label project-label--after">After</span>
+                  </div>
+                </div>
+                <div class="projects-carousel__info">
+                  {project.service && <span class="projects-carousel__tag">{project.service}</span>}
+                  {project.title && <h3 class="projects-carousel__title">{project.title}</h3>}
+                  {project.description && <p class="projects-carousel__desc">{project.description}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {items.length > 1 && (
+            <>
+              <button class="projects-carousel__nav projects-carousel__nav--prev" aria-label="Previous project" data-prev>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="projects-carousel__nav projects-carousel__nav--next" aria-label="Next project" data-next>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="projects-carousel__dots" role="tablist" aria-label="Project navigation">
+                {items.map((_, i) => (
+                  <button class={`projects-carousel__dot ${i === 0 ? 'active' : ''}`} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={`Project ${i + 1}`} data-dot={i} />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* -- Grid variant (default) ------------------------------------- */}
+      {variantStr !== 'carousel' && (
       <div class="projects-grid">
         {items.map((project, i) => (
           <div class="project-card">
@@ -55,6 +123,7 @@ const hasProjects = items.length > 0;
           </div>
         ))}
       </div>
+      )}
     </div>
   </section>
 )}
@@ -232,6 +301,134 @@ const hasProjects = items.length > 0;
     margin: 0.5rem 0 0;
   }
 
+
+  /* -- Carousel variant ---------------------------------------------- */
+  .projects-carousel {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .projects-carousel__track {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .projects-carousel__slide {
+    display: none;
+  }
+
+  .projects-carousel__slide--active {
+    display: block;
+  }
+
+  .projects-carousel__slide .project-slider-wrap {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--card-radius, var(--radius, 12px));
+    overflow: hidden;
+  }
+
+  .projects-carousel__info {
+    text-align: center;
+    padding: 1.25rem 0 0;
+  }
+
+  .projects-carousel__tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    padding: 0.2rem 0.625rem;
+    border-radius: var(--radius-full, 9999px);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  .projects-carousel__title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin: 0.5rem 0 0.25rem;
+    color: var(--text);
+  }
+
+  .projects-carousel__desc {
+    font-size: 0.9rem;
+    color: var(--textMuted);
+    margin: 0;
+  }
+
+  .projects-carousel__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-100%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.2s ease;
+    z-index: 2;
+  }
+
+  .projects-carousel__nav:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .projects-carousel__nav:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .projects-carousel__nav--prev { left: -56px; }
+  .projects-carousel__nav--next { right: -56px; }
+
+  .projects-carousel__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .projects-carousel__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+  }
+
+  .projects-carousel__dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .projects-carousel__dot:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 1024px) {
+    .projects-carousel__nav--prev { left: 0.5rem; }
+    .projects-carousel__nav--next { right: 0.5rem; }
+    .projects-carousel__nav {
+      background: color-mix(in srgb, var(--surface) 90%, transparent);
+      backdrop-filter: blur(4px);
+    }
+  }
+
   /* ── Responsive ─────────────────────────────────────────────────── */
   @media (max-width: 767px) {
     .project-slider-knob {
@@ -255,3 +452,36 @@ const hasProjects = items.length > 0;
     }
   }
 </style>
+
+<script>
+  function initProjectCarousel() {
+    const carousel = document.querySelector('[data-carousel]');
+    if (!carousel) return;
+
+    const slides = carousel.querySelectorAll<HTMLElement>('[data-slide]');
+    const dots = carousel.querySelectorAll<HTMLElement>('[data-dot]');
+    const prevBtn = carousel.querySelector<HTMLButtonElement>('[data-prev]');
+    const nextBtn = carousel.querySelector<HTMLButtonElement>('[data-next]');
+    let current = 0;
+
+    function goTo(index: number) {
+      slides[current].classList.remove('projects-carousel__slide--active');
+      slides[current].setAttribute('aria-hidden', 'true');
+      dots[current]?.classList.remove('active');
+      dots[current]?.setAttribute('aria-selected', 'false');
+
+      current = (index + slides.length) % slides.length;
+
+      slides[current].classList.add('projects-carousel__slide--active');
+      slides[current].removeAttribute('aria-hidden');
+      dots[current]?.classList.add('active');
+      dots[current]?.setAttribute('aria-selected', 'true');
+    }
+
+    prevBtn?.addEventListener('click', () => goTo(current - 1));
+    nextBtn?.addEventListener('click', () => goTo(current + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+  }
+
+  document.addEventListener('astro:page-load', initProjectCarousel);
+</script>
