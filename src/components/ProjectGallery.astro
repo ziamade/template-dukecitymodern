@@ -518,7 +518,13 @@ const hasProjects = items.length > 0;
     });
   }
 
+  let sliderController: AbortController | null = null;
+
   function initSliders() {
+    sliderController?.abort();
+    sliderController = new AbortController();
+    const { signal } = sliderController;
+
     document.querySelectorAll<HTMLElement>('.project-slider').forEach(slider => {
       const wrap = slider.querySelector<HTMLElement>('.project-slider-wrap');
       const handle = slider.querySelector<HTMLElement>('.project-slider-handle');
@@ -542,34 +548,34 @@ const hasProjects = items.length > 0;
       handle.addEventListener('mousedown', (e: MouseEvent) => {
         e.preventDefault();
         dragging = true;
-      });
+      }, { signal });
 
       document.addEventListener('mousemove', (e: MouseEvent) => {
         if (!dragging) return;
         updateSlider(e.clientX);
-      });
+      }, { signal });
 
       document.addEventListener('mouseup', () => {
         dragging = false;
-      });
+      }, { signal });
 
       // Touch drag
       handle.addEventListener('touchstart', (e: TouchEvent) => {
         e.stopPropagation();
         dragging = true;
-      }, { passive: true });
+      }, { passive: true, signal });
 
       wrap.addEventListener('touchmove', (e: TouchEvent) => {
         if (!dragging) return;
         e.preventDefault();
         e.stopPropagation();
         updateSlider(e.touches[0].clientX);
-      }, { passive: false });
+      }, { passive: false, signal } as AddEventListenerOptions);
 
       wrap.addEventListener('touchend', (e: TouchEvent) => {
         if (dragging) e.stopPropagation();
         dragging = false;
-      }, { passive: true });
+      }, { passive: true, signal });
 
       // Keyboard: arrow keys move slider 5% per press
       handle.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -580,7 +586,7 @@ const hasProjects = items.length > 0;
         const next = e.key === 'ArrowLeft' ? Math.max(0, currentVal - 5) : Math.min(100, currentVal + 5);
         const rect = wrap!.getBoundingClientRect();
         updateSlider(rect.left + (next / 100) * rect.width);
-      });
+      }, { signal });
     });
   }
 
