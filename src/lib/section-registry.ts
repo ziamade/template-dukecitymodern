@@ -19,6 +19,7 @@ export const DEFAULT_COMPONENTS: Record<string, string> = {
   hours: 'HoursDisplay',
   beforeAfter: 'BeforeAfter',
   differentiator: 'Differentiator',
+  facility: 'Facility',
   marquee: 'Marquee',
   team: 'Team',
   products: 'Products',
@@ -31,6 +32,7 @@ export const VARIANT_OVERRIDES: Record<string, Record<string, string>> = {
   trust: { stats: 'TrustStats' },
   contact: { 'order-visit': 'OrderVisit' },
   about: { 'author-bio': 'AuthorBio' },
+  differentiator: { 'service-options': 'ServiceOptions' },
 };
 
 /** Default nav labels for each section */
@@ -57,7 +59,7 @@ const DEFAULT_NAV_LABELS: Record<string, string> = {
 };
 
 /** Sections that are never shown in navigation */
-const NAV_EXCLUDED = new Set(['hero', 'trust', 'process', 'beforeAfter', 'differentiator', 'marquee', 'cta']);
+const NAV_EXCLUDED = new Set(['hero', 'trust', 'process', 'beforeAfter', 'differentiator', 'marquee', 'cta', 'facility']);
 
 /**
  * Resolve which component to render for a section.

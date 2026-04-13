@@ -1,32 +1,26 @@
 {
   "projects": [
     {
-      "title": "Residential Pipe Fence",
-      "description": "40-foot pipe fence with walk-through gate, Northeast Heights",
-      "before": "/assets/images/gallery/fence-before.jpg",
-      "after": "/assets/images/gallery/fence-after.jpg",
-      "service": "Pipe Fences & Gates"
+      "title": "Full Automotive Tint",
+      "description": "Complete window tinting on a sedan",
+      "before": "/assets/images/img_autobf.png",
+      "after": "/assets/images/img_autotint.JPEG",
+      "service": "Automotive Tinting"
     },
     {
-      "title": "Driveway Gate Installation",
-      "description": "Double swing gate with remote opener, North Valley",
-      "before": "/assets/images/gallery/gate-before.jpg",
-      "after": "/assets/images/gallery/gate-after.jpg",
-      "service": "Pipe Fences & Gates"
+      "title": "Specialty Vehicle Tint",
+      "description": "Custom tint on a specialty vehicle",
+      "before": "/assets/images/img_specialtybf.JPEG",
+      "after": "/assets/images/img_specialtytint.JPEG",
+      "service": "Specialty Vehicles"
     },
     {
-      "title": "Trailer Hitch Repair",
-      "description": "Structural weld repair on commercial flatbed trailer",
-      "before": "/assets/images/gallery/trailer-before.jpg",
-      "after": "/assets/images/gallery/trailer-after.jpg",
-      "service": "Custom Welding Solutions"
-    },
-    {
-      "title": "Handrail Fabrication",
-      "description": "Custom steel handrails for front porch steps, South Valley",
-      "before": "/assets/images/gallery/handrail-before.jpg",
-      "after": "/assets/images/gallery/handrail-after.jpg",
-      "service": "Custom Welding Solutions"
+      "title": "Tint Removal and Re-tint",
+      "description": "Old tint removed and replaced with fresh film",
+      "before": "/assets/images/img_removalbf.JPEG",
+      "after": "/assets/images/img_removaltint.JPEG",
+      "service": "Tint Removal"
     }
-  ]
+  ],
+  "source": "media-curator"
 }
