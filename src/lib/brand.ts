@@ -59,12 +59,54 @@ export function getContrastRatio(hex1: string, hex2: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+/** Derive accentDim (accent at 0.6 opacity) from a hex accent color. */
+function deriveAccentDim(accentHex: string): string {
+  const rgb = parseHex(accentHex);
+  if (!rgb) return 'rgba(128, 128, 128, 0.6)';
+  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.6)`;
+}
+
+/** Derive accentGlow (accent at 0.2 opacity) from a hex accent color. */
+function deriveAccentGlow(accentHex: string): string {
+  const rgb = parseHex(accentHex);
+  if (!rgb) return 'rgba(128, 128, 128, 0.2)';
+  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.2)`;
+}
+
+/** Derive border color from bg — darken for light palettes, lighten for dark. */
+function deriveBorder(bgHex: string): string {
+  const rgb = parseHex(bgHex);
+  if (!rgb) return '#E0E0E0';
+  const light = isLightColor(bgHex);
+  const factor = light ? 0.85 : 1.4;
+  const clamp = (v: number) => Math.min(255, Math.max(0, Math.round(v * factor)));
+  return `#${clamp(rgb[0]).toString(16).padStart(2, '0')}${clamp(rgb[1]).toString(16).padStart(2, '0')}${clamp(rgb[2]).toString(16).padStart(2, '0')}`;
+}
+
+/** Derive borderSubtle — midpoint between bg and border. */
+function deriveBorderSubtle(bgHex: string, borderHex: string): string {
+  const bgRgb = parseHex(bgHex);
+  const borderRgb = parseHex(borderHex);
+  if (!bgRgb || !borderRgb) return borderHex;
+  const mid = (a: number, b: number) => Math.round((a + b) / 2);
+  return `#${mid(bgRgb[0], borderRgb[0]).toString(16).padStart(2, '0')}${mid(bgRgb[1], borderRgb[1]).toString(16).padStart(2, '0')}${mid(bgRgb[2], borderRgb[2]).toString(16).padStart(2, '0')}`;
+}
+
 /**
  * Generate CSS custom properties from a single color palette.
  * v4: Single palette, no light/dark toggle.
+ * Accepts either the full 10-key palette or just the 6 core colors
+ * (bg, surface, surfaceAlt, text, textMuted, accent) — derived colors
+ * are auto-computed when omitted.
  */
 export function paletteToCSS(palette: ColorPalette): string {
   const vars: string[] = [];
+
+  // Derive optional colors from core 6
+  const accentDim = palette.accentDim ?? deriveAccentDim(palette.accent);
+  const accentGlow = palette.accentGlow ?? deriveAccentGlow(palette.accent);
+  const border = palette.border ?? deriveBorder(palette.bg);
+  const borderSubtle = palette.borderSubtle ?? deriveBorderSubtle(palette.bg, border);
 
   // Core palette
   vars.push(`  --bg: ${cssSafe(palette.bg)};`);
@@ -74,16 +116,10 @@ export function paletteToCSS(palette: ColorPalette): string {
   vars.push(`  --text: ${cssSafe(palette.text)};`);
   vars.push(`  --textMuted: ${cssSafe(palette.textMuted)};`);
   vars.push(`  --accent: ${cssSafe(palette.accent)};`);
-  vars.push(`  --accentDim: ${cssSafe(palette.accentDim)};`);
-  vars.push(`  --accentGlow: ${cssSafe(palette.accentGlow)};`);
-  vars.push(`  --border: ${cssSafe(palette.border)};`);
-
-  // Optional
-  if (palette.borderSubtle) {
-    vars.push(`  --borderSubtle: ${cssSafe(palette.borderSubtle)};`);
-  } else {
-    vars.push(`  --borderSubtle: ${cssSafe(palette.border)};`);
-  }
+  vars.push(`  --accentDim: ${cssSafe(accentDim)};`);
+  vars.push(`  --accentGlow: ${cssSafe(accentGlow)};`);
+  vars.push(`  --border: ${cssSafe(border)};`);
+  vars.push(`  --borderSubtle: ${cssSafe(borderSubtle)};`);
 
   // Derived glass surfaces — auto-detect light/dark palette
   const glassBase = isLightColor(palette.bg) ? '0, 0, 0' : '255, 255, 255';
