@@ -92,6 +92,31 @@ describe('paletteToCSS', () => {
     expect(css).toContain('--accent:');
     expect(css).toContain('--text:');
   });
+
+  it('derives accentDim, accentGlow, border, borderSubtle from core 6', () => {
+    const core6 = {
+      bg: '#F5F0EB',
+      surface: '#E8E1D8',
+      surfaceAlt: '#EDE7DF',
+      text: '#1C2428',
+      textMuted: '#5A6268',
+      accent: '#8A5D04',
+    };
+    const css = paletteToCSS(core6 as any);
+    // accentDim derived as rgba of accent at 0.6
+    expect(css).toContain('--accentDim: rgba(138, 93, 4, 0.6)');
+    // accentGlow derived as rgba of accent at 0.2
+    expect(css).toContain('--accentGlow: rgba(138, 93, 4, 0.2)');
+    // border and borderSubtle should be present (derived from bg)
+    expect(css).toContain('--border:');
+    expect(css).toContain('--borderSubtle:');
+  });
+
+  it('uses explicit accentDim/accentGlow/border when provided', () => {
+    const css = paletteToCSS(darkPalette as any);
+    // darkPalette has explicit accentDim '#b8845e' — should use it, not derive
+    expect(css).toContain('--accentDim: #b8845e');
+  });
 });
 
 describe('getContrastRatio', () => {

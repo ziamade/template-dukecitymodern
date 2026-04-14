@@ -62,15 +62,17 @@ export const clientSchema = z.object({
 // ---------------------------------------------------------------------------
 
 export const colorPaletteSchema = z.object({
+  // Core 6 — required, these define the palette
   bg: cssColor,
   surface: cssColor,
   surfaceAlt: cssColor,
   text: cssColor,
   textMuted: cssColor,
   accent: cssColor,
-  accentDim: cssColor,
-  accentGlow: cssColor,
-  border: cssColor,
+  // Derived 4 — optional, auto-computed from core 6 by paletteToCSS() when omitted
+  accentDim: cssColor.optional(),
+  accentGlow: cssColor.optional(),
+  border: cssColor.optional(),
   borderSubtle: cssColor.optional(),
 }).loose();
 
