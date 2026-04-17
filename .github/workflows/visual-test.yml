@@ -32,7 +32,9 @@ jobs:
         run: |
           cd /tmp
           git clone --depth 1 https://x-access-token:${{ secrets.PLATFORM_READ_TOKEN }}@github.com/ziamade/ziamade-platform.git
-          cd ziamade-platform/packages/pipeline
+          cd ziamade-platform
+          npm ci
+          cd packages/pipeline
           TEMPLATE_DIR=$GITHUB_WORKSPACE npx tsx scripts/build-from-fixture.ts ${{ matrix.fixture }}
           cd build/${{ matrix.fixture }} && npm ci && npx astro build
 
