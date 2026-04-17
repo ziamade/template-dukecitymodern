@@ -58,6 +58,18 @@ describe('resolveComponent', () => {
     expect(resolveComponent('trust')).toBe('TrustBar');
   });
 
+  it('hero variant "text" resolves to HeroText', () => {
+    expect(resolveComponent('hero', 'text')).toBe('HeroText');
+  });
+
+  it('hero default resolves to Hero (no variant given)', () => {
+    expect(resolveComponent('hero')).toBe('Hero');
+  });
+
+  it('hero unknown variant falls back to Hero', () => {
+    expect(resolveComponent('hero', 'nonexistent')).toBe('Hero');
+  });
+
   it('ignores unknown variant and returns default', () => {
     expect(resolveComponent('trust', 'nonexistent')).toBe('TrustBar');
     expect(resolveComponent('contact', 'nonexistent')).toBe('QuoteForm');
