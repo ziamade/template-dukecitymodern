@@ -172,6 +172,10 @@ export const contactSchema = z.object({
   email: z.string(),
   phoneForTel: z.string(),
   phone: z.string().optional(),
+  bookingUrl: z.string().optional(),
+  formTitle: z.string().optional(),
+  formDescription: z.string().optional(),
+  messagePlaceholder: z.string().optional(),
 }).loose();
 
 // ---------------------------------------------------------------------------
