@@ -5,6 +5,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StickyHeader from '../components/StickyHeader.astro';
 import Hero from '../components/Hero.astro';
+import HeroText from '../components/HeroText.astro';
 import ServiceCards from '../components/ServiceCards.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
 import ProjectGallery from '../components/ProjectGallery.astro';
@@ -43,7 +44,7 @@ const hasReviews = (testimonials?.reviewCount ?? 0) > 0 || (testimonials?.averag
 
 // Component lookup by name string
 const componentMap: Record<string, any> = {
-  Hero, ServiceCards, PhotoGallery, ProjectGallery,
+  Hero, HeroText, ServiceCards, PhotoGallery, ProjectGallery,
   TrustBar, TrustStats, ProcessSteps, MenuSection,
   Reviews, FAQ, QuoteForm, OrderVisit, AboutMap,
   HoursDisplay, BeforeAfter, Differentiator, Marquee,

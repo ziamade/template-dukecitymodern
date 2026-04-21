@@ -29,6 +29,7 @@ export const DEFAULT_COMPONENTS: Record<string, string> = {
 
 /** Component variant overrides (variant string → component name) */
 export const VARIANT_OVERRIDES: Record<string, Record<string, string>> = {
+  hero: { text: 'HeroText' },
   trust: { stats: 'TrustStats' },
   contact: { 'order-visit': 'OrderVisit' },
   about: { 'author-bio': 'AuthorBio' },
