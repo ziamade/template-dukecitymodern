@@ -3,6 +3,15 @@ import type { Page } from '@playwright/test';
 /**
  * Wait for page to settle: DOM loaded, images loaded, animations frozen.
  * Call before taking screenshots for deterministic results.
+ *
+ * Covers the template's GSAP progressive-enhancement pattern by forcing
+ * all scroll-revealed elements to their final opacity. See below for the
+ * selector list.
+ *
+ * For ad-hoc local Playwright runs (not via this CI harness), prefer
+ * `page.emulateMedia({ reducedMotion: 'reduce' })` — animation-controller
+ * respects that media query and never hides content in the first place,
+ * so no helper is needed.
  */
 export async function waitForIdle(page: Page): Promise<void> {
   // Wait for DOM to be ready (don't use networkidle — it can hang on persistent connections)
@@ -43,14 +52,20 @@ export async function waitForIdle(page: Page): Promise<void> {
     `,
   });
 
-  // Force GSAP-animated elements to be visible (they start at opacity:0)
+  // Force GSAP-animated elements to be visible (they start at opacity:0).
+  // Mirrors every `.gsap-ready` hidden selector in src/styles/animations.css
+  // so fullPage screenshots capture post-reveal content even for sections
+  // below the fold (platform#658).
   await page.addStyleTag({
     content: `
       .gsap-ready .reveal-up,
       .gsap-ready .reveal-left,
       .gsap-ready .reveal-right,
       .gsap-ready .reveal-scale,
-      .gsap-ready .reveal-fade {
+      .gsap-ready .reveal-fade,
+      .gsap-ready .stagger-parent > *,
+      .gsap-ready .split-chars .char,
+      .gsap-ready .split-words .word {
         opacity: 1 !important;
         transform: none !important;
       }
