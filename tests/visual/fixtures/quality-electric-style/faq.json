@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "question": "Are you licensed and insured?", "answer": "Yes. NM electrical contractor license NM-EE-12345 and full liability insurance." },
+    { "question": "Do you handle emergency calls?", "answer": "Yes, 24/7. Same-day response in most of the Albuquerque metro." },
+    { "question": "What areas do you serve?", "answer": "Albuquerque, Rio Rancho, Corrales, and the East Mountains." }
+  ]
+}

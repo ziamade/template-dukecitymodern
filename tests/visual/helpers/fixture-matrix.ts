@@ -196,6 +196,27 @@ export const FIXTURES: FixtureDefinition[] = [
     hasMarquee: true,
   },
   {
+    name: 'quality-electric-style',
+    description:
+      'F11: Issue #88 regression — pipeline-style hours.json (semicolon-delimited hoursWeekdays/hoursWeekend), no process.json, BrandName treatment with empty heroTagline, services-cards variant. Triggers all four bug surfaces fixed in #88.',
+    heroStyle: 'split',
+    serviceVariant: 'cards',
+    galleryVariant: 'none',
+    expectedSections: ['hero', 'trust', 'services', 'reviews', 'faq', 'contact', 'about', 'hours'],
+    // process is in theme.sectionOrder but profile lacks process.json → must NOT render
+    absentSections: ['menu', 'gallery', 'projects', 'process'],
+    isRestaurant: false,
+    hasGallery: false,
+    hasProjects: false,
+    hasReviews: true,
+    hasFAQ: true,
+    hasAlert: false,
+    hasBeforeAfter: false,
+    hasDifferentiator: false,
+    hasMenu: false,
+    hasMarquee: true,
+  },
+  {
     name: 'round-soft',
     description: 'F10: All rounded, pill buttons, editorial, scroll gallery, compact services',
     heroStyle: 'split',

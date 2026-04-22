@@ -1,0 +1,33 @@
+{
+  "sections": [
+    { "id": "hero", "variant": "split" },
+    { "id": "trust", "variant": "badges" },
+    { "id": "services", "variant": "cards" },
+    { "id": "process" },
+    { "id": "reviews" },
+    { "id": "faq" },
+    { "id": "contact" },
+    { "id": "about" },
+    { "id": "hours" }
+  ],
+  "sectionOrder": ["hero", "trust", "services", "process", "reviews", "faq", "contact", "about", "hours"],
+  "accentStyle": "tint",
+  "industry": "Electrical Services",
+  "layout": {
+    "heroStyle": "split",
+    "atmosphereLevel": "minimal",
+    "motionIntensity": "standard",
+    "headerStyle": "glass",
+    "cardStyle": "shadow",
+    "cardRadius": "soft",
+    "sectionGap": "normal",
+    "buttonStyle": "rounded",
+    "typographyScale": "standard",
+    "imageStyle": "rounded",
+    "sectionPattern": "alternating",
+    "headerPosition": "hidden-on-scroll",
+    "buttonVariant": "solid",
+    "dividerStyle": "fade"
+  },
+  "marqueeItems": ["Licensed Electricians", "24/7 Emergency", "Free Estimates", "Serving Albuquerque"]
+}
