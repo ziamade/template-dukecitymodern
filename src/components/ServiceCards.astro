@@ -202,25 +202,15 @@ const splitRemaining = featured.length > 0
     }
   }
 
-  /* Mobile: horizontal carousel */
+  /* Mobile: vertical stack — keep page scroll as the only scrollbar.
+     The horizontal carousel here previously added a second scrollable container
+     in the ancestor chain (page + services-grid), which surfaced as a double
+     scrollbar in clients whose UA didn't honor `scrollbar-width: none`.
+     See issue #88 acceptance criterion: "Services section has exactly one scrollbar." */
   @media (max-width: 767px) {
     .services-grid {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      grid-template-columns: 1fr;
       gap: var(--gap, 1rem);
-      padding-bottom: var(--gap-sm, 0.5rem);
-    }
-    .services-grid::-webkit-scrollbar {
-      display: none;
-    }
-    .services-grid .service-card {
-      flex: 0 0 85vw;
-      max-width: 340px;
-      scroll-snap-align: center;
-      scroll-snap-stop: always;
     }
   }
 
