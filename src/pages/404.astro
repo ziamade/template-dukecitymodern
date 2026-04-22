@@ -1,12 +1,97 @@
 ---
 // src/pages/404.astro
+// Custom 404 page styled with brand tokens (foundations-polish, issue #79).
+// Single message + link home. No nav clutter.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BrandName from '../components/BrandName.astro';
+import { client } from '../lib/data';
 ---
 <BaseLayout>
-  <div style="text-align:center; padding:4rem 1rem;">
-    <h1>Page Not Found</h1>
-    <p>The page you're looking for doesn't exist.</p>
-    <a href="/" class="btn-primary">Back to <BrandName size="inline" /></a>
-  </div>
+  <main id="main-content">
+    <section class="not-found-section" aria-label="Page not found">
+      <div class="not-found-card">
+        <span class="not-found-eyebrow">404</span>
+        <h1 class="not-found-heading">Page not found</h1>
+        <p class="not-found-message">
+          The page you're looking for doesn't exist, or has been moved.
+        </p>
+        <a href="/" class="not-found-cta">
+          Back to {client?.name ? <BrandName size="inline" /> : 'home'}
+        </a>
+      </div>
+    </section>
+  </main>
 </BaseLayout>
+
+<style>
+  .not-found-section {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl, 4rem) var(--space-md, 1.5rem);
+    background: var(--bg);
+  }
+
+  .not-found-card {
+    max-width: 560px;
+    width: 100%;
+    text-align: center;
+    padding: var(--space-xl, 4rem) var(--space-md, 1.5rem);
+    background: var(--surface);
+    border: 1px solid var(--borderSubtle, var(--border));
+    border-radius: var(--radius-lg, 1rem);
+  }
+
+  .not-found-eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--text-display, 2.75rem);
+    font-weight: 800;
+    line-height: var(--leading-tight, 1.1);
+    color: var(--accent);
+    letter-spacing: var(--tracking-tight, -0.02em);
+    margin-bottom: var(--space-sm, 1rem);
+  }
+
+  .not-found-heading {
+    font-family: var(--font-heading);
+    font-size: var(--text-h1, 2.25rem);
+    line-height: var(--leading-snug, 1.2);
+    color: var(--text);
+    margin: 0 0 var(--space-sm, 1rem) 0;
+  }
+
+  .not-found-message {
+    font-size: var(--text-lead, 1.125rem);
+    line-height: var(--leading-normal, 1.5);
+    color: var(--textMuted, var(--text));
+    margin: 0 0 var(--space-lg, 2.5rem) 0;
+  }
+
+  .not-found-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs, 0.5rem);
+    padding: var(--space-xs, 0.75rem) var(--space-md, 1.5rem);
+    font-family: var(--font-body);
+    font-size: var(--text-base, 1rem);
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    border-radius: var(--btn-radius, var(--radius-sm, 0.25rem));
+    transition: background var(--duration-fast, 0.2s) ease,
+                border-color var(--duration-fast, 0.2s) ease;
+  }
+
+  .not-found-cta:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border-color: var(--accent);
+  }
+
+  .not-found-cta:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+</style>
