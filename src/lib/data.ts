@@ -4,9 +4,17 @@
  * Every required JSON data file is imported here, validated through its
  * Zod schema, and re-exported as a properly typed constant.
  *
- * Validation is non-fatal: if a schema fails, the raw data is used
- * as-is and a warning is logged. Client data varies widely across
- * sites, so strict validation must never block a build.
+ * Validation is FATAL: if a schema fails, `astro build` aborts with a
+ * non-zero exit code. The pipeline sees the failure and does not deploy
+ * a broken site. Prior behavior silently fell back to raw data and the
+ * template rendered empty / broken sections — see ziamade-platform#649
+ * for the shakeout that motivated the fail-loudly change.
+ *
+ * Schemas in ./schemas.ts are intentionally permissive (`.loose()`,
+ * most fields `.optional()`), so validation only fails on genuine
+ * contract violations (missing required fields, wrong types). If a
+ * pipeline change breaks this file, either fix the writer or loosen
+ * the schema — do NOT reintroduce the silent fallback.
  *
  * Optional data files (tour.json, preview.json, process.json,
  * differentiator.json) are NOT imported here — they use import.meta.glob
@@ -25,8 +33,8 @@
  *   - attributes.json    — Places v2 with attributes
  *   - google-links.json  — only written if links exist
  */
-import type { ZodSchema } from 'astro/zod';
 import { normalizeHours } from './hours-parser';
+import { validate } from './data-validate';
 import {
   clientSchema,
   brandSchema,
@@ -100,17 +108,8 @@ const rawAttributes: unknown = Object.values(attributesFiles)[0]?.default ?? {};
 const googleLinksFiles = import.meta.glob<{ default: unknown }>('../data/google-links.json', { eager: true });
 const rawGoogleLinks: unknown = Object.values(googleLinksFiles)[0]?.default ?? {};
 
-/** Validate with safeParse — warn on failure, never crash the build. */
-function validate<T>(schema: ZodSchema<T>, raw: unknown, name: string): T {
-  const result = schema.safeParse(raw);
-  if (!result.success) {
-    console.warn(`[data] ${name} failed validation (using raw data):`, JSON.stringify(result.error.issues));
-    return raw as T;
-  }
-  return result.data;
-}
-
-// Validated + typed exports
+// Validated + typed exports — validate() throws on schema failure,
+// aborting the Astro build with a non-zero exit code.
 export const client = validate(clientSchema, rawClient, 'client.json');
 export const brand = validate(brandSchema, rawBrand, 'brand.json');
 export const theme = validate(themeSchema, rawTheme, 'theme.json');
