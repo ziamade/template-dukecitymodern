@@ -1,0 +1,75 @@
+---
+/**
+ * SectionEmptyState.astro — branded "coming soon" placeholder for thin-data
+ * sections (reviews, gallery, testimonials, menu, FAQ).
+ *
+ * Per the foundations-polish spec (issue #79): when a section is listed in
+ * theme.json but the backing data is thin or missing, render a branded
+ * placeholder instead of leaving a broken-looking half-section. When the
+ * business genuinely has no data for a category (e.g., a trades business
+ * with no menu), omit the section from theme.json entirely — this component
+ * is never rendered in that case.
+ *
+ * Styling: uses --text-lead, --space-*, --radius-md, and the brand accent
+ * color. No hardcoded font-size / padding / border-radius.
+ */
+interface Props {
+  sectionId: string;
+  heading: string;
+  message: string;
+  /** Optional: override the default h2 heading (e.g. "Reviews"). */
+  eyebrow?: string;
+}
+const { sectionId, heading, message, eyebrow } = Astro.props;
+---
+<section class={`empty-state-section section empty-state--${sectionId}`} id={sectionId} aria-label={heading}>
+  <div class="container">
+    <div class="empty-state-card reveal-up">
+      {eyebrow && <span class="empty-state-eyebrow">{eyebrow}</span>}
+      <h2 class="empty-state-heading">{heading}</h2>
+      <p class="empty-state-message">{message}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .empty-state-section {
+    padding: var(--section-pad, clamp(5rem, 3rem + 5vw, 10rem)) 0;
+  }
+
+  .empty-state-card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: var(--space-xl, 4rem) var(--space-md, 1.5rem);
+    text-align: center;
+    background: color-mix(in srgb, var(--surface) 100%, transparent);
+    border: 1px solid var(--borderSubtle, var(--border));
+    border-radius: var(--radius-md, 0.5rem);
+  }
+
+  .empty-state-eyebrow {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--text-caption, 0.75rem);
+    font-weight: 600;
+    letter-spacing: var(--tracking-caps, 0.15em);
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: var(--space-xs, 0.75rem);
+  }
+
+  .empty-state-heading {
+    font-family: var(--font-heading);
+    font-size: var(--text-h2, 2rem);
+    line-height: var(--leading-snug, 1.2);
+    color: var(--text);
+    margin: 0 0 var(--space-xs, 0.75rem) 0;
+  }
+
+  .empty-state-message {
+    font-size: var(--text-lead, 1.125rem);
+    line-height: var(--leading-normal, 1.5);
+    color: var(--textMuted, var(--text));
+    margin: 0;
+  }
+</style>
