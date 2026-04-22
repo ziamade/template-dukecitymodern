@@ -30,31 +30,6 @@ import {
 } from './data-contracts/brand';
 
 // ---------------------------------------------------------------------------
-// Shared / reusable schemas
-// ---------------------------------------------------------------------------
-
-/** CSS color value — hex (#fff, #aabbcc), rgb(), rgba(), hsl(), hsla(), or CSS named color */
-const cssColor = z.string().refine(
-  (val) =>
-    /^(#[0-9a-fA-F]{3,8}|rgba?\([\d\s,.%]+\)|hsla?\([\d\s,.%deg]+\)|[a-zA-Z]+)$/i.test(
-      val,
-    ),
-  {
-    message:
-      'Must be a valid CSS color value (hex, rgb, rgba, hsl, hsla, or CSS named color)',
-  },
-);
-
-/** Font name — letters, numbers, spaces, hyphens, and apostrophes only */
-const fontName = z.string().refine(
-  (val) => /^[a-zA-Z0-9\s\-']+$/.test(val),
-  {
-    message:
-      'Font name must contain only letters, numbers, spaces, hyphens, and apostrophes',
-  },
-);
-
-// ---------------------------------------------------------------------------
 // client.json
 // ---------------------------------------------------------------------------
 
@@ -79,9 +54,8 @@ export const clientSchema = z.object({
 
 // ---------------------------------------------------------------------------
 // brand.json — canonical schema lives in ./data-contracts/brand.ts
-// (platform#640). `cssColor` and `fontName` refinements from the pre-#640
-// hand-authored schema are dropped — the canonical shape uses plain
-// z.string() and the pipeline validates palette colors upstream.
+// (platform#640). The canonical shape uses plain z.string() and the
+// pipeline validates palette colors upstream.
 // ---------------------------------------------------------------------------
 
 // `.loose()` is applied at the template boundary so components can carry
