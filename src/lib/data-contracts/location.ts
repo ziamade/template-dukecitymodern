@@ -17,8 +17,11 @@ export const LocationSchema = z.object({
   zip: z.string().optional(),
   country: z.string().default('US'),
   mapLink: z.string().min(1),
-  lat: z.number().optional(),
-  lng: z.number().optional(),
+  // Pipeline legitimately emits `null` when coords are unknown (fixture
+  // sites with no Places lookup, BYO-fixture manual entries). Accept
+  // both nullable and absent. Template renderers guard truthy.
+  lat: z.number().nullable().optional(),
+  lng: z.number().nullable().optional(),
 });
 
 export type LocationData = z.infer<typeof LocationSchema>;
