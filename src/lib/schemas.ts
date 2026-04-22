@@ -6,33 +6,28 @@
  * validation with useful error messages, not strict enforcement.
  *
  * Uses `astro/zod` — Astro bundles Zod, no extra dependency needed.
+ *
+ * Migrated files (see data-contracts/*.ts, platform#640):
+ *   hero, brand, contact, location, hours, cta
+ * These re-export from `./data-contracts/*.ts`, which are byte-identical
+ * clones of the `@ziamade/shared/data-contracts/*.ts` source modules.
+ * Any drift is caught by the platform-repo drift-guard test.
  */
 import { z } from 'astro/zod';
-
-// ---------------------------------------------------------------------------
-// Shared / reusable schemas
-// ---------------------------------------------------------------------------
-
-/** CSS color value — hex (#fff, #aabbcc), rgb(), rgba(), hsl(), hsla(), or CSS named color */
-const cssColor = z.string().refine(
-  (val) =>
-    /^(#[0-9a-fA-F]{3,8}|rgba?\([\d\s,.%]+\)|hsla?\([\d\s,.%deg]+\)|[a-zA-Z]+)$/i.test(
-      val,
-    ),
-  {
-    message:
-      'Must be a valid CSS color value (hex, rgb, rgba, hsl, hsla, or CSS named color)',
-  },
-);
-
-/** Font name — letters, numbers, spaces, hyphens, and apostrophes only */
-const fontName = z.string().refine(
-  (val) => /^[a-zA-Z0-9\s\-']+$/.test(val),
-  {
-    message:
-      'Font name must contain only letters, numbers, spaces, hyphens, and apostrophes',
-  },
-);
+import { HeroSchema as SharedHeroSchema } from './data-contracts/hero';
+import { ContactSchema as SharedContactSchema } from './data-contracts/contact';
+import { LocationSchema as SharedLocationSchema } from './data-contracts/location';
+import {
+  HoursSchema as SharedHoursSchema,
+  HoursDaySchema as SharedHoursDaySchema,
+} from './data-contracts/hours';
+import { CtaSchema as SharedCtaSchema } from './data-contracts/cta';
+import {
+  BrandSchema as SharedBrandSchema,
+  BrandPaletteSchema as SharedBrandPaletteSchema,
+  BrandNamePartSchema as SharedBrandNamePartSchema,
+  BrandNameTreatmentSchema as SharedBrandNameTreatmentSchema,
+} from './data-contracts/brand';
 
 // ---------------------------------------------------------------------------
 // client.json
@@ -58,43 +53,20 @@ export const clientSchema = z.object({
 }).loose();
 
 // ---------------------------------------------------------------------------
-// brand.json
+// brand.json — canonical schema lives in ./data-contracts/brand.ts
+// (platform#640). The canonical shape uses plain z.string() and the
+// pipeline validates palette colors upstream.
 // ---------------------------------------------------------------------------
 
-export const colorPaletteSchema = z.object({
-  // Core 6 — required, these define the palette
-  bg: cssColor,
-  surface: cssColor,
-  surfaceAlt: cssColor,
-  text: cssColor,
-  textMuted: cssColor,
-  accent: cssColor,
-  // Derived 4 — optional, auto-computed from core 6 by paletteToCSS() when omitted
-  accentDim: cssColor.optional(),
-  accentGlow: cssColor.optional(),
-  border: cssColor.optional(),
-  borderSubtle: cssColor.optional(),
-}).loose();
-
-export const namePartSchema = z.object({
-  text: z.string(),
-  font: z.enum(['name', 'heading', 'body']).or(z.string()),
-  color: z.enum(['accent', 'primary', 'text', 'textMuted', 'gradient']).or(z.string()),
-}).loose();
-
-export const nameTreatmentSchema = z.object({
-  parts: z.array(namePartSchema),
-  layout: z.enum(['inline', 'stacked']).optional(),
-}).loose();
-
-export const brandSchema = z.object({
-  palette: colorPaletteSchema,
-  nameFont: fontName,
-  headingFont: fontName,
-  bodyFont: fontName,
-  monoFont: fontName.nullish(),
-  nameTreatment: nameTreatmentSchema.optional(),
-}).loose();
+// `.loose()` is applied at the template boundary so components can carry
+// extra fields (e.g. copywriter-authored callout text, legacy fixture
+// attributes) without TypeScript stripping them. The canonical schema
+// stays strict on the pipeline side; drift guard compares the base
+// module, not the template's looseness wrapper.
+export const colorPaletteSchema = SharedBrandPaletteSchema.loose();
+export const namePartSchema = SharedBrandNamePartSchema.loose();
+export const nameTreatmentSchema = SharedBrandNameTreatmentSchema.loose();
+export const brandSchema = SharedBrandSchema.loose();
 
 // ---------------------------------------------------------------------------
 // theme.json
@@ -165,42 +137,39 @@ export const themeSchema = z.object({
 }).loose();
 
 // ---------------------------------------------------------------------------
-// contact.json
+// contact.json — canonical shape lives in ./data-contracts/contact.ts
+// All fields optional (platform#640): pipeline omits null rather than
+// writing it, so the post-#640 contact.json is always schema-valid.
 // ---------------------------------------------------------------------------
 
-export const contactSchema = z.object({
-  email: z.string(),
-  phoneForTel: z.string(),
-  phone: z.string().optional(),
+// The template extends the canonical contact with form-copy overrides —
+// QuoteForm.astro reads these to customize the inquiry form's title,
+// description, and message placeholder per site. Fixture-authored,
+// not pipeline-emitted; preserved here for type safety.
+export const contactSchema = SharedContactSchema.extend({
+  formTitle: z.string().optional(),
+  formDescription: z.string().optional(),
+  messagePlaceholder: z.string().optional(),
 }).loose();
 
 // ---------------------------------------------------------------------------
-// location.json
+// location.json — canonical shape lives in ./data-contracts/location.ts
+// `mapLink` is now always provided by compile-step (platform#640).
 // ---------------------------------------------------------------------------
 
-export const locationSchema = z.object({
-  address: z.string(),
-  city: z.string(),
-  state: z.string(),
-  zip: z.string(),
-  country: z.string(),
-  mapLink: z.string(),
-  lat: z.number().nullish(),
-  lng: z.number().nullish(),
-}).loose();
+export const locationSchema = SharedLocationSchema.loose();
 
 // ---------------------------------------------------------------------------
-// hero.json
+// hero.json — canonical shape lives in ./data-contracts/hero.ts
+// `heroImage` is now always provided by compile-step (platform#640).
 // ---------------------------------------------------------------------------
 
-export const heroSchema = z.object({
-  heroImage: z.string(),
-  heroTagline: z.string(),
-  heroSubtitle: z.string(),
-  fallbackImage: z.string().optional(),
-  heroVideo: z.string().optional(),
-  videoUrl: z.string().optional(),
-  videoPoster: z.string().optional(),
+// The template extends the canonical hero with a nested `cta` override —
+// Hero.astro reads `hero.cta.text` / `hero.cta.href` when the site
+// author wants a hero-specific call-to-action that differs from the
+// global CTA. Not part of the canonical contract (pipeline doesn't
+// emit it), but preserved here so the component's types stay useful.
+export const heroSchema = SharedHeroSchema.extend({
   cta: ctaOverrideSchema.optional(),
 }).loose();
 
@@ -224,24 +193,14 @@ export const seoSchema = z.object({
 export const jsonLdSchema = z.record(z.string(), z.unknown());
 
 // ---------------------------------------------------------------------------
-// hours.json
+// hours.json — canonical shape lives in ./data-contracts/hours.ts
+// Pipeline emits `days[]` directly post-#640 (platform#640). The legacy
+// string shape is still tolerated at runtime by `hours-parser.ts`
+// `normalizeHours()` for BYO-fixture legacy sites.
 // ---------------------------------------------------------------------------
 
-export const hoursDaySchema = z.object({
-  day: z.string(),
-  open: z.string().nullish(),
-  close: z.string().nullish(),
-}).loose();
-
-export const hoursSchema = z.object({
-  days: z.array(hoursDaySchema),
-  // `secondaryHours` is nullable-by-design per the Pipeline Data Contract
-  // ("delivery/takeout if available"). The template's `normalizeHours()`
-  // helper in `hours-parser.ts` always fills in either a Record or an explicit
-  // `null` — never `undefined` — so `.optional()` alone would reject every
-  // fixture build where no secondary hours exist. See platform#649.
-  secondaryHours: z.record(z.string(), z.unknown()).nullable().optional(),
-}).loose();
+export const hoursDaySchema = SharedHoursDaySchema.loose();
+export const hoursSchema = SharedHoursSchema.loose();
 
 // ---------------------------------------------------------------------------
 // testimonials.json
@@ -414,15 +373,11 @@ export const teamSchema = z.object({
 }).loose();
 
 // ---------------------------------------------------------------------------
-// cta.json
+// cta.json — canonical shape lives in ./data-contracts/cta.ts
+// `buttonHref` is always provided by compile-step post-#640 (platform#640).
 // ---------------------------------------------------------------------------
 
-export const ctaSchema = z.object({
-  text: z.string(),
-  buttonText: z.string(),
-  buttonHref: z.string(),
-  enabled: z.boolean().optional(),
-}).loose();
+export const ctaSchema = SharedCtaSchema.loose();
 
 // ---------------------------------------------------------------------------
 // book.json

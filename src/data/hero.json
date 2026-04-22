@@ -1,1 +1,5 @@
-{ "heroImage": "", "heroTagline": "", "heroSubtitle": "", "fallbackImage": "" }
+{
+  "heroImage": "/src/assets/images/hero.jpg",
+  "heroTagline": "Duke City Modern — your business, online.",
+  "heroSubtitle": "A template built for Albuquerque small businesses. Replace this copy with your own."
+}
