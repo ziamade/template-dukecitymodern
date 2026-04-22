@@ -235,7 +235,12 @@ export const hoursDaySchema = z.object({
 
 export const hoursSchema = z.object({
   days: z.array(hoursDaySchema),
-  secondaryHours: z.record(z.string(), z.unknown()).optional(),
+  // `secondaryHours` is nullable-by-design per the Pipeline Data Contract
+  // ("delivery/takeout if available"). The template's `normalizeHours()`
+  // helper in `hours-parser.ts` always fills in either a Record or an explicit
+  // `null` — never `undefined` — so `.optional()` alone would reject every
+  // fixture build where no secondary hours exist. See platform#649.
+  secondaryHours: z.record(z.string(), z.unknown()).nullable().optional(),
 }).loose();
 
 // ---------------------------------------------------------------------------
