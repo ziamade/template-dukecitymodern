@@ -12,6 +12,18 @@
  * differentiator.json) are NOT imported here — they use import.meta.glob
  * in components. Their schemas are exported from ./schemas.ts for inline
  * validation.
+ *
+ * Pipeline-conditional data files are also loaded via import.meta.glob
+ * below and re-exported with safe empty defaults so that static
+ * `import { menu, team, cta, book, attributes, googleLinks } from
+ * '../lib/data'` consumers keep working when the file is absent. Per the
+ * Pipeline Data Contract these are emitted only under specific conditions:
+ *   - menu.json          — restaurants only
+ *   - team.json          — team-led businesses
+ *   - cta.json           — authors only
+ *   - book.json          — authors only
+ *   - attributes.json    — Places v2 with attributes
+ *   - google-links.json  — only written if links exist
  */
 import type { ZodSchema } from 'astro/zod';
 import { normalizeHours } from './hours-parser';
@@ -57,18 +69,36 @@ import rawTestimonials from '../data/testimonials.json';
 import rawFaq from '../data/faq.json';
 import rawAbout from '../data/about.json';
 import rawGallery from '../data/gallery.json';
-import rawMenu from '../data/menu.json';
 import rawProjects from '../data/projects.json';
 import rawAlert from '../data/alert.json';
 import rawAnalytics from '../data/analytics.json';
 import rawTrustbar from '../data/trustbar.json';
-import rawTeam from '../data/team.json';
-import rawCta from '../data/cta.json';
-import rawBook from '../data/book.json';
-import rawAttributes from '../data/attributes.json';
-import rawGoogleLinks from '../data/google-links.json';
 import rawSources from '../data/_sources.json';
 import rawTemplateManifest from '../data/_template-manifest.json';
+
+// Pipeline-conditional optional files — loaded via import.meta.glob so absent
+// files do not break the Astro build. Mirrors the pattern used for tour.json /
+// preview.json (BaseLayout.astro) and process.json / differentiator.json (in
+// their respective components). The fallback shape for each is the minimum the
+// downstream consumer needs to short-circuit cleanly when the file is absent
+// (CTASection / BookShowcase / Reviews all guard with truthy checks already).
+const menuFiles = import.meta.glob<{ default: unknown }>('../data/menu.json', { eager: true });
+const rawMenu: unknown = Object.values(menuFiles)[0]?.default ?? { categories: [] };
+
+const teamFiles = import.meta.glob<{ default: unknown }>('../data/team.json', { eager: true });
+const rawTeam: unknown = Object.values(teamFiles)[0]?.default ?? { items: [] };
+
+const ctaFiles = import.meta.glob<{ default: unknown }>('../data/cta.json', { eager: true });
+const rawCta: unknown = Object.values(ctaFiles)[0]?.default ?? { text: '', buttonText: '', buttonHref: '', enabled: false };
+
+const bookFiles = import.meta.glob<{ default: unknown }>('../data/book.json', { eager: true });
+const rawBook: unknown = Object.values(bookFiles)[0]?.default ?? { title: '' };
+
+const attributesFiles = import.meta.glob<{ default: unknown }>('../data/attributes.json', { eager: true });
+const rawAttributes: unknown = Object.values(attributesFiles)[0]?.default ?? {};
+
+const googleLinksFiles = import.meta.glob<{ default: unknown }>('../data/google-links.json', { eager: true });
+const rawGoogleLinks: unknown = Object.values(googleLinksFiles)[0]?.default ?? {};
 
 /** Validate with safeParse — warn on failure, never crash the build. */
 function validate<T>(schema: ZodSchema<T>, raw: unknown, name: string): T {
