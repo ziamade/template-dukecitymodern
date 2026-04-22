@@ -136,6 +136,52 @@ export function paletteToCSS(palette: ColorPalette): string {
 }
 
 /**
+ * Foundations-polish knobs (issue #79). Each returns 0..n CSS lines appended
+ * inside the same `:root { ... }` block emitted by generateThemeCSS().
+ *
+ * All three are fully optional — when absent, the defaults baked into
+ * tokens.css take over, preserving backward-compat with client repos that
+ * pre-date the foundations-polish wave.
+ */
+
+/** Typography knob → --text-base override (ratio stays driven by tokens.css). */
+function generateTypographyCSS(brand: Brand): string[] {
+  const baseSize = (brand as any).typography?.baseSize;
+  if (typeof baseSize !== 'string' || !baseSize.trim()) return [];
+  return [`  --text-base: ${cssSafe(baseSize)};`];
+}
+
+/** Spacing knob → --density-multiplier driving the whole spacing scale. */
+function generateSpacingCSS(brand: Brand): string[] {
+  const density = (brand as any).spacing?.density;
+  const MAP: Record<string, string> = {
+    compact: '0.85',
+    comfortable: '1',
+    airy: '1.15',
+  };
+  const multiplier = MAP[density];
+  return multiplier ? [`  --density-multiplier: ${multiplier};`] : [];
+}
+
+/** Radius knob → named radius scale. Whole scale switches atomically. */
+function generateRadiusCSS(brand: Brand): string[] {
+  const style = (brand as any).radius?.style;
+  const SCALES: Record<string, { sm: string; md: string; lg: string; pill: string }> = {
+    sharp:   { sm: '0',        md: '2px',    lg: '4px',      pill: '9999px' },
+    rounded: { sm: '0.25rem',  md: '0.5rem', lg: '1rem',     pill: '9999px' },
+    soft:    { sm: '0.5rem',   md: '1rem',   lg: '1.5rem',   pill: '9999px' },
+  };
+  const scale = SCALES[style];
+  if (!scale) return [];
+  return [
+    `  --radius-sm: ${scale.sm};`,
+    `  --radius-md: ${scale.md};`,
+    `  --radius-lg: ${scale.lg};`,
+    `  --radius-pill: ${scale.pill};`,
+  ];
+}
+
+/**
  * Generate the full CSS block for the site's single palette + fonts.
  * v4: No light/dark modes, no data-theme, no @media prefers-color-scheme.
  */
@@ -159,13 +205,20 @@ export function generateThemeCSS(brand: Brand): string {
     }
   }
 
+  const knobLines = [
+    ...generateTypographyCSS(brand),
+    ...generateSpacingCSS(brand),
+    ...generateRadiusCSS(brand),
+  ];
+  const knobBlock = knobLines.length > 0 ? '\n' + knobLines.join('\n') : '';
+
   return `
 :root {
 ${paletteCSS}
   --font-name: '${safeName}', var(--font-heading), sans-serif;
   --font-heading: '${safeHeading}', sans-serif;
   --font-body: '${safeBody}', system-ui, sans-serif;
-  --font-mono: ${monoFont};
+  --font-mono: ${monoFont};${knobBlock}
 }`.trim();
 }
 

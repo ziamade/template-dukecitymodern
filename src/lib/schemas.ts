@@ -66,7 +66,36 @@ export const clientSchema = z.object({
 export const colorPaletteSchema = SharedBrandPaletteSchema.loose();
 export const namePartSchema = SharedBrandNamePartSchema.loose();
 export const nameTreatmentSchema = SharedBrandNameTreatmentSchema.loose();
-export const brandSchema = SharedBrandSchema.loose();
+
+/**
+ * Foundations-polish knobs (issue #79). All optional — when absent, tokens.css
+ * defaults stand (backward-compat with pre-0.2.x client repos). These are
+ * template-only extensions on top of the canonical brand shape (platform#640);
+ * the pipeline doesn't emit them yet but template components read them when
+ * present.
+ */
+const typographyKnobSchema = z.object({
+  /** Scalar override for --text-base (e.g. "1rem", "1.0625rem"). */
+  baseSize: z.string().optional(),
+}).loose();
+
+const spacingKnobSchema = z.object({
+  /** Global density multiplier applied to the spacing scale. */
+  density: z.enum(['compact', 'comfortable', 'airy']).or(z.string()).optional(),
+}).loose();
+
+const radiusKnobSchema = z.object({
+  /** Switches the whole radius scale between sharp, rounded (default), and soft. */
+  style: z.enum(['sharp', 'rounded', 'soft']).or(z.string()).optional(),
+}).loose();
+
+// Canonical brand shape + template-only foundations-polish knobs. Same
+// `.extend()` pattern Track A uses for contact/hero (platform#640).
+export const brandSchema = SharedBrandSchema.extend({
+  typography: typographyKnobSchema.optional(),
+  spacing: spacingKnobSchema.optional(),
+  radius: radiusKnobSchema.optional(),
+}).loose();
 
 // ---------------------------------------------------------------------------
 // theme.json

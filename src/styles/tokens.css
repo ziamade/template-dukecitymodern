@@ -8,6 +8,17 @@
 
    This file defines structural tokens that those injected values
    reference, plus the full motion, shadow, and spacing vocabulary.
+
+   Foundations layer (issue #79):
+   - --text-* (display, h1..h3, lead, body, small, caption) on a 1.25
+     ratio with fluid clamps. --text-base is overridable via brand.json
+     typography.baseSize; the ratio stays intact.
+   - --space-* (3xs..3xl) geometric scale, scaled by --density-multiplier
+     from brand.json spacing.density ("compact" | "comfortable" | "airy").
+   - --radius-* (sm, md, lg, pill) switched by brand.json radius.style
+     ("sharp" | "rounded" | "soft"). The legacy --radius, --radius-xs,
+     --radius-xl, --radius-full tokens are retained as aliases for
+     components that have not migrated yet.
    ================================================================= */
 
 
@@ -38,77 +49,136 @@
 
 
 /* ── Typography ──────────────────────────────────────────────────── */
-/* Fluid type scale. generateLayoutCSS() may override --font-size-base,
-   --font-size-h1, --font-size-h2 via typographyScale token. */
+/* Foundations layer (issue #79): named --text-* scale on a 1.25 ratio
+   with fluid clamps. --text-base is the only token brand.json can
+   override (typography.baseSize); the rest stay locked to the ratio.
+
+   The legacy --display-size / --hero-size / etc. aliases below map
+   onto this scale so older components keep working without edits. */
 
 :root {
-  --mono-size: 0.8125rem;
-  --caption-size: 0.75rem;
-  --small-size: 0.875rem;
-  --body-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --lead-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
-  --subhead-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem);
-  --title-size: clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem);
-  --display-size: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
-  --hero-size: clamp(2.5rem, 1.5rem + 5vw, 5.5rem);
-  --mega-size: clamp(3.5rem, 2rem + 7vw, 9rem);
+  /* Named type scale — foundations layer */
+  --text-caption: clamp(0.75rem,  0.72rem + 0.15vw, 0.8125rem);
+  --text-small:   clamp(0.875rem, 0.83rem + 0.22vw, 0.9375rem);
+  --text-base:    clamp(1rem,     0.94rem + 0.30vw, 1.125rem);
+  --text-body:    var(--text-base);
+  --text-lead:    clamp(1.125rem, 1.05rem + 0.38vw, 1.25rem);
+  --text-h3:      clamp(1.375rem, 1.25rem + 0.63vw, 1.625rem);
+  --text-h2:      clamp(1.75rem,  1.50rem + 1.25vw, 2.25rem);
+  --text-h1:      clamp(2.25rem,  1.90rem + 1.75vw, 3rem);
+  --text-display: clamp(2.75rem,  2.20rem + 2.75vw, 4rem);
+
+  /* Line-height tokens on the foundations scale */
+  --leading-tight:  1.1;
+  --leading-snug:   1.2;
+  --leading-normal: 1.5;
+  --leading-loose:  1.7;
+
+  /* Legacy fluid aliases (kept for existing components — map onto new scale) */
+  --mono-size:    0.8125rem;
+  --caption-size: var(--text-caption);
+  --small-size:   var(--text-small);
+  --body-size:    var(--text-base);
+  --lead-size:    var(--text-lead);
+  --subhead-size: var(--text-h3);
+  --title-size:   var(--text-h2);
+  --display-size: var(--text-h1);
+  --hero-size:    var(--text-display);
+  --mega-size:    clamp(3.5rem, 2rem + 7vw, 9rem);
 
   /* Base sizes used by existing components (aliased from scale) */
-  --font-size-base: var(--body-size);
-  --font-size-h1: var(--display-size);
-  --font-size-h2: var(--title-size);
-  --font-size-small: var(--small-size);
-  --font-size-mono: var(--mono-size);
+  --font-size-base:  var(--text-base);
+  --font-size-h1:    var(--text-h1);
+  --font-size-h2:    var(--text-h2);
+  --font-size-h3:    var(--text-h3);
+  --font-size-small: var(--text-small);
+  --font-size-mono:  var(--mono-size);
 
-  /* Line heights */
-  --line-height-tight: 1.1;
-  --line-height-heading: 1.2;
-  --line-height-body: 1.6;
-  --line-height-relaxed: 1.75;
+  /* Line heights — legacy names kept as aliases */
+  --line-height-tight:   var(--leading-tight);
+  --line-height-heading: var(--leading-snug);
+  --line-height-body:    var(--leading-normal);
+  --line-height-relaxed: var(--leading-loose);
 
   /* Tracking */
-  --tracking-tight: -0.02em;
+  --tracking-tight:  -0.02em;
   --tracking-normal: 0;
-  --tracking-wide: 0.08em;
-  --tracking-caps: 0.15em;
+  --tracking-wide:   0.08em;
+  --tracking-caps:   0.15em;
 }
 
 
 /* ── Spacing ─────────────────────────────────────────────────────── */
+/* Foundations layer (issue #79): named --space-* scale, geometric
+   with a density multiplier that brand.json spacing.density flips
+   ("compact" = 0.85, "comfortable" = 1, "airy" = 1.15). When the
+   multiplier is absent the scale is identical to the pre-#79 values
+   — backward-compat is automatic. Each token calc()s against the
+   multiplier so a single brand knob scales the whole layout. */
 
 :root {
-  --section-pad: clamp(5rem, 3rem + 5vw, 10rem);
-  --section-gap: clamp(3rem, 5vw, 6rem);
-  --content-width: min(1400px, 92vw);
-  --content-narrow: min(900px, 88vw);
+  /* Density multiplier — overridable via brand.json spacing.density */
+  --density-multiplier: 1;
+
+  /* Named spacing scale — foundations layer */
+  --space-3xs: calc(0.25rem  * var(--density-multiplier));
+  --space-2xs: calc(0.5rem   * var(--density-multiplier));
+  --space-xs:  calc(0.75rem  * var(--density-multiplier));
+  --space-sm:  calc(1rem     * var(--density-multiplier));
+  --space-md:  calc(1.5rem   * var(--density-multiplier));
+  --space-lg:  calc(2.5rem   * var(--density-multiplier));
+  --space-xl:  calc(4rem     * var(--density-multiplier));
+  --space-2xl: calc(6rem     * var(--density-multiplier));
+  --space-3xl: calc(10rem    * var(--density-multiplier));
+
+  /* Section rhythm */
+  --section-pad:     clamp(5rem, 3rem + 5vw, 10rem);
+  --section-gap:     clamp(3rem, 5vw, 6rem);
+  --content-width:   min(1400px, 92vw);
+  --content-narrow:  min(900px, 88vw);
   --content-reading: min(680px, 88vw);
 
-  --gap-xs: 0.25rem;
-  --gap-sm: 0.5rem;
-  --gap: 1rem;
-  --gap-md: 1.5rem;
-  --gap-lg: 2rem;
-  --gap-xl: 3rem;
-  --gap-2xl: 4rem;
+  /* Legacy --gap-* aliases — map onto named scale so older components
+     respond to the density multiplier without CSS edits. */
+  --gap-xs:  var(--space-3xs);
+  --gap-sm:  var(--space-2xs);
+  --gap:     var(--space-sm);
+  --gap-md:  var(--space-md);
+  --gap-lg:  calc(2rem * var(--density-multiplier));
+  --gap-xl:  calc(3rem * var(--density-multiplier));
+  --gap-2xl: var(--space-xl);
 }
 
 
 /* ── Radius ──────────────────────────────────────────────────────── */
-/* Base radius tiers. --card-radius is the runtime token that
-   components consume; it defaults to --radius and can be overridden
-   by generateLayoutCSS() or data-attribute selectors below. */
+/* Foundations layer (issue #79): 4-step named scale switched atomically
+   by brand.json radius.style ("sharp" | "rounded" | "soft"). Defaults
+   below correspond to "rounded" — the historical look. When absent in
+   brand.json, the pre-#79 appearance is preserved.
+
+   --card-radius is the runtime token that components consume; it
+   defaults to --radius-md and can be overridden by generateLayoutCSS()
+   or data-attribute selectors below. */
 
 :root {
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 32px;
-  --radius-full: 9999px;
+  /* Named radius scale — foundations layer */
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   1rem;
+  --radius-pill: 9999px;
+
+  /* Legacy tokens — kept as aliases for components that pre-date the
+     foundations scale. --radius stays at 12px so existing layouts do
+     not shift. --radius-xs / --radius-xl / --radius-full are referenced
+     in enough places to warrant aliases rather than a global rename. */
+  --radius-xs:   4px;
+  --radius:      12px;
+  --radius-xl:   32px;
+  --radius-full: var(--radius-pill);
 
   --card-radius: var(--radius);
-  --btn-radius: var(--radius-sm);
-  --img-radius: var(--radius-sm);
+  --btn-radius:  var(--radius-sm);
+  --img-radius:  var(--radius-sm);
 }
 
 
