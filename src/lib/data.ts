@@ -12,6 +12,11 @@
  * differentiator.json) are NOT imported here — they use import.meta.glob
  * in components. Their schemas are exported from ./schemas.ts for inline
  * validation.
+ *
+ * menu.json and team.json are also optional — non-restaurant fixtures don't
+ * ship menu.json, non-team fixtures don't ship team.json. They're loaded via
+ * import.meta.glob below and re-exported with safe empty defaults so that
+ * static `import { menu, team }` consumers keep working.
  */
 import type { ZodSchema } from 'astro/zod';
 import {
@@ -56,18 +61,26 @@ import rawTestimonials from '../data/testimonials.json';
 import rawFaq from '../data/faq.json';
 import rawAbout from '../data/about.json';
 import rawGallery from '../data/gallery.json';
-import rawMenu from '../data/menu.json';
 import rawProjects from '../data/projects.json';
 import rawAlert from '../data/alert.json';
 import rawAnalytics from '../data/analytics.json';
 import rawTrustbar from '../data/trustbar.json';
-import rawTeam from '../data/team.json';
 import rawCta from '../data/cta.json';
 import rawBook from '../data/book.json';
 import rawAttributes from '../data/attributes.json';
 import rawGoogleLinks from '../data/google-links.json';
 import rawSources from '../data/_sources.json';
 import rawTemplateManifest from '../data/_template-manifest.json';
+
+// Optional: menu.json (restaurants only) and team.json (team-led businesses only).
+// Loaded via import.meta.glob so absent files do not break the Astro build.
+// Mirrors the pattern used for tour.json / preview.json (BaseLayout.astro)
+// and process.json / differentiator.json (in their respective components).
+const menuFiles = import.meta.glob<{ default: unknown }>('../data/menu.json', { eager: true });
+const rawMenu: unknown = Object.values(menuFiles)[0]?.default ?? { categories: [] };
+
+const teamFiles = import.meta.glob<{ default: unknown }>('../data/team.json', { eager: true });
+const rawTeam: unknown = Object.values(teamFiles)[0]?.default ?? { items: [] };
 
 /** Validate with safeParse — warn on failure, never crash the build. */
 function validate<T>(schema: ZodSchema<T>, raw: unknown, name: string): T {
