@@ -50,9 +50,9 @@ const hasReviews = (testimonials?.reviewCount ?? 0) > 0 || (testimonials?.averag
 // "menu" out of theme.json and it never renders a placeholder either).
 const hasGalleryData = (gallery?.images?.length ?? 0) > 0 || Boolean(gallery?.beholdFeedId);
 const hasMenuData = (menu?.categories?.length ?? 0) > 0 &&
-  (menu?.categories ?? []).some((c: any) => (c.items?.length ?? 0) > 0);
+  (menu?.categories ?? []).some((c) => (c.items?.length ?? 0) > 0);
 const hasFaqData = (faq?.items?.length ?? 0) > 0;
-const hasTestimonialItems = ((testimonials as any)?.items?.length ?? 0) > 0;
+const hasTestimonialItems = (testimonials?.items?.length ?? 0) > 0;
 
 const EMPTY_STATES: Record<string, { heading: string; message: string; eyebrow?: string }> = {
   reviews: {

@@ -146,14 +146,14 @@ export function paletteToCSS(palette: ColorPalette): string {
 
 /** Typography knob → --text-base override (ratio stays driven by tokens.css). */
 function generateTypographyCSS(brand: Brand): string[] {
-  const baseSize = (brand as any).typography?.baseSize;
+  const baseSize = brand.typography?.baseSize;
   if (typeof baseSize !== 'string' || !baseSize.trim()) return [];
   return [`  --text-base: ${cssSafe(baseSize)};`];
 }
 
 /** Spacing knob → --density-multiplier driving the whole spacing scale. */
 function generateSpacingCSS(brand: Brand): string[] {
-  const density = (brand as any).spacing?.density;
+  const density = brand.spacing?.density;
   const MAP: Record<string, string> = {
     compact: '0.85',
     comfortable: '1',
@@ -165,7 +165,7 @@ function generateSpacingCSS(brand: Brand): string[] {
 
 /** Radius knob → named radius scale. Whole scale switches atomically. */
 function generateRadiusCSS(brand: Brand): string[] {
-  const style = (brand as any).radius?.style;
+  const style = brand.radius?.style;
   const SCALES: Record<string, { sm: string; md: string; lg: string; pill: string }> = {
     sharp:   { sm: '0',        md: '2px',    lg: '4px',      pill: '9999px' },
     rounded: { sm: '0.25rem',  md: '0.5rem', lg: '1rem',     pill: '9999px' },
