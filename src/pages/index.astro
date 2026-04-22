@@ -34,13 +34,65 @@ import BookShowcase from '../components/BookShowcase.astro';
 import AuthorBio from '../components/AuthorBio.astro';
 import ServiceOptions from '../components/ServiceOptions.astro';
 import Facility from '../components/Facility.astro';
+import SectionEmptyState from '../components/SectionEmptyState.astro';
 
 import { DEFAULT_COMPONENTS, VARIANT_OVERRIDES, resolveNavLabels, resolveCta, resolveHeroCta } from '../lib/section-registry';
 
-import { contact, location, testimonials, theme } from '../lib/data';
+import { contact, location, testimonials, theme, gallery, menu, faq } from '../lib/data';
 import type { SectionEntry } from '../lib/types';
 
 const hasReviews = (testimonials?.reviewCount ?? 0) > 0 || (testimonials?.averageRating ?? 0) > 0;
+
+// Foundations-polish (issue #79): branded empty-state placeholders for thin-data
+// sections. A section is considered "thin" when it is explicitly listed in
+// theme.json but the backing data is absent. If the operator does not list the
+// section at all we continue to omit it entirely (e.g., trades businesses leave
+// "menu" out of theme.json and it never renders a placeholder either).
+const hasGalleryData = (gallery?.images?.length ?? 0) > 0 || Boolean(gallery?.beholdFeedId);
+const hasMenuData = (menu?.categories?.length ?? 0) > 0 &&
+  (menu?.categories ?? []).some((c) => (c.items?.length ?? 0) > 0);
+const hasFaqData = (faq?.items?.length ?? 0) > 0;
+const hasTestimonialItems = (testimonials?.items?.length ?? 0) > 0;
+
+const EMPTY_STATES: Record<string, { heading: string; message: string; eyebrow?: string }> = {
+  reviews: {
+    eyebrow: 'Reviews',
+    heading: 'Reviews coming soon',
+    message: 'We\'re gathering customer reviews. Check back shortly, or leave one yourself once you\'ve worked with us.',
+  },
+  gallery: {
+    eyebrow: 'Gallery',
+    heading: 'Photos coming soon',
+    message: 'New photos are on the way. In the meantime, get in touch for past work and current projects.',
+  },
+  testimonials: {
+    eyebrow: 'Testimonials',
+    heading: 'Testimonials coming soon',
+    message: 'We\'re lining up customer stories now. Your experience could be the next one featured here.',
+  },
+  menu: {
+    eyebrow: 'Menu',
+    heading: 'Menu coming soon',
+    message: 'The full menu is being finalized. Call or stop in for today\'s offerings.',
+  },
+  faq: {
+    eyebrow: 'FAQ',
+    heading: 'Questions coming soon',
+    message: 'We\'re collecting the questions we hear most. Have one in the meantime? Reach out and we\'ll answer it.',
+  },
+};
+
+/** Returns true when a section should render its branded empty state. */
+function shouldShowEmptyState(id: string): boolean {
+  switch (id) {
+    case 'reviews':      return !hasReviews;
+    case 'gallery':      return !hasGalleryData;
+    case 'menu':         return !hasMenuData;
+    case 'faq':          return !hasFaqData;
+    case 'testimonials': return !hasTestimonialItems && !hasReviews;
+    default:             return false;
+  }
+}
 
 // Component lookup by name string
 const componentMap: Record<string, any> = {
@@ -120,7 +172,6 @@ const showActionBar = themeActionBar.hidden !== true;
   {sections.map((entry, i) => {
     const Component = resolveComponent(entry);
     if (!Component) return null;
-    if (entry.id === 'reviews' && !hasReviews) return null;
     const isDark = darkSection && entry.id === darkSection;
     const nextEntry = sections[i + 1];
     const nextIsDark = nextEntry && darkSection && nextEntry.id === darkSection;
@@ -128,23 +179,36 @@ const showActionBar = themeActionBar.hidden !== true;
     const showDividerBefore = useEditorialDividers && isDark;
     const showDividerAfterHero = useEditorialDividers && entry.id === 'hero' && nextEntry;
 
+    // Foundations-polish: when the section is listed in theme.json but the
+    // backing data is thin, render the branded empty-state placeholder
+    // instead of a broken-looking half-section. Reviews keeps the same
+    // "omit if no data" default when the operator did NOT explicitly list
+    // reviews — that's enforced by theme.json shape and handled upstream.
+    const useEmptyState = shouldShowEmptyState(entry.id);
+    const emptyState = useEmptyState ? EMPTY_STATES[entry.id] : null;
+    const RenderedComponent: any = emptyState ? SectionEmptyState : Component;
+
     return (
       <>
         {showDividerAfterHero && <Divider to="var(--surface)" variant="gentle" />}
         {showDividerBefore && <Divider to="var(--text)" variant="wave" />}
         {isDark ? (
           <div data-section-mood="dark">
-            {entry.id === 'hero'
-              ? <Component heroCta={heroCta} variant={entry.variant} />
-              : <Component variant={entry.variant} />}
+            {emptyState
+              ? <RenderedComponent sectionId={entry.id} {...emptyState} />
+              : (entry.id === 'hero'
+                  ? <RenderedComponent heroCta={heroCta} variant={entry.variant} />
+                  : <RenderedComponent variant={entry.variant} />)}
           </div>
         ) : (
-          entry.id === 'hero'
-            ? <Component heroCta={heroCta} variant={entry.variant} />
-            : <Component variant={entry.variant} />
+          emptyState
+            ? <RenderedComponent sectionId={entry.id} {...emptyState} />
+            : (entry.id === 'hero'
+                ? <RenderedComponent heroCta={heroCta} variant={entry.variant} />
+                : <RenderedComponent variant={entry.variant} />)
         )}
         {isDark && useEditorialDividers && <Divider to="var(--background)" variant="curve" />}
-        {entry.id === 'reviews' && <ScrollMoment />}
+        {entry.id === 'reviews' && hasReviews && <ScrollMoment />}
       </>
     );
   })}
