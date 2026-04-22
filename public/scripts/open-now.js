@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const badgeText = badge.querySelector('.badge-text');
     if (!badgeText) return;
     const hasAnyHours = days.some(d => d.open && d.open.toLowerCase() !== 'closed');
-    if (!hasAnyHours) { badge.style.display = 'none'; return; }
+    if (!hasAnyHours) { badge.style.display = 'none'; badgeText.textContent = 'Hours not listed'; return; }
     const is24_7 = days.length > 0 && days.every(d => d.open && d.open.toLowerCase().includes('24 hour'));
     if (is24_7) { badge.classList.add('open', 'open-24-7'); badgeText.textContent = 'Open 24/7'; return; }
     const now = new Date();
@@ -25,5 +25,5 @@ document.addEventListener('DOMContentLoaded', () => {
     const openMin = parseTime(today.open); const closeMin = parseTime(today.close); const nowMin = now.getHours() * 60 + now.getMinutes();
     if (openMin !== null && closeMin !== null && nowMin >= openMin && nowMin < closeMin) { badge.classList.add('open'); badgeText.textContent = 'Open \u00B7 Closes ' + today.close; }
     else { badge.classList.add('closed'); badgeText.textContent = nowMin < (openMin || 0) ? 'Closed \u00B7 Opens ' + today.open : 'Closed \u00B7 Opens tomorrow'; }
-  } catch (e) { const badgeText = badge.querySelector('.badge-text'); if (badgeText) badgeText.textContent = ''; }
+  } catch (e) { const badgeText = badge.querySelector('.badge-text'); if (badgeText) badgeText.textContent = 'Hours not listed'; }
 });
