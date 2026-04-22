@@ -50,32 +50,29 @@ export function parseHoursString(input: string | null | undefined): HoursDay[] {
   const trimmed = input.trim();
   if (!trimmed) return [];
 
-  return trimmed
-    .split(DELIMITER_REGEX)
-    .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0 && entry.includes(':'))
-    .map((entry) => {
-      const colonIdx = entry.indexOf(':');
-      const day = entry.slice(0, colonIdx).trim();
-      const spec = entry.slice(colonIdx + 1).trim();
+  const out: HoursDay[] = [];
+  for (const raw of trimmed.split(DELIMITER_REGEX)) {
+    const entry = raw.trim();
+    if (!entry || !entry.includes(':')) continue;
 
-      // Skip if day is empty after trim
-      if (!day) return null;
+    const colonIdx = entry.indexOf(':');
+    const day = entry.slice(0, colonIdx).trim();
+    const spec = entry.slice(colonIdx + 1).trim();
 
-      // Try to split on a range separator (e.g. "9 AM – 5 PM")
-      const rangeMatch = spec.split(RANGE_SEPARATOR_REGEX);
-      if (rangeMatch.length === 2 && rangeMatch[0].trim() && rangeMatch[1].trim()) {
-        return {
-          day,
-          open: rangeMatch[0].trim(),
-          close: rangeMatch[1].trim(),
-        };
-      }
+    // Skip if day is empty after trim
+    if (!day) continue;
 
-      // Otherwise treat the whole spec as a label (Closed, Open 24 hours, etc.)
-      return { day, open: spec, close: null };
-    })
-    .filter((d): d is HoursDay => d !== null);
+    // Try to split on a range separator (e.g. "9 AM – 5 PM")
+    const rangeMatch = spec.split(RANGE_SEPARATOR_REGEX);
+    if (rangeMatch.length === 2 && rangeMatch[0].trim() && rangeMatch[1].trim()) {
+      out.push({ day, open: rangeMatch[0].trim(), close: rangeMatch[1].trim() });
+      continue;
+    }
+
+    // Otherwise treat the whole spec as a label (Closed, Open 24 hours, etc.)
+    out.push({ day, open: spec, close: null });
+  }
+  return out;
 }
 
 /**
