@@ -26,6 +26,7 @@
  *   - google-links.json  — only written if links exist
  */
 import type { ZodSchema } from 'astro/zod';
+import { normalizeHours } from './hours-parser';
 import {
   clientSchema,
   brandSchema,
@@ -118,7 +119,11 @@ export const location = validate(locationSchema, rawLocation, 'location.json');
 export const hero = validate(heroSchema, rawHero, 'hero.json');
 export const seo = validate(seoSchema, rawSeo, 'seo.json');
 export const schemaJson = validate(jsonLdSchema, rawSchema, 'schema.json');
-export const hours = validate(hoursSchema, rawHours, 'hours.json');
+// Normalize hours first so legacy/intermediate string formats (hoursWeekdays, hoursWeekend
+// with `;` or ` | ` delimiters) are converted to the canonical `{days[], secondaryHours}`
+// shape before validation. Without this, components see `hours.days = undefined` and
+// render the empty-state stub even when hours data is present. See issue #88.
+export const hours = validate(hoursSchema, normalizeHours(rawHours), 'hours.json');
 export const testimonials = validate(testimonialsSchema, rawTestimonials, 'testimonials.json');
 export const faq = validate(faqSchema, rawFaq, 'faq.json');
 export const about = validate(aboutSchema, rawAbout, 'about.json');

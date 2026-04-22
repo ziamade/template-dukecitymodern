@@ -99,8 +99,17 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
         </div>
       )}
 
-      {/* Tagline */}
-      <h1 class="hero-tagline reveal-up">{heroTagline}</h1>
+      {/* Tagline — when no custom heroTagline is set, fall back to the
+          BrandName component so brand.nameTreatment (accent/font parts) renders
+          correctly instead of flat text. `size="inline"` lets the BrandName
+          parts inherit the h1's font-size. See issue #88 acceptance: "Hero and
+          header business-name renders use BrandName.astro when
+          brand.nameTreatment is present." */}
+      <h1 class="hero-tagline reveal-up">
+        {heroTagline === client.name && brand?.nameTreatment?.parts?.length
+          ? <BrandName size="inline" />
+          : heroTagline}
+      </h1>
 
       {/* Subtitle */}
       {heroSubtitle && (
@@ -146,7 +155,7 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
       {/* Open/closed badge + location */}
       <div class="hero-meta reveal-up">
         <div class="open-badge" id="open-badge">
-          <span class="badge-text">Loading hours...</span>
+          <span class="badge-text">Hours not listed</span>
         </div>
         {location?.city && (
           <a href={location.mapLink || '#'} class="hero-location">

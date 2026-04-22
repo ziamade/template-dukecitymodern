@@ -64,8 +64,15 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
         </div>
       )}
 
-      {/* Tagline — oversized for text-only variant */}
-      <h1 class="hero-tagline reveal-up">{heroTagline}</h1>
+      {/* Tagline — oversized for text-only variant. When no custom heroTagline
+          is set, render via BrandName so brand.nameTreatment is honored
+          (accent on the first word, etc.). `size="inline"` inherits the h1's
+          font-size so the oversized tagline scale is preserved. See issue #88. */}
+      <h1 class="hero-tagline reveal-up">
+        {heroTagline === client.name && brand?.nameTreatment?.parts?.length
+          ? <BrandName size="inline" />
+          : heroTagline}
+      </h1>
 
       {/* Subtitle */}
       {heroSubtitle && (
@@ -111,7 +118,7 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
       {/* Open/closed + location */}
       <div class="hero-meta reveal-up">
         <div class="open-badge" id="open-badge">
-          <span class="badge-text">Loading hours...</span>
+          <span class="badge-text">Hours not listed</span>
         </div>
         {location?.city && (
           <a href={location.mapLink || '#'} class="hero-location">

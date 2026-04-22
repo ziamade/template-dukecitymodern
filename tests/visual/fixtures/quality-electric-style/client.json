@@ -1,0 +1,12 @@
+{
+  "name": "Quality Electric",
+  "slug": "quality-electric",
+  "foundingYear": "2009",
+  "license": "NM-EE-12345",
+  "insured": true,
+  "serviceArea": "Albuquerque metro and the East Mountains",
+  "industry": "Electrical Services",
+  "orderUrl": "",
+  "socials": { "facebook": "", "instagram": "", "google": "", "yelp": "" },
+  "domain": "quality-electric.example"
+}

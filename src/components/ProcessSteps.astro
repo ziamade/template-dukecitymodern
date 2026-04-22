@@ -3,9 +3,12 @@
 // v4 upgrade: large watermark step numbers, accent connecting line,
 // hover lift on cards, .stagger-parent for entrance animation,
 // responsive 4-col > 2-col > 1-col grid.
-
-// process.json is optional: loaded via import.meta.glob so the build
-// succeeds without it. When absent, the component uses sensible defaults.
+//
+// process.json is OPTIONAL. The section drops entirely when profile data is missing
+// (issue #88 acceptance: "How It Works / process section does NOT render when profile
+// lacks explicit process steps"). Hardcoded defaults previously leaked generic
+// "Schedule → Arrive → Complete" copy onto every electrician/plumber/restaurant
+// site, which read as template filler to clients during dev_review.
 import { processSchema } from '../lib/schemas';
 const processFiles = import.meta.glob('../data/process.json', { eager: true });
 const rawProcess = (Object.values(processFiles)[0] as Record<string, unknown>)?.default ?? null;
@@ -14,16 +17,10 @@ const processData = rawProcess ? processSchema.parse(rawProcess) : null;
 const heading = processData?.heading || 'How It Works';
 const eyebrow = processData?.eyebrow || 'Our Process';
 
-// Default process steps (used when no process.json exists)
-const defaultSteps = [
-  { number: '01', title: 'Get in Touch', description: 'Call, text, or fill out our form.' },
-  { number: '02', title: 'Free Estimate', description: 'We assess your needs and provide a quote.' },
-  { number: '03', title: 'Get It Done', description: 'Our team handles everything professionally.' },
-  { number: '04', title: 'Enjoy the Results', description: 'Quality work, guaranteed satisfaction.' },
-];
-
-// Use process.json steps if available and non-empty, otherwise defaults
-const rawSteps = (processData?.steps?.length ?? 0) > 0 ? processData!.steps : defaultSteps;
+// Only render when process.json exists AND defines at least one step. No hardcoded
+// fallback steps — copy must come from the profile so it actually reflects the
+// business's workflow.
+const rawSteps = processData?.steps ?? [];
 
 // Normalize step data: ensure 2-digit number format
 const steps = rawSteps.map((step, idx) => ({

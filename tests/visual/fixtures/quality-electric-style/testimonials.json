@@ -1,0 +1,10 @@
+{
+  "reviewCount": 84,
+  "averageRating": 4.9,
+  "reviewSource": "Google",
+  "items": [
+    { "text": "Came out same day for a panel issue. Clear explanation, fair price, fixed it on the first visit.", "author": "Maria G.", "initials": "MG", "role": "Homeowner", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Quality Electric installed all the lighting in our addition. Tidy work, on time, exactly what we asked for.", "author": "James K.", "initials": "JK", "role": "", "rating": 5, "source": "Google", "url": "" },
+    { "text": "Honest pricing and they actually answer the phone. Hard to find these days.", "author": "Susan T.", "initials": "ST", "role": "Property Manager", "rating": 5, "source": "Google", "url": "" }
+  ]
+}
