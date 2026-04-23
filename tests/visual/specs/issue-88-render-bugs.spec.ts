@@ -14,9 +14,12 @@
  *      copy was renamed AND that the parser populated `days[]` from the strings.
  *   3. Services section has exactly one ancestor with an `overflow` rule applied
  *      (the page itself). Proves the mobile horizontal carousel was removed.
- *   4. The hardcoded "Schedule → Arrive → Complete" process section does NOT render
- *      when no process.json is present — even though `process` is in
- *      `theme.json.sections`.
+ *   4. The process section renders with industry-default fallback steps when
+ *      process.json is absent and `process` is in `theme.sectionOrder`. The
+ *      original #88 behavior was to drop the section entirely; template#100
+ *      replaced that with an industry-default fallback so "How It Works"
+ *      always reflects something plausible while the pipeline's grounded
+ *      process-author output (platform#698) is still preferred when present.
  *   5. Hero tagline is rendered via the BrandName component (`.bn` parts present)
  *      when brand.nameTreatment is set and no custom heroTagline is provided.
  */
@@ -82,11 +85,18 @@ test.describe(`Issue #88 regressions (${fixtureName})`, () => {
     expect(overflowAncestors).toEqual([]);
   });
 
-  test('AC#3: process section is absent when no process.json is provided', async ({ page }) => {
+  test('AC#3: process section renders industry-default steps when process.json is absent (template#100)', async ({ page }) => {
     await page.goto('/');
     await waitForIdle(page);
-    const process = page.locator('#process');
-    await expect(process).toHaveCount(0);
+    // Quality Electric's theme.json has industry "Electrical Services" and
+    // `process` in sectionOrder, so the section must render. Without a
+    // process.json file, the industry-default `trade` bucket supplies steps.
+    const section = page.locator('#process');
+    await expect(section).toBeVisible();
+    // Defaults ship 3-4 steps — assert the section has at least three so we
+    // catch a regression that would render the section empty.
+    const cards = section.locator('.process-step-card');
+    expect(await cards.count()).toBeGreaterThanOrEqual(3);
   });
 
   test('AC#4: hero tagline renders BrandName parts when nameTreatment is set', async ({ page }) => {

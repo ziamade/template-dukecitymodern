@@ -27,6 +27,10 @@ const DATA_FILES = [
   'projects.json', 'menu.json', 'location.json', 'seo.json',
   'schema.json', 'google-links.json', 'verification.json',
   'attributes.json', '_sources.json', '_template-manifest.json',
+  // process.json is optional (template#100). When present, it drives the
+  // process section. When absent, the template falls back to industry-
+  // default boilerplate.
+  'process.json',
 ];
 
 let previewProcess: ChildProcess | null = null;
@@ -35,6 +39,12 @@ export async function activateFixture(fixtureName: string): Promise<void> {
   console.log(`\n  Activating fixture: ${fixtureName}`);
 
   backupCurrentData();
+
+  // Clear optional files that are NOT part of _base so they can't leak from
+  // the previous fixture's overlay. _base-covered files get overwritten in
+  // the next copy step, so only the genuinely optional ones need deletion.
+  //   - process.json (template#100, only seeded by fixtures that want it)
+  removeOptionalDataFiles(['process.json']);
 
   // Copy _base defaults first
   copyDataFiles(BASE_FIXTURE);
@@ -98,8 +108,15 @@ function restoreBackup(): void {
 
   for (const file of DATA_FILES) {
     const backup = path.join(BACKUP_DIR, file);
+    const target = path.join(DATA_DIR, file);
     if (fs.existsSync(backup)) {
-      fs.copyFileSync(backup, path.join(DATA_DIR, file));
+      fs.copyFileSync(backup, target);
+    } else if (fs.existsSync(target)) {
+      // Fixture overlay wrote a file that wasn't in the original src/data.
+      // Clean it up so we don't leak fixture state back into the working
+      // tree (e.g. process.json seeded by standard-service onto a base
+      // checkout that didn't have one).
+      fs.unlinkSync(target);
     }
   }
 
@@ -123,6 +140,15 @@ function restoreBackup(): void {
   }
 
   fs.rmSync(BACKUP_DIR, { recursive: true, force: true });
+}
+
+function removeOptionalDataFiles(files: string[]): void {
+  for (const file of files) {
+    const target = path.join(DATA_DIR, file);
+    if (fs.existsSync(target)) {
+      fs.unlinkSync(target);
+    }
+  }
 }
 
 function copyDataFiles(sourceDir: string): void {

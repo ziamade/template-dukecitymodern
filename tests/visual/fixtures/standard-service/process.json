@@ -1,0 +1,19 @@
+{
+  "steps": [
+    {
+      "title": "Free estimate",
+      "description": "Call or text with a quick description of the project. Same-day or next-day quote, no high-pressure upsells.",
+      "order": 1
+    },
+    {
+      "title": "Scheduled visit",
+      "description": "Pick a window that works for you. We confirm the date the day before and arrive on time with the right crew.",
+      "order": 2
+    },
+    {
+      "title": "On-site work",
+      "description": "Licensed, insured, and tidy. We walk you through what we did and clean up the space before we leave.",
+      "order": 3
+    }
+  ]
+}

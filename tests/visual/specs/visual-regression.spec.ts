@@ -109,6 +109,20 @@ test.describe(`Visual: ${fixtureName}`, () => {
     await expect(about).toHaveScreenshot(`${fixtureName}/section-about.png`);
   });
 
+  // Process section — template#100 added an industry-default fallback path,
+  // so this test captures the rendered output for fixtures whose theme
+  // includes `process` in sectionOrder. standard-service exercises the
+  // grounded process.json path; quality-electric-style exercises the
+  // industry-default fallback (trade bucket).
+  test('process section', async ({ page }) => {
+    await page.goto('/');
+    await waitForIdle(page);
+    const process = page.locator('#process');
+    if ((await process.count()) === 0) return;
+    await process.scrollIntoViewIfNeeded();
+    await expect(process).toHaveScreenshot(`${fixtureName}/section-process.png`);
+  });
+
   test('footer', async ({ page }) => {
     await page.goto('/');
     await waitForIdle(page);
