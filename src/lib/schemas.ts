@@ -473,11 +473,21 @@ export const tourSchema = z.object({
   businessName: z.string().optional(),
 }).loose();
 
-/** process.json — custom process steps (falls back to hardcoded defaults) */
+/**
+ * process.json — grounded process steps emitted by the platform's
+ * `process-author` skill (platform#698). When absent, ProcessSteps.astro
+ * falls back to industry-default boilerplate keyed off `theme.json.industry`.
+ *
+ * The canonical platform schema uses `{title, description, order}` with
+ * `order` as a 1-based integer. The template accepts the legacy `number`
+ * field too for BYO-fixture sites, and makes `description` optional for
+ * resilience against thin fixture data.
+ */
 export const processStepSchema = z.object({
   number: z.union([z.string(), z.number()]).optional(),
+  order: z.number().int().optional(),
   title: z.string(),
-  description: z.string(),
+  description: z.string().optional(),
   icon: z.string().optional(),
 }).loose();
 

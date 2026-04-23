@@ -4,30 +4,74 @@
 // hover lift on cards, .stagger-parent for entrance animation,
 // responsive 4-col > 2-col > 1-col grid.
 //
-// process.json is OPTIONAL. The section drops entirely when profile data is missing
-// (issue #88 acceptance: "How It Works / process section does NOT render when profile
-// lacks explicit process steps"). Hardcoded defaults previously leaked generic
-// "Schedule → Arrive → Complete" copy onto every electrician/plumber/restaurant
-// site, which read as template filler to clients during dev_review.
+// Data contract (template#100):
+//   - When `src/data/process.json` exists: render its grounded steps (emitted
+//     by the platform process-author skill, platform#698). Schema is
+//     `{steps: [{title, description, order}]}` with 3-5 entries.
+//   - When `src/data/process.json` is absent: fall back to industry-default
+//     boilerplate selected by `theme.json.industry`. This is a safety net for
+//     runs where the platform skill can't ground real steps (thin social
+//     data, edge-case industries). The defaults are intentionally plausible
+//     rather than specific — grounded output is always preferred when it
+//     exists.
+//
+// The section still drops entirely if there are literally zero steps to
+// render (grounded file empty AND industry-default set empty — currently
+// impossible, but we keep the guard so an empty `steps: []` doesn't emit
+// a blank section).
 import { processSchema } from '../lib/schemas';
+import { themeSchema } from '../lib/schemas';
+import { resolveDefaultProcessSteps } from '../lib/process-defaults';
+
 const processFiles = import.meta.glob('../data/process.json', { eager: true });
 const rawProcess = (Object.values(processFiles)[0] as Record<string, unknown>)?.default ?? null;
 const processData = rawProcess ? processSchema.parse(rawProcess) : null;
 
+const themeFiles = import.meta.glob('../data/theme.json', { eager: true });
+const rawTheme = (Object.values(themeFiles)[0] as Record<string, unknown>)?.default ?? null;
+const themeData = rawTheme ? themeSchema.parse(rawTheme) : null;
+const industry = themeData?.industry ?? null;
+
 const heading = processData?.heading || 'How It Works';
 const eyebrow = processData?.eyebrow || 'Our Process';
 
-// Only render when process.json exists AND defines at least one step. No hardcoded
-// fallback steps — copy must come from the profile so it actually reflects the
-// business's workflow.
-const rawSteps = processData?.steps ?? [];
+// Choose source: grounded process.json if present, otherwise industry defaults.
+// Either way the template renders the same visual treatment.
+const rawSteps = processData?.steps && processData.steps.length > 0
+  ? processData.steps
+  : resolveDefaultProcessSteps(industry);
 
-// Normalize step data: ensure 2-digit number format
-const steps = rawSteps.map((step, idx) => ({
-  number: step.number ? String(step.number).padStart(2, '0') : String(idx + 1).padStart(2, '0'),
-  title: step.title,
-  description: step.description || '',
-}));
+// Normalize step data:
+//   1. Filter out entries missing a title (defensive — platform validator
+//      enforces this upstream but BYO fixtures may not).
+//   2. Sort by `order` when present; fall back to array position for stability
+//      so input order is preserved when `order` is missing/duplicated.
+//   3. Derive a 2-digit step number from `number` (legacy), `order` (platform
+//      canonical), or array position (last resort).
+const normalizedSteps = rawSteps
+  .map((step, idx) => ({ step, idx }))
+  .filter(({ step }) => typeof step.title === 'string' && step.title.trim().length > 0)
+  .sort((a, b) => {
+    const ao = typeof a.step.order === 'number' ? a.step.order : Number.POSITIVE_INFINITY;
+    const bo = typeof b.step.order === 'number' ? b.step.order : Number.POSITIVE_INFINITY;
+    if (ao !== bo) return ao - bo;
+    return a.idx - b.idx;
+  })
+  .map(({ step }, renderIdx) => {
+    const numberSource =
+      step.number !== undefined && step.number !== null
+        ? String(step.number)
+        : step.order !== undefined && step.order !== null
+          ? String(step.order)
+          : String(renderIdx + 1);
+    return {
+      number: numberSource.padStart(2, '0'),
+      title: step.title,
+      description: step.description || '',
+    };
+  });
+
+const steps = normalizedSteps;
 ---
 {steps.length > 0 && (
   <section class="process-section section" id="process">

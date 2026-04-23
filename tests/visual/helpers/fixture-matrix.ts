@@ -198,13 +198,15 @@ export const FIXTURES: FixtureDefinition[] = [
   {
     name: 'quality-electric-style',
     description:
-      'F11: Issue #88 regression — pipeline-style hours.json (semicolon-delimited hoursWeekdays/hoursWeekend), no process.json, BrandName treatment with empty heroTagline, services-cards variant. Triggers all four bug surfaces fixed in #88.',
+      'F11: Issue #88 regression — pipeline-style hours.json (semicolon-delimited hoursWeekdays/hoursWeekend), no process.json, BrandName treatment with empty heroTagline, services-cards variant. Exercises the industry-default process fallback (template#100) because process is in sectionOrder but no process.json is seeded.',
     heroStyle: 'split',
     serviceVariant: 'cards',
     galleryVariant: 'none',
-    expectedSections: ['hero', 'trust', 'services', 'reviews', 'faq', 'contact', 'about', 'hours'],
-    // process is in theme.sectionOrder but profile lacks process.json → must NOT render
-    absentSections: ['menu', 'gallery', 'projects', 'process'],
+    // process renders via industry-default fallback (trade bucket) when
+    // process.json is absent (template#100). Previously listed under
+    // absentSections; flipped to expectedSections with the template#100 fix.
+    expectedSections: ['hero', 'trust', 'services', 'process', 'reviews', 'faq', 'contact', 'about', 'hours'],
+    absentSections: ['menu', 'gallery', 'projects'],
     isRestaurant: false,
     hasGallery: false,
     hasProjects: false,
