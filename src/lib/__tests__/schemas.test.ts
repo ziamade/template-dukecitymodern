@@ -1,5 +1,50 @@
 import { describe, it, expect } from 'vitest';
-import { hoursSchema } from '../schemas';
+import { contactSchema, hoursSchema } from '../schemas';
+
+/**
+ * Regression test for platform#675.
+ *
+ * After #94 (fail-loud zod) + #95 (canonical shared contact schema),
+ * the template's contactSchema must accept the pipeline's email-less
+ * emit shape. Most ABQ trade businesses (Quality Electric LLC and
+ * similar) don't list a public email. `compile-step/contact-json.ts`
+ * builds `{ phone, phoneForTel }` with the email key OMITTED (not
+ * written as null or empty string) when the business has no email.
+ *
+ * The canonical ContactSchema in packages/shared/src/data-contracts/
+ * contact.ts already declares `email: z.string().optional()`, so this
+ * test locks in the behavior so a future "tighten email" refactor
+ * can't break trades builds.
+ */
+describe('contactSchema (platform#675)', () => {
+  it('accepts the pipeline email-less emit shape (Quality Electric LLC)', () => {
+    // Exact shape emitted by compile-step/contact-json.ts when
+    // p.contact.email is falsy — email key omitted entirely.
+    const input = { phone: '(505) 699-9746', phoneForTel: '5056999746' };
+    const out = contactSchema.parse(input);
+    expect(out.phone).toBe('(505) 699-9746');
+    expect(out.phoneForTel).toBe('5056999746');
+    expect(out.email).toBeUndefined();
+  });
+
+  it('accepts email when the business has one (fixture emit shape)', () => {
+    const input = {
+      phone: '(505) 555-0100',
+      phoneForTel: '5055550100',
+      email: 'info@example.com',
+    };
+    const out = contactSchema.parse(input);
+    expect(out.email).toBe('info@example.com');
+  });
+
+  it('accepts an empty object (nothing gathered yet)', () => {
+    // compile-step can emit {} when profile.contact has no fields —
+    // see the pipeline test "omits contact.phone / phoneForTel /
+    // email when missing" in packages/pipeline/src/__tests__/runner/
+    // compile-step.test.ts.
+    expect(() => contactSchema.parse({})).not.toThrow();
+  });
+});
 
 /**
  * Regression test for platform#649 round 2.
