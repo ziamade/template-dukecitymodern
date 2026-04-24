@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { contactSchema, hoursSchema } from '../schemas';
+import { aboutSchema, contactSchema, hoursSchema } from '../schemas';
 
 /**
  * Regression test for platform#675.
@@ -99,5 +99,44 @@ describe('hoursSchema.secondaryHours (platform#649 round 2)', () => {
   it('rejects secondaryHours that is neither record nor null nor undefined', () => {
     const input = { days: [baseDay], secondaryHours: 'open 24 hours' };
     expect(() => hoursSchema.parse(input)).toThrow();
+  });
+});
+
+/**
+ * Regression test for platform#681 / template#99.
+ *
+ * Platform PR #688 extends the pipeline's `about.json` with an optional
+ * `image` field. The media-curator's about-hero selector prefers people
+ * and job-site photos (never the hero photo, fallback to highest-quality
+ * non-hero at quality >= 0.6) and writes the asset path into
+ * `about.image`. `AboutMap.astro` reads it and renders an `<img>` when
+ * present, falling back to the brand logo when absent.
+ *
+ * Existing client sites built before platform#688 don't have this field
+ * in their `about.json`. Lock in both shapes at the schema boundary so
+ * a future "require image" refactor can't break backward compatibility.
+ */
+describe('aboutSchema.image (platform#681 / #99)', () => {
+  it('accepts about.json without image (pre-platform#688 shape)', () => {
+    const input = { heading: 'About Us', text: 'We do good work.' };
+    const out = aboutSchema.parse(input);
+    expect(out.heading).toBe('About Us');
+    expect(out.text).toBe('We do good work.');
+    expect(out.image).toBeUndefined();
+  });
+
+  it('accepts about.json with image (post-platform#688 shape)', () => {
+    const input = {
+      heading: 'About Us',
+      text: 'We do good work.',
+      image: '/assets/images/about-hero.webp',
+    };
+    const out = aboutSchema.parse(input);
+    expect(out.image).toBe('/assets/images/about-hero.webp');
+  });
+
+  it('rejects image when it is not a string', () => {
+    const input = { heading: 'About', text: 'x', image: 42 };
+    expect(() => aboutSchema.parse(input)).toThrow();
   });
 });
