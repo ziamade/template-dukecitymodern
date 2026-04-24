@@ -36,6 +36,13 @@ const previewFiles = import.meta.glob<{ default: PreviewData }>('../data/preview
 const previewData: PreviewData | undefined = Object.values(previewFiles)[0]?.default;
 const inPreview = isPreview(previewData);
 
+// Per-site AI-authored CSS override (spec ziamade-platform#755).
+// If the client site repo ships src/styles/site.css, it is inlined LAST in
+// <head> so it wins over all template styles (source order).
+// Guarded via import.meta.glob ?raw — missing file = empty object, no error.
+const siteOverrideFiles = import.meta.glob<string>('../styles/site.css', { eager: true, query: '?raw', import: 'default' });
+const siteOverrideCss: string | undefined = Object.values(siteOverrideFiles)[0];
+
 const themeCSS = generateThemeCSS(brand);
 const layout = (theme.layout || {}) as Record<string, string>;
 const layoutCSS = generateLayoutCSS(layout);
@@ -87,6 +94,8 @@ const depth = layout.depth || '';
   <style set:html={fontFaceCSS}></style>
   <style set:html={themeCSS}></style>
   {layoutCSS && <style set:html={layoutCSS}></style>}
+  {/* Per-site override — spec #755 spike. Inlined last so source order wins. */}
+  {siteOverrideCss && <style set:html={siteOverrideCss}></style>}
   {analytics?.umamiWebsiteId && (
     <script defer src={analytics.umamiScriptUrl} data-website-id={analytics.umamiWebsiteId} />
   )}
