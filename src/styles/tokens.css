@@ -44,6 +44,11 @@
   --status-success: #16a34a;
   --status-error: #dc2626;
   --status-warning: #f59e0b;
+  /* Semantic alias: --status-open is the "currently open / live" green
+     used by the heartbeat-dot indicator. Aliased to --status-success so
+     a future palette change ripples through both. Per-site CSS authored
+     by the css-author skill (ziamade-platform#755) targets this token. */
+  --status-open: var(--status-success);
   --star-color: #f5a623;
 }
 
