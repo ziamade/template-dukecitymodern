@@ -127,6 +127,9 @@ export const layoutTokensSchema = z.object({
   buttonVariant: enumOr(['solid', 'ghost', 'tactile']).optional(),
   dividerStyle: enumOr(['line', 'glow', 'fade', 'none']).optional(),
   logoSize: enumOr(['sm', 'md', 'lg']).optional(),
+  /** true = the logo asset already spells the business name, so the header
+   *  suppresses the BrandName text beside it. Ignored when logoUrl is unset. */
+  logoOnly: z.boolean().optional(),
   shadowStyle: enumOr(['subtle', 'standard', 'dramatic']).optional(),
   hoverIntensity: enumOr(['none', 'subtle', 'standard']).optional(),
   gradientStyle: enumOr(['none', 'subtle', 'accent-tint']).optional(),
@@ -163,6 +166,12 @@ export const themeSchema = z.object({
   cta: ctaOverrideSchema.optional(),
   heroCta: ctaOverrideSchema.optional(),
   actionBar: actionBarSchema.optional(),
+  /** Per-section heading/eyebrow overrides, keyed by section id. Lets a site
+   *  rename a section whose component hard-codes its own copy. */
+  sectionCopy: z.record(z.string(), z.object({
+    heading: z.string().optional(),
+    eyebrow: z.string().optional(),
+  }).loose()).optional(),
 }).loose();
 
 // ---------------------------------------------------------------------------
@@ -308,11 +317,27 @@ export const menuItemSchema = z.object({
 
 export const menuCategorySchema = z.object({
   name: z.string(),
+  /** Qualifier rendered under the category name (ages, hours, who it's for).
+   *  Keeps `name` short enough for the category pill nav. */
+  description: z.string().optional(),
   items: z.array(menuItemSchema),
+}).loose();
+
+/** Optional section-copy overrides so non-restaurant sites can use the price
+ *  list without the word "Menu". All optional — omitting them keeps the
+ *  restaurant defaults ("Menu" heading, `client.orderUrl` → "Order Online"). */
+export const menuCtaSchema = z.object({
+  text: z.string().optional(),
+  href: z.string().optional(),
+  note: z.string().optional(),
 }).loose();
 
 export const menuSchema = z.object({
   categories: z.array(menuCategorySchema),
+  heading: z.string().optional(),
+  eyebrow: z.string().optional(),
+  note: z.string().optional(),
+  cta: menuCtaSchema.optional(),
 }).loose();
 
 // ---------------------------------------------------------------------------

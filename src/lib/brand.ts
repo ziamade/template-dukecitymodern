@@ -334,7 +334,14 @@ export function generateLayoutCSS(layout?: Record<string, string>): string {
     vars.push(`  --hover-shadow: ${HOVER_SHADOW_MAP[layout.hoverIntensity]};`);
   }
 
-  return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';
+  // `:root:root` (specificity 0,2,0), not `:root`. Astro emits the bundled
+  // stylesheet <link> AFTER this inline <style>, so an equal-specificity
+  // `:root` block loses the cascade to the `:root` defaults in tokens.css and
+  // every token that has a default there silently does nothing. That was
+  // cardRadius, buttonStyle, imageStyle, shadowStyle and overlayDarkness —
+  // five of the layout knobs theme.json exposes, all inert. Doubling the
+  // pseudo-class wins on specificity instead of relying on source order.
+  return vars.length > 0 ? `:root:root {\n${vars.join('\n')}\n}` : '';
 }
 
 // buildFontURL() removed — replaced by self-hosted fonts in src/lib/fonts.ts

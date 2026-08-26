@@ -14,6 +14,10 @@ interface Props {
 const { navLinks, ctaText, ctaHref } = Astro.props;
 const logoUrl = client.logoUrl || '';
 const logoSize = theme.layout?.logoSize || 'md';
+// When the logo asset IS the wordmark, rendering BrandName next to it prints
+// the business name twice. Opt out with theme.layout.logoOnly. Default stays
+// false so sites whose logo is a bare mark keep the name beside it.
+const logoOnly = logoUrl ? (theme.layout as { logoOnly?: boolean } | undefined)?.logoOnly === true : false;
 ---
 <header class="site-header" id="site-header" data-logo-size={logoSize}>
   <div class="header-inner">
@@ -28,7 +32,7 @@ const logoSize = theme.layout?.logoSize || 'md';
           loading="eager"
         />
       )}
-      <BrandName size="header" />
+      {!logoOnly && <BrandName size="header" />}
     </a>
 
     <nav class="header-nav" aria-label="Main navigation">

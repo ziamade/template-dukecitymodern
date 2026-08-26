@@ -111,23 +111,34 @@ const steps = normalizedSteps;
 
   /* ── Process grid ──────────────────────────────────────────────── */
 
+  /* Flex (not grid) so a step count that doesn't fill the row centers the
+     remainder instead of leaving a ragged gap on the right. A 3-step process
+     on desktop lays out as three centered quarters; a 5-step process wraps the
+     orphan to a centered second row. Grid's implicit columns can't do this —
+     `justify-content: center` on a fixed 4-column track list still leaves the
+     empty 4th column occupying space. */
   .process-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 0;
     max-width: 1100px;
     margin: 0 auto;
   }
 
+  .process-step {
+    flex: 0 1 100%;
+  }
+
   @media (min-width: 640px) {
-    .process-grid {
-      grid-template-columns: repeat(2, 1fr);
+    .process-step {
+      flex: 0 1 50%;
     }
   }
 
   @media (min-width: 1024px) {
-    .process-grid {
-      grid-template-columns: repeat(4, 1fr);
+    .process-step {
+      flex: 0 1 25%;
     }
   }
 

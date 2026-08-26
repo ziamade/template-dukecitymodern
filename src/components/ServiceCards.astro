@@ -3,6 +3,7 @@
 // v4 upgrade: data-tilt cards, gradient overlay on hover, mobile carousel,
 // GSAP reveal-up + stagger-parent, 4 variants (cards/icon-grid/compact/split).
 import OptimizedImg from './OptimizedImg.astro';
+import { theme } from '../lib/data';
 
 interface Props { variant?: string | number; }
 const { variant: variantProp } = Astro.props;
@@ -22,6 +23,16 @@ if (services.length === 0) {
   else if (svcData) services = (svcData as any).items || [];
 }
 
+// Section copy override. "Our Services" is wrong for plenty of businesses that
+// still need service cards — a class studio runs programs, a clinic runs
+// treatments, a venue runs packages. theme.sectionCopy keeps the override with
+// the rest of the per-site layout decisions rather than inventing a
+// services.json just to carry two strings.
+const sectionCopy = (theme as { sectionCopy?: Record<string, { heading?: string; eyebrow?: string }> })
+  .sectionCopy?.services;
+const heading = sectionCopy?.heading || 'Our Services';
+const eyebrow = sectionCopy?.eyebrow ?? 'What We Do';
+
 const MAX_FEATURED = 6;
 const featured = services.filter((s: any) => s.beforeImage || s.image).slice(0, MAX_FEATURED);
 const secondary = services.filter((s: any) => !featured.includes(s));
@@ -34,8 +45,8 @@ const splitRemaining = featured.length > 0
   <section class="services-section section" data-variant={variant} id="services" data-tour="services">
     <div class="container">
       <div class="section-heading reveal-up">
-        <span class="section-eyebrow">What We Do</span>
-        <h2 class="section-title">Our Services</h2>
+        {eyebrow && <span class="section-eyebrow">{eyebrow}</span>}
+        <h2 class="section-title">{heading}</h2>
       </div>
 
       {variant === 'cards' && (

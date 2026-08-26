@@ -1,6 +1,6 @@
 {
-  "version": "4.0.9",
-  "description": "Template capability manifest \u2014 agent skills read this to validate their output stays within what the template can render.",
+  "version": "4.0.12",
+  "description": "Template capability manifest — agent skills read this to validate their output stays within what the template can render.",
   "capabilities": {
     "heroStyles": [
       "split",
@@ -91,6 +91,9 @@
       "border",
       "underline",
       "tint"
+    ],
+    "layoutBooleans": [
+      "logoOnly"
     ],
     "sectionIds": [
       "hero",

@@ -597,6 +597,23 @@ const secondaryText = heroSecondaryCta?.text || (hasServicesSection ? 'Our Servi
     color: rgba(255, 255, 255, 0.9);
   }
 
+  /* The ghost secondary CTA has no fill, so it inherits --text from the page
+     palette. Over a photo backdrop that is a dark label on a bright image —
+     the one element in the overlay hero that was never re-colored for
+     light-on-dark. Primary buttons are unaffected: they paint their own
+     accent fill. */
+  .hero--overlay :global(.btn--ghost),
+  .hero--video :global(.btn--ghost) {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+
+  .hero--overlay :global(.btn--ghost:hover),
+  .hero--video :global(.btn--ghost:hover) {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.85);
+  }
+
   /* ===================================================================
      Video variant — video background, gradient to --bg
      =================================================================== */
