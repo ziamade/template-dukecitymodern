@@ -5,11 +5,34 @@ import OptimizedImg from './OptimizedImg.astro';
 const categories = menu?.categories || [];
 const hasMenu = categories.length > 0 && categories.some((c) => c.items?.length > 0);
 const orderUrl = client.orderUrl || '';
+
+// Section copy overrides. `menu.json` is `.loose()`, so these keys ride along
+// without a schema change. "Menu" is only the right heading for food service —
+// a class studio pricing its sessions, a salon listing its services, or a gym
+// listing memberships all need their own word. Same for the trailing CTA:
+// restaurants send people to an ordering page, everyone else has some other
+// single next step (book, register, sign a waiver).
+const overrides = menu as unknown as {
+  heading?: string;
+  eyebrow?: string;
+  note?: string;
+  cta?: { text?: string; href?: string; note?: string };
+} | undefined;
+const heading = overrides?.heading || 'Menu';
+const eyebrow = overrides?.eyebrow || '';
+const note = overrides?.note || '';
+const ctaText = overrides?.cta?.text || (orderUrl ? 'Order Online' : '');
+const ctaHref = overrides?.cta?.href || orderUrl;
+const ctaNote = overrides?.cta?.note
+  ?? (orderUrl && !overrides?.cta ? 'Full menu and online ordering available' : '');
 ---
 {hasMenu && (
   <section class="menu-section section" id="menu">
     <div class="container">
-      <h2 class="section-heading">Menu</h2>
+      <div class="menu-heading-block">
+        {eyebrow && <span class="section-eyebrow">{eyebrow}</span>}
+        <h2 class="section-heading">{heading}</h2>
+      </div>
 
       <nav class="menu-nav" aria-label="Menu categories">
         {categories.map((cat, i) => (
@@ -21,7 +44,12 @@ const orderUrl = client.orderUrl || '';
 
       {categories.map((cat, i) => (
         <div class="menu-category" id={`menu-cat-${i}`}>
-          <h3 class="menu-category-name">{cat.name}</h3>
+          <div class="menu-category-head">
+            <h3 class="menu-category-name">{cat.name}</h3>
+            {(cat as { description?: string }).description && (
+              <p class="menu-category-desc">{(cat as { description?: string }).description}</p>
+            )}
+          </div>
           <div class="menu-items">
             {cat.items.map((item) => (
               <div class={`menu-item ${item.featured ? 'menu-item--featured' : ''}`}>
@@ -54,12 +82,14 @@ const orderUrl = client.orderUrl || '';
         </div>
       ))}
 
-      {orderUrl && (
+      {note && <p class="menu-note">{note}</p>}
+
+      {ctaText && ctaHref && (
         <div class="menu-order-cta">
-          <a href={orderUrl} class="btn-primary" target="_blank" rel="noopener">
-            Order Online
+          <a href={ctaHref} class="btn-primary" target="_blank" rel="noopener">
+            {ctaText}
           </a>
-          <p class="menu-order-note">Full menu and online ordering available</p>
+          {ctaNote && <p class="menu-order-note">{ctaNote}</p>}
         </div>
       )}
     </div>
@@ -71,6 +101,42 @@ const orderUrl = client.orderUrl || '';
 
   .menu-section {
     background: var(--background);
+  }
+
+  .menu-heading-block {
+    text-align: center;
+  }
+
+  /* The rule under a category belongs below the whole head block, not between
+     the name and its qualifier — so move it off .menu-category-name. */
+  .menu-category-head {
+    border-bottom: 2px solid var(--border);
+    margin-bottom: var(--gap-md, 1.5rem);
+  }
+
+  .menu-category-head .menu-category-name {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  /* Qualifier under a category name — ages, hours, who it's for. */
+  .menu-category-desc {
+    color: var(--textMuted, var(--text));
+    font-size: var(--small-size, 0.875rem);
+    line-height: var(--line-height-body, 1.6);
+    margin-top: var(--gap-xs, 0.25rem);
+    padding-bottom: var(--gap-sm, 0.5rem);
+  }
+
+  /* Fine print under the price list — cancellation terms, class caps, etc. */
+  .menu-note {
+    max-width: 640px;
+    margin: var(--gap-lg, 2rem) auto 0;
+    text-align: center;
+    color: var(--textMuted, var(--text));
+    font-size: var(--small-size, 0.875rem);
+    line-height: var(--line-height-body, 1.6);
   }
 
   /* ── Sticky pill nav ──────────────────────────────────────────────── */
